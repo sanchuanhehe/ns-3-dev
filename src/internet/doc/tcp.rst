@@ -49,7 +49,7 @@ Vegas, Scalable, Veno, Binary Increase Congestion Control (BIC), Yet Another
 HighSpeed TCP (YeAH), Illinois, H-TCP, Low Extra Delay Background Transport
 (LEDBAT), TCP Low Priority (TCP-LP), Data Center TCP (DCTCP) and Bottleneck
 Bandwidth and RTT (BBR) also supported. The model also supports Selective
-Acknowledgements (SACK), Proportional Rate Reduction (PRR) and Explicit
+Acknowledgements (SACK), Forward Acknowledgement (FACK), Proportional Rate Reduction (PRR) and Explicit
 Congestion Notification (ECN). Multipath-TCP is not yet supported in the |ns3|
 releases.
 
@@ -1377,6 +1377,7 @@ section below on :ref:`Writing-tcp-tests`.
 * **tcp-cong-avoid-test:** TCP congestion avoidance for different packet sizes
 * **tcp-datasentcb:** Check TCP's 'data sent' callback
 * **tcp-endpoint-bug2211-test:** A test for an issue that was causing stack overflow
+* **tcp-fack-test:** Unit tests on FACK
 * **tcp-fast-retr-test:** Fast Retransmit testing
 * **tcp-header:** Unit tests on the TCP header
 * **tcp-highspeed-test:** Unit tests on the HighSpeed congestion control
@@ -1596,6 +1597,69 @@ implementation.
 
 For an academic peer-reviewed paper on the SACK implementation in ns-3,
 please refer to https://dl.acm.org/citation.cfm?id=3067666.
+
+Forward Acknowledgement (FACK)
+++++++++++++++++++++++++++++++
+
+FACK is designed to be used with the TCP SACK option. It keeps an explicit
+measure of the total number of bytes of outstanding data in the network. It
+achieves this by using the additional information provided by TCP SACK.
+
+FACK maintains two state variables: snd_fack and retran_data.
+
+snd_fack is updated to reflect the forward-most data held by the receiver.
+In non-recovery state, the snd_fack variable is updated from the acknowledgment
+number in the TCP header whereas during the recovery state, the sender utilizes
+information contained in TCP SACK options 6 to update snd_fack.
+
+retran_data  reflects the quantity of outstanding retransmitted data in the
+network. Each time a segment is retransmitted, retran_data is increased by the
+segment's size; when a retransmitted segment is determined to have left the
+network, retran_data is decreased by the segment's size.
+
+awnd variable is defined to be the data sender’s estimate of the actual quantity
+of data outstanding in the network.
+
+Assuming that all the unacknowledged data has left the network:
+
+.. math ::
+  awnd = snd_nxt - snd_fack
+
+snd_nxt holds the sequence number of the first byte of unsent data.
+
+In recovery state, data which is retransmitted must also be included in the
+calculation of awnd.
+.. math ::
+awnd = snd_nxt - snd_fack + retran_data
+
+Using this measure of outstanding data, the FACK algorithm can regulate the
+amount of data outstanding in the network to be within one MSS of the current
+value of cwnd.
+
+In the FACK version, the cwnd adjustment and retransmission are also triggered
+when the receiver reports that the reassembly queue is longer than 3 segments:
+
+.. code-block:: c++
+
+  if ((snd.fack - snd.una) > (3 * MSS) || (dupacks == 3))
+    {
+      EnterRecovery ();
+    }
+
+By default the FACK option is disabled. To enable FACK, the following
+configuration can be used:
+
+::
+ Config::SetDefault ("ns3::TcpSocketBase::Fack", BooleanValue (true));
+
+The following unit tests have been written to validate the implementation of FACK:
+
+* To check the change of TCP congestion state on the fulfillment of below
+  condition:
+  ::
+  (snd.fack - snd.una) > (3 * MSS)
+
+More information (paper): https://dl.acm.org/citation.cfm?id=248181
 
 Loss Recovery Algorithms
 ++++++++++++++++++++++++
