@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: GPL-2.0-only
  */
 
-#include "tap-encode-decode.h"
-
+#include "ns3/encode-decode.h"
 #include "ns3/mac48-address.h"
 
 #include <cerrno>
@@ -79,15 +78,15 @@ SendSocket(const char* path, int fd)
     //
     // We have this string called path, which is really a hex representation
     // of the endpoint that the tap bridge created.  It used a forward encoding
-    // method (TapBufferToString) to take the sockaddr_un it made and passed
+    // method (BufferToString) to take the sockaddr_un it made and passed
     // the resulting string to us.  So we need to take the inverse method
-    // (TapStringToBuffer) and build the same sockaddr_un over here.
+    // (StringToBuffer) and build the same sockaddr_un over here.
     //
     socklen_t clientAddrLen;
     struct sockaddr_un clientAddr;
 
     LOG("Decode address " << path);
-    bool rc = ns3::TapStringToBuffer(path, (uint8_t*)&clientAddr, &clientAddrLen);
+    bool rc = ns3::StringToBuffer(path, (uint8_t*)&clientAddr, &clientAddrLen);
     ABORT_IF(rc == false, "Unable to decode path", 0);
 
     LOG("Connect");

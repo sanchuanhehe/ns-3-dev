@@ -44,7 +44,7 @@ BufferToString(uint8_t* buffer, uint32_t len)
 }
 
 /**
- * @brief Convert string encoded by the inverse function (TapBufferToString)
+ * @brief Convert string encoded by the inverse function (BufferToString)
  * back into a byte buffer.
  *
  * @param s The input string.
