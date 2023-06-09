@@ -6,10 +6,9 @@
 
 #include "emu-fd-net-device-helper.h"
 
-#include "encode-decode.h"
-
 #include "ns3/abort.h"
 #include "ns3/config.h"
+#include "ns3/encode-decode.h"
 #include "ns3/fd-net-device.h"
 #include "ns3/log.h"
 #include "ns3/names.h"

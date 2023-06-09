@@ -4,8 +4,7 @@
  * SPDX-License-Identifier: GPL-2.0-only
  */
 
-#include "creator-utils.h"
-
+#include "ns3/creator-utils.h"
 #include "ns3/mac48-address.h"
 
 #include <arpa/inet.h>
