@@ -258,7 +258,7 @@ TapFdNetDeviceHelper::CreateFileDescriptor() const
         status = ::execlp(TAP_DEV_CREATOR,
                           TAP_DEV_CREATOR,             // argv[0] (filename)
                           ossDeviceName.str().c_str(), // argv[1] (-d<device name>)
-                          ossMac.str().c_str(),        // argv[2] (-m<MAC address>
+                          ossMac.str().c_str(),        // argv[2] (-m<MAC address>)
                           ossIp4.str().c_str(),        // argv[3] (-i<IP v4 address>)
                           ossIp6.str().c_str(),        // argv[4] (-I<IP v6 address>)
                           ossNetmask4.str().c_str(),   // argv[5] (-n<IP v4 net mask>)
@@ -266,6 +266,8 @@ TapFdNetDeviceHelper::CreateFileDescriptor() const
                           ossMode.str().c_str(),       // argv[7] (-t <tap>)
                           ossPI.str().c_str(),         // argv[8] (-h <pi>)
                           ossPath.str().c_str(),       // argv[9] (-p<path>)
+                          ossMode.str().c_str(),       // argv[10] (-o<operating mode>)
+                          "-o 0",                      // argv[11] (-o<operating mode>)
                           (char*)nullptr);
 
         //
