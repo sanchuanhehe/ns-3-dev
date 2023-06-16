@@ -186,25 +186,13 @@ if(${ENABLE_FDNETDEV})
     )
 
     add_definitions(
-      -DTAP_DEV_CREATOR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/src/fd-net-device/ns${NS3_VER}-tap-device-creator${build_profile_suffix}"
-    )
-
-    build_exec(
-      EXECNAME tap-device-creator
-      SOURCE_FILES
-        helper/tap-device-creator.cc
-      LIBRARIES_TO_LINK ${libnetwork}
-                        ${libtun-tap}
-      EXECUTABLE_DIRECTORY_PATH
-        ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/src/fd-net-device/
-      INSTALL_DIRECTORY_PATH ${CMAKE_INSTALL_LIBEXECDIR}/ns3
-      STANDALONE
+      -DTAP_DEV_CREATOR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/src/tun-tap/ns${NS3_VER}-tap-creator${build_profile_suffix}"
     )
 
     list(
       APPEND
       fd-net-device_creators
-      tap-device-creator
+      tap-creator
     )
     list(
       APPEND

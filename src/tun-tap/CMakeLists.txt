@@ -13,3 +13,13 @@ build_lib(
   SOURCE_FILES ${source_files}
   HEADER_FILES ${header_files}
 )
+
+build_exec(
+  EXECNAME tap-creator
+  SOURCE_FILES helper/tap-creator.cc
+  LIBRARIES_TO_LINK ${libnetwork}
+                    ${libtun-tap}
+  EXECUTABLE_DIRECTORY_PATH ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/src/tun-tap/
+  INSTALL_DIRECTORY_PATH ${CMAKE_INSTALL_LIBEXECDIR}/ns3
+  STANDALONE
+)
