@@ -10,10 +10,11 @@
 #define APPLICATION_CONTAINER_H
 
 #include "ns3/application.h"
+#include "ns3/nstime.h"
+#include "ns3/object-container.h"
 #include "ns3/random-variable-stream.h"
 
 #include <stdint.h>
-#include <vector>
 
 namespace ns3
 {
@@ -29,144 +30,21 @@ namespace ns3
  * by the caller.  This is that container used to hold the Ptr<Application>
  * which are instantiated by the Application helper.
  */
-class ApplicationContainer
+class ApplicationContainer : public ObjectContainer<Application>
 {
   public:
-    /**
-     * Create an empty ApplicationContainer.
-     */
-    ApplicationContainer();
-
-    /**
-     * Create an ApplicationContainer with exactly one application which has
-     * been previously instantiated.  The single application is specified
-     * by a smart pointer.
-     *
-     * @param application The Ptr<Application> to add to the container.
-     */
-    ApplicationContainer(Ptr<Application> application);
-
-    /**
-     * Create an ApplicationContainer with exactly one application which has
-     * been previously instantiated and assigned a name using the Object Name
-     * Service.  This Application is then specified by its assigned name.
-     *
-     * @param name The name of the Application Object to add to the container.
-     */
-    ApplicationContainer(std::string name);
-
-    /// Application container iterator
-    typedef std::vector<Ptr<Application>>::const_iterator Iterator;
-
-    /**
-     * @brief Get an iterator which refers to the first Application in the
-     * container.
-     *
-     * Applications can be retrieved from the container in two ways.  First,
-     * directly by an index into the container, and second, using an iterator.
-     * This method is used in the iterator method and is typically used in a
-     * for-loop to run through the Applications
-     *
-     * @code
-     *   ApplicationContainer::Iterator i;
-     *   for (i = container.Begin (); i != container.End (); ++i)
-     *     {
-     *       (*i)->method ();  // some Application method
-     *     }
-     * @endcode
-     *
-     * @returns an iterator which refers to the first Application in the container.
-     */
-    Iterator Begin() const;
-
-    /**
-     * @brief Get an iterator which indicates past-the-last Application in the
-     * container.
-     *
-     * Applications can be retrieved from the container in two ways.  First,
-     * directly by an index into the container, and second, using an iterator.
-     * This method is used in the iterator method and is typically used in a
-     * for-loop to run through the Applications
-     *
-     * @code
-     *   ApplicationContainer::Iterator i;
-     *   for (i = container.Begin (); i != container.End (); ++i)
-     *     {
-     *       (*i)->method ();  // some Application method
-     *     }
-     * @endcode
-     *
-     * @returns an iterator which indicates an ending condition for a loop.
-     */
-    Iterator End() const;
-
-    /**
-     * @brief Get the number of Ptr<Application> stored in this container.
-     *
-     * Applications can be retrieved from the container in two ways.  First,
-     * directly by an index into the container, and second, using an iterator.
-     * This method is used in the direct method and is typically used to
-     * define an ending condition in a for-loop that runs through the stored
-     * Applications
-     *
-     * @code
-     *   uint32_t nApplications = container.GetN ();
-     *   for (uint32_t i = 0 i < nApplications; ++i)
-     *     {
-     *       Ptr<Application> p = container.Get (i)
-     *       i->method ();  // some Application method
-     *     }
-     * @endcode
-     *
-     * @returns the number of Ptr<Application> stored in this container.
-     */
-    uint32_t GetN() const;
-
-    /**
-     * @brief Get the Ptr<Application> stored in this container at a given
-     * index.
-     *
-     * Applications can be retrieved from the container in two ways.  First,
-     * directly by an index into the container, and second, using an iterator.
-     * This method is used in the direct method and is used to retrieve the
-     * indexed Ptr<Application>.
-     *
-     * @code
-     *   uint32_t nApplications = container.GetN ();
-     *   for (uint32_t i = 0 i < nApplications; ++i)
-     *     {
-     *       Ptr<Application> p = container.Get (i)
-     *       i->method ();  // some Application method
-     *     }
-     * @endcode
-     *
-     * @param i the index of the requested application pointer.
-     * @returns the requested application pointer.
-     */
-    Ptr<Application> Get(uint32_t i) const;
-
-    /**
-     * @brief Append the contents of another ApplicationContainer to the end of
-     * this container.
-     *
-     * @param other The ApplicationContainer to append.
-     */
-    void Add(ApplicationContainer other);
-
-    /**
-     * @brief Append a single Ptr<Application> to this container.
-     *
-     * @param application The Ptr<Application> to append.
-     */
-    void Add(Ptr<Application> application);
-
-    /**
-     * @brief Append to this container the single Ptr<Application> referred to
-     * via its object name service registered name.
-     *
-     * @param name The name of the Application Object to add to the container.
-     */
-    void Add(std::string name);
+    using ObjectContainer<Application>::Iterator;
+    using ObjectContainer<Application>::ObjectContainer;
+    using ObjectContainer<Application>::Add;
+    using ObjectContainer<Application>::Create;
+    using ObjectContainer<Application>::Clear;
+    using ObjectContainer<Application>::Begin;
+    using ObjectContainer<Application>::End;
+    using ObjectContainer<Application>::Get;
+    using ObjectContainer<Application>::GetN;
+    using ObjectContainer<Application>::operator[];
+    using ObjectContainer<Application>::GetAllItems;
+    using ObjectContainer<Application>::Contains;
 
     /**
      * @brief Start all of the Applications in this container at the start time
@@ -212,9 +90,6 @@ class ApplicationContainer
      * @param stop The Time at which each of the applications should stop.
      */
     void Stop(Time stop) const;
-
-  private:
-    std::vector<Ptr<Application>> m_applications; //!< Applications smart pointers
 };
 
 } // namespace ns3
