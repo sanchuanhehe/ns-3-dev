@@ -17,6 +17,7 @@ This file is a best-effort approach to solving this issue; we will do our best b
 ### New API
 
 * (applications) Added two new base classes for source and sink applications, `SourceApplication` and `SinkApplication`, respectively.
+* (core) Added class `ObjectContainer` that serves as a base class for all containers.
 
 ### Changes to existing API
 
