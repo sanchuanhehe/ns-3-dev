@@ -34,12 +34,16 @@ class BuildingContainer : public ObjectContainer<Building>
 {
   public:
     using ObjectContainer<Building>::Iterator;
+    using ObjectContainer<Building>::iterator;
+    using ObjectContainer<Building>::const_iterator;
     using ObjectContainer<Building>::ObjectContainer;
     using ObjectContainer<Building>::Add;
     using ObjectContainer<Building>::Create;
     using ObjectContainer<Building>::Clear;
     using ObjectContainer<Building>::Begin;
+    using ObjectContainer<Building>::begin;
     using ObjectContainer<Building>::End;
+    using ObjectContainer<Building>::end;
     using ObjectContainer<Building>::Get;
     using ObjectContainer<Building>::GetN;
     using ObjectContainer<Building>::operator[];

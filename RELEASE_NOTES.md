@@ -37,6 +37,8 @@ The required Doxygen version for documentation generation is version 1.11.
 - (applications) - It is now possible to specify the address on which to bind the listening socket for UdpServer via the `Local` attribute.
 - (applications) - It is now possible to specify a port only for PacketSink to listen to any address (both IPv4 and IPv6).
 - (core) Added class `ObjectContainer` that serves as a base class for all containers.
+- (core) Added class `ObjectContainer` that serves as a base class for all containers.
+- (core) Implemented `ObjectContainer::begin()` and `ObjectContainer::end()` functions of the STL library.
 - (wifi) - Added a `WifiDefaultProtectionManager::SkipMuRtsBeforeBsrp` attribute to avoid using MU-RTS to protect the transmission of a BSRP Trigger Frame. If this attribute is set to true (which is the default value), BSRP Trigger Frames can be used as Initial Control Frames for EMLSR clients
 
 ### Bugs fixed

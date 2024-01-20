@@ -39,12 +39,16 @@ class EnergyHarvesterContainer : public ObjectContainer<EnergyHarvester>, public
 {
   public:
     using ObjectContainer<EnergyHarvester>::Iterator;
+    using ObjectContainer<EnergyHarvester>::iterator;
+    using ObjectContainer<EnergyHarvester>::const_iterator;
     using ObjectContainer<EnergyHarvester>::ObjectContainer;
     using ObjectContainer<EnergyHarvester>::Add;
     using ObjectContainer<EnergyHarvester>::Create;
     using ObjectContainer<EnergyHarvester>::Clear;
     using ObjectContainer<EnergyHarvester>::Begin;
+    using ObjectContainer<EnergyHarvester>::begin;
     using ObjectContainer<EnergyHarvester>::End;
+    using ObjectContainer<EnergyHarvester>::end;
     using ObjectContainer<EnergyHarvester>::Get;
     using ObjectContainer<EnergyHarvester>::GetN;
     using ObjectContainer<EnergyHarvester>::operator[];

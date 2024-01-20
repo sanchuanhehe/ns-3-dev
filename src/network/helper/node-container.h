@@ -29,12 +29,16 @@ class NodeContainer : public ObjectContainer<Node>
 {
   public:
     using ObjectContainer<Node>::Iterator;
+    using ObjectContainer<Node>::iterator;
+    using ObjectContainer<Node>::const_iterator;
     using ObjectContainer<Node>::ObjectContainer;
     using ObjectContainer<Node>::Add;
     using ObjectContainer<Node>::Create;
     using ObjectContainer<Node>::Clear;
     using ObjectContainer<Node>::Begin;
+    using ObjectContainer<Node>::begin;
     using ObjectContainer<Node>::End;
+    using ObjectContainer<Node>::end;
     using ObjectContainer<Node>::Get;
     using ObjectContainer<Node>::GetN;
     using ObjectContainer<Node>::operator[];

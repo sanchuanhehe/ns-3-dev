@@ -37,12 +37,16 @@ class EnergySourceContainer : public ObjectContainer<EnergySource>, public Objec
 {
   public:
     using ObjectContainer<EnergySource>::Iterator;
+    using ObjectContainer<EnergySource>::iterator;
+    using ObjectContainer<EnergySource>::const_iterator;
     using ObjectContainer<EnergySource>::ObjectContainer;
     using ObjectContainer<EnergySource>::Add;
     using ObjectContainer<EnergySource>::Create;
     using ObjectContainer<EnergySource>::Clear;
     using ObjectContainer<EnergySource>::Begin;
+    using ObjectContainer<EnergySource>::begin;
     using ObjectContainer<EnergySource>::End;
+    using ObjectContainer<EnergySource>::end;
     using ObjectContainer<EnergySource>::Get;
     using ObjectContainer<EnergySource>::GetN;
     using ObjectContainer<EnergySource>::operator[];

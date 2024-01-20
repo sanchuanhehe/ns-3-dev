@@ -34,12 +34,16 @@ class ApplicationContainer : public ObjectContainer<Application>
 {
   public:
     using ObjectContainer<Application>::Iterator;
+    using ObjectContainer<Application>::iterator;
+    using ObjectContainer<Application>::const_iterator;
     using ObjectContainer<Application>::ObjectContainer;
     using ObjectContainer<Application>::Add;
     using ObjectContainer<Application>::Create;
     using ObjectContainer<Application>::Clear;
     using ObjectContainer<Application>::Begin;
+    using ObjectContainer<Application>::begin;
     using ObjectContainer<Application>::End;
+    using ObjectContainer<Application>::end;
     using ObjectContainer<Application>::Get;
     using ObjectContainer<Application>::GetN;
     using ObjectContainer<Application>::operator[];

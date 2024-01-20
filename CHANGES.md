@@ -18,6 +18,8 @@ This file is a best-effort approach to solving this issue; we will do our best b
 
 * (applications) Added two new base classes for source and sink applications, `SourceApplication` and `SinkApplication`, respectively.
 * (core) Added class `ObjectContainer` that serves as a base class for all containers.
+* (core) Added class `ObjectContainer` that serves as a base class for all containers.
+* (core) Implemented `ObjectContainer::begin()` and `ObjectContainer::end()` functions of the STL library.
 
 ### Changes to existing API
 
