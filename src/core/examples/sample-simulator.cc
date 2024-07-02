@@ -85,7 +85,7 @@ CancelledEvent()
     std::cout << "I should never be called... " << std::endl;
 }
 
-} // unnamed namespace
+} // namespace
 
 int
 main(int argc, char* argv[])

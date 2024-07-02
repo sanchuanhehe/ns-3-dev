@@ -699,7 +699,7 @@ CoverTwoHopNeighbors(Ipv4Address neighborMainAddr, TwoHopNeighborSet& N2)
         }
     }
 }
-} // unnamed namespace
+} // namespace
 
 void
 RoutingProtocol::MprComputation()

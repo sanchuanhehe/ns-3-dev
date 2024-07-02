@@ -102,7 +102,7 @@ TracedValueCbSink<SequenceNumber32>(SequenceNumber32 oldValue, SequenceNumber32 
     TracedValueCbSink<int64_t>(oldValue.GetValue(), newValue.GetValue());
 }
 
-} // unnamed namespace
+} // namespace
 
 /**
  * \ingroup system-tests-traced

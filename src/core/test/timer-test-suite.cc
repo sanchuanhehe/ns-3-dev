@@ -39,7 +39,7 @@ void barcir(const int&){};
 /// Function with one int reference parameter.
 void barir(int&){};
 
-} // anonymous namespace
+} // namespace
 
 using namespace ns3;
 

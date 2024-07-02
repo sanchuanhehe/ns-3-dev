@@ -107,7 +107,7 @@ ReplaceTimePrinter()
     LogSetTimePrinter(&ReplacementTimePrinter);
 }
 
-} // unnamed namespace
+} // namespace
 
 int
 main(int argc, char* argv[])

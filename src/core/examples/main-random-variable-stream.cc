@@ -96,7 +96,7 @@ Histogram(Ptr<RandomVariableStream> rndvar,
     return data;
 }
 
-} // unnamed namespace
+} // namespace
 
 int
 main(int argc, char* argv[])
