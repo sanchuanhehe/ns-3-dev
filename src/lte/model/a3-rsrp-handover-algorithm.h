@@ -111,6 +111,6 @@ class A3RsrpHandoverAlgorithm : public LteHandoverAlgorithm
 
 }; // end of class A3RsrpHandoverAlgorithm
 
-} // end of namespace ns3
+} // namespace ns3
 
 #endif /* A3_RSRP_HANDOVER_ALGORITHM_H */

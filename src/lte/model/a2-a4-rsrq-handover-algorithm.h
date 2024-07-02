@@ -180,6 +180,6 @@ class A2A4RsrqHandoverAlgorithm : public LteHandoverAlgorithm
 
 }; // end of class A2A4RsrqHandoverAlgorithm
 
-} // end of namespace ns3
+} // namespace ns3
 
 #endif /* A2_A4_RSRQ_HANDOVER_ALGORITHM_H */

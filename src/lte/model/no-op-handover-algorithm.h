@@ -63,6 +63,6 @@ class NoOpHandoverAlgorithm : public LteHandoverAlgorithm
 
 }; // end of class NoOpHandoverAlgorithm
 
-} // end of namespace ns3
+} // namespace ns3
 
 #endif /* NO_OP_HANDOVER_ALGORITHM_H */

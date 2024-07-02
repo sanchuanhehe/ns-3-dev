@@ -246,6 +246,6 @@ class LteFfrAlgorithm : public Object
 
 }; // end of class LteFfrAlgorithm
 
-} // end of namespace ns3
+} // namespace ns3
 
 #endif /* LTE_FFR_ALGORITHM_H */

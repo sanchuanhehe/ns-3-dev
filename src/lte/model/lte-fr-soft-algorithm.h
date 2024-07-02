@@ -145,6 +145,6 @@ class LteFrSoftAlgorithm : public LteFfrAlgorithm
 
 }; // end of class LteFrSoftAlgorithm
 
-} // end of namespace ns3
+} // namespace ns3
 
 #endif /* LTE_FR_SOFT_ALGORITHM_H */

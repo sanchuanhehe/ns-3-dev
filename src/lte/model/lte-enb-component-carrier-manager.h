@@ -213,6 +213,6 @@ class LteEnbComponentCarrierManager : public Object
 
 }; // end of class LteEnbComponentCarrierManager
 
-} // end of namespace ns3
+} // namespace ns3
 
 #endif /* LTE_ENB_COMPONENT_CARRIER_MANAGER_H */

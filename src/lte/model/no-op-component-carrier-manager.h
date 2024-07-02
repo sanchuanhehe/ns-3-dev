@@ -177,6 +177,6 @@ class RrComponentCarrierManager : public NoOpComponentCarrierManager
     uint8_t m_lastCcIdForSr{0}; //!< Last CCID to which a SR was routed
 };                              // end of class RrComponentCarrierManager
 
-} // end of namespace ns3
+} // namespace ns3
 
 #endif /* NO_OP_COMPONENT_CARRIER_MANAGER_H */

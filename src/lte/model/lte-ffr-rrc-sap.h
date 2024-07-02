@@ -245,6 +245,6 @@ MemberLteFfrRrcSapUser<C>::SendLoadInformation(EpcX2Sap::LoadInformationParams p
     m_owner->DoSendLoadInformation(params);
 }
 
-} // end of namespace ns3
+} // namespace ns3
 
 #endif /* LTE_FFR_RRC_SAP_H */

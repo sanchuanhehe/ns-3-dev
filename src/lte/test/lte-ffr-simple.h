@@ -148,6 +148,6 @@ class LteFfrSimple : public LteFfrAlgorithm
 
 }; // end of class LteFfrSimple
 
-} // end of namespace ns3
+} // namespace ns3
 
 #endif /* LTE_FFR_SIMPLE_H */

@@ -98,6 +98,6 @@ class LteUeComponentCarrierManager : public Object
 
 }; // end of class LteUeComponentCarrierManager
 
-} // end of namespace ns3
+} // namespace ns3
 
 #endif /* LTE_UE_COMPONENT_CARRIER_MANAGER_H */

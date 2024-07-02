@@ -94,6 +94,6 @@ class LteHandoverAlgorithm : public Object
 
 }; // end of class LteHandoverAlgorithm
 
-} // end of namespace ns3
+} // namespace ns3
 
 #endif /* LTE_HANDOVER_ALGORITHM_H */

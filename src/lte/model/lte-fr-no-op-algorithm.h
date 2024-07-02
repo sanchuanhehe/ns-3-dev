@@ -90,6 +90,6 @@ class LteFrNoOpAlgorithm : public LteFfrAlgorithm
 
 }; // end of class LteFrNoOpAlgorithm
 
-} // end of namespace ns3
+} // namespace ns3
 
 #endif /* LTE_FFR_NO_OP_ALGORITHM_H */

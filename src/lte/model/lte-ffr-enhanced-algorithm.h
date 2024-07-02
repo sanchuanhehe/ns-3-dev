@@ -184,6 +184,6 @@ class LteFfrEnhancedAlgorithm : public LteFfrAlgorithm
 
 }; // end of class LteFfrEnhancedAlgorithm
 
-} // end of namespace ns3
+} // namespace ns3
 
 #endif /* LTE_FFR_ENHANCED_ALGORITHM_H */
