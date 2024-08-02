@@ -15,7 +15,9 @@
 #include "wifi-phy-state-helper.h"
 #include "wifi-standards.h"
 
+#include "ns3/decibel.h"
 #include "ns3/error-model.h"
+#include "ns3/units.h"
 
 #include <limits>
 
@@ -874,25 +876,25 @@ class WifiPhy : public Object
      *
      * @param gain the transmission gain
      */
-    void SetTxGain(dB_u gain);
+    void SetTxGain(units::dimensionless::dB_t gain);
     /**
      * Return the transmission gain.
      *
      * @return the transmission gain
      */
-    dB_u GetTxGain() const;
+    units::dimensionless::dB_t GetTxGain() const;
     /**
      * Sets the reception gain.
      *
      * @param gain the reception gain
      */
-    void SetRxGain(dB_u gain);
+    void SetRxGain(units::dimensionless::dB_t gain);
     /**
      * Return the reception gain.
      *
      * @return the reception gain
      */
-    dB_u GetRxGain() const;
+    units::dimensionless::dB_t GetRxGain() const;
 
     /**
      * Get the remaining time to the end of the MAC header reception of the next MPDU being
@@ -1622,8 +1624,8 @@ class WifiPhy : public Object
     dBm_u m_ccaSensitivityThreshold; //!< Clear channel assessment (CCA) modulation and coding rate
                                      //!< sensitivity threshold
 
-    dB_u m_txGain;                     //!< Transmission gain
-    dB_u m_rxGain;                     //!< Reception gain
+    units::dimensionless::dB_t m_txGain; //!< Transmission gain
+    units::dimensionless::dB_t m_rxGain; //!< Reception gain
     dBm_u m_txPowerBase;               //!< Minimum transmission power
     dBm_u m_txPowerEnd;                //!< Maximum transmission power
     uint8_t m_nTxPower;                //!< Number of available transmission power levels

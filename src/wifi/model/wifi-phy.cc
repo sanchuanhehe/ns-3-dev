@@ -167,15 +167,15 @@ WifiPhy::GetTypeId()
                                              &WifiPhy::GetCcaSensitivityThreshold),
                           MakeDoubleChecker<dBm_u>())
             .AddAttribute("TxGain",
-                          "Transmission gain (dB).",
-                          DoubleValue(0.0),
-                          MakeDoubleAccessor(&WifiPhy::SetTxGain, &WifiPhy::GetTxGain),
-                          MakeDoubleChecker<dB_u>())
+                          "Transmission gain.",
+                          DecibelValue(0.0),
+                          MakeDecibelAccessor(&WifiPhy::SetTxGain, &WifiPhy::GetTxGain),
+                          MakeDecibelChecker())
             .AddAttribute("RxGain",
-                          "Reception gain (dB).",
-                          DoubleValue(0.0),
-                          MakeDoubleAccessor(&WifiPhy::SetRxGain, &WifiPhy::GetRxGain),
-                          MakeDoubleChecker<dB_u>())
+                          "Reception gain.",
+                          DecibelValue(0.0),
+                          MakeDecibelAccessor(&WifiPhy::SetRxGain, &WifiPhy::GetRxGain),
+                          MakeDecibelChecker())
             .AddAttribute("TxPowerLevels",
                           "Number of transmission power levels available between "
                           "TxPowerStart and TxPowerEnd included.",
@@ -600,26 +600,26 @@ WifiPhy::GetNTxPower() const
 }
 
 void
-WifiPhy::SetTxGain(dB_u gain)
+WifiPhy::SetTxGain(units::dimensionless::dB_t gain)
 {
     NS_LOG_FUNCTION(this << gain);
     m_txGain = gain;
 }
 
-dB_u
+units::dimensionless::dB_t
 WifiPhy::GetTxGain() const
 {
     return m_txGain;
 }
 
 void
-WifiPhy::SetRxGain(dB_u gain)
+WifiPhy::SetRxGain(units::dimensionless::dB_t gain)
 {
     NS_LOG_FUNCTION(this << gain);
     m_rxGain = gain;
 }
 
-dB_u
+units::dimensionless::dB_t
 WifiPhy::GetRxGain() const
 {
     return m_rxGain;
@@ -1913,7 +1913,7 @@ WifiPhy::Send(const WifiConstPsduMap& psdus, const WifiTxVector& txVector)
     auto ppdu = GetPhyEntity(txVector.GetModulationClass())->BuildPpdu(psdus, txVector, txDuration);
     m_previouslyRxPpduUid = UINT64_MAX; // reset (after creation of PPDU) to use it only once
 
-    const auto txPower = DbmToW(GetTxPowerForTransmission(ppdu) + GetTxGain());
+    const auto txPower = DbmToW(GetTxPowerForTransmission(ppdu) + GetTxGain().to<double>());
     NotifyTxBegin(psdus, txPower);
     if (!m_phyTxPsduBeginTrace.IsEmpty())
     {
@@ -2342,6 +2342,7 @@ WifiPhy::GetTxPowerForTransmission(Ptr<const WifiPpdu> ppdu) const
 
     // Apply power density constraint on EIRP
     const auto channelWidth = ppdu->GetTxChannelWidth();
+<<<<<<< HEAD
     dBm_per_MHz_u txPowerDbmPerMhz =
         (txPower + GetTxGain()) - RatioToDb(channelWidth); // account for antenna gain since EIRP
     NS_LOG_INFO("txPower=" << txPower << "dBm with txPowerDbmPerMhz=" << txPowerDbmPerMhz
@@ -2351,6 +2352,18 @@ WifiPhy::GetTxPowerForTransmission(Ptr<const WifiPpdu> ppdu) const
     NS_LOG_INFO("txPower=" << txPower
                            << "dBm after applying m_powerDensityLimit=" << m_powerDensityLimit);
     return txPower;
+=======
+    double txPowerDbmPerMhz = (txPowerDbm + GetTxGain().to<double>()) -
+                              RatioToDb(channelWidth); // account for antenna gain since EIRP
+    NS_LOG_INFO("txPowerDbm=" << txPowerDbm << " with txPowerDbmPerMhz=" << txPowerDbmPerMhz
+                              << " over " << channelWidth << " MHz");
+    txPowerDbm = std::min(txPowerDbmPerMhz, m_powerDensityLimit) + RatioToDb(channelWidth);
+    txPowerDbm -=
+        GetTxGain().to<double>(); // remove antenna gain since will be added right afterwards
+    NS_LOG_INFO("txPowerDbm=" << txPowerDbm
+                              << " after applying m_powerDensityLimit=" << m_powerDensityLimit);
+    return txPowerDbm;
+>>>>>>> wifi: Convert a few attributes to DecibelValue
 }
 
 Ptr<const WifiPsdu>

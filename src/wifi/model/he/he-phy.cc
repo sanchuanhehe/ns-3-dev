@@ -1444,14 +1444,15 @@ HePhy::StartTx(Ptr<const WifiPpdu> ppdu)
     if (ppdu->GetType() == WIFI_PPDU_TYPE_UL_MU || ppdu->GetType() == WIFI_PPDU_TYPE_DL_MU)
     {
         const auto nonHeTxPower =
-            m_wifiPhy->GetTxPowerForTransmission(ppdu) + m_wifiPhy->GetTxGain();
+            m_wifiPhy->GetTxPowerForTransmission(ppdu) + m_wifiPhy->GetTxGain().to<double>();
 
         // temporarily set WifiPpdu flag to PSD_HE_PORTION for correct calculation of TX power for
         // the HE portion
         auto hePpdu = DynamicCast<const HePpdu>(ppdu);
         NS_ASSERT(hePpdu);
         hePpdu->SetTxPsdFlag(HePpdu::PSD_HE_PORTION);
-        const auto heTxPower = m_wifiPhy->GetTxPowerForTransmission(ppdu) + m_wifiPhy->GetTxGain();
+        const auto heTxPower =
+            m_wifiPhy->GetTxPowerForTransmission(ppdu) + m_wifiPhy->GetTxGain().to<double>();
         hePpdu->SetTxPsdFlag(HePpdu::PSD_NON_HE_PORTION);
 
         // non-HE portion

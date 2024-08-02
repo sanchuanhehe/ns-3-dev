@@ -492,7 +492,7 @@ SpectrumWifiPhy::StartRx(Ptr<SpectrumSignalParameters> rxParams,
     Watt_u totalRxPower{0.0};
     RxPowerWattPerChannelBand rxPowers;
 
-    const auto rxGainRatio = DbToRatio(GetRxGain());
+    const auto rxGainRatio = DbToRatio(GetRxGain().to<double>());
 
     std::size_t index = 0;
     MHz_u prevBw{0};
