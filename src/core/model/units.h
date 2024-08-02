@@ -4874,6 +4874,47 @@ namespace std
 #	pragma pop_macro("pascal")
 #endif // _MSC_VER
 
+// clang-format on
+// NOLINTEND
+
+namespace ns3
+{
+// Stream extraction operators must be defined for units that will be used
+// within Attributes or ns-3 CommandLine
+
+/**
+ * \brief Stream extraction operator for units::dimensionless::dB_t
+ * \param [in,out] is The stream
+ * \param [out] decibel the output value
+ * \return The stream
+ */
+inline std::istream&
+operator>>(std::istream& is, units::dimensionless::dB_t& decibel)
+{
+    std::string value;
+    is >> value;
+    bool ok = true;
+    auto pos = value.find('_');
+    if (pos == std::string::npos)
+    {
+        ok = false;
+    }
+    auto unit = value.substr(pos + 1);
+    if (unit != "dB")
+    {
+        ok = false;
+    }
+    auto number = value.substr(0, pos);
+    if (!ok)
+    {
+        is.setstate(std::ios_base::failbit);
+    }
+    decibel = units::dimensionless::dB_t(std::strtod(number.c_str(), nullptr));
+    return is;
+}
+
+} // namespace ns3
+
 #endif // units_h__
 
 // For Emacs
@@ -4883,6 +4924,3 @@ namespace std
 // fill-column: 116
 // tab-width: 4
 // End:
-
-// clang-format on
-// NOLINTEND

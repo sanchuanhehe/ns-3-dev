@@ -195,6 +195,7 @@ set(source_files
     model/wall-clock-synchronizer.cc
     model/matrix-array.cc
     model/demangle.cc
+    model/decibel.cc
 )
 
 # Define core lib headers
@@ -296,6 +297,7 @@ set(header_files
     model/uinteger.h
     model/uniform-random-bit-generator.h
     model/units.h
+    model/decibel.h
     model/valgrind.h
     model/vector.h
     model/warnings.h
