@@ -340,6 +340,7 @@ set(test_sources
     test/tuple-value-test-suite.cc
     test/type-id-test-suite.cc
     test/type-traits-test-suite.cc
+    test/units-test-suite.cc
     test/watchdog-test-suite.cc
     test/val-array-test-suite.cc
     test/matrix-array-test-suite.cc
