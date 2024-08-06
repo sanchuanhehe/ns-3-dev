@@ -3885,7 +3885,8 @@ TestUlOfdmaPhyTransmission::DoSetup()
     std::list<Ptr<WifiPhy>> phys{m_phyAp, m_phySta1, m_phySta2, m_phySta3};
     for (auto& phy : phys)
     {
-        phy->SetAttribute("TxGain", DecibelValue(units::dimensionless::dB_t(1)));
+        // Leaving the below unchanged as a DoubleValue to show that it still works
+        phy->SetAttribute("TxGain", DoubleValue(1));
         phy->SetAttribute("TxPowerStart", DoubleValue(16.0));
         phy->SetAttribute("TxPowerEnd", DoubleValue(16.0));
         phy->SetAttribute("PowerDensityLimit", DoubleValue(100.0)); // no impact by default
