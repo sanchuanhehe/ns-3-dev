@@ -21,6 +21,7 @@
 
 #include "attribute-helper.h"
 #include "attribute.h"
+#include "double.h"
 #include "units.h"
 
 /**
@@ -36,7 +37,7 @@ namespace ns3
 
 ATTRIBUTE_VALUE_DEFINE_WITH_NAME(units::dimensionless::dB_t, Decibel);
 ATTRIBUTE_ACCESSOR_DEFINE(Decibel);
-ATTRIBUTE_CHECKER_DEFINE(Decibel);
+ATTRIBUTE_CHECKER_WITH_CONVERTER_DEFINE(units::dimensionless::dB_t, Decibel, Double);
 
 } // namespace ns3
 
