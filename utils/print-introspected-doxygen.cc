@@ -1544,6 +1544,7 @@ PrintAttributeImplementations(std::ostream& os)
       // All three (Value, Access and Checkers) defined, but custom
       { "Boolean",        "bool",           false, "boolean.h"          },
       { "Callback",       "CallbackBase",   true,  "callback.h"         },
+      { "Decibel",        "units;:dimensionless::dB_t", false, "decibel.h" },
       { "Double",         "double",         false, "double.h"           },
       { "Enum",           "T",              false, "enum.h"             },
       { "Integer",        "int64_t",        false, "integer.h"          },
