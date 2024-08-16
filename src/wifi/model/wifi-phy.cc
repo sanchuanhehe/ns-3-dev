@@ -171,11 +171,12 @@ WifiPhy::GetTypeId()
                           DecibelValue(0.0),
                           MakeDecibelAccessor(&WifiPhy::SetTxGain, &WifiPhy::GetTxGain),
                           MakeDecibelChecker())
-            .AddAttribute("RxGain",
-                          "Reception gain.",
-                          DecibelValue(0.0),
-                          MakeDecibelAccessor(&WifiPhy::SetRxGain, &WifiPhy::GetRxGain),
-                          MakeDecibelChecker())
+            .AddAttribute(
+                "RxGain",
+                "Reception gain.",
+                DecibelValue(0.0),
+                MakeDecibelAccessor(&WifiPhy::SetRxGain, &WifiPhy::GetRxGain),
+                MakeDecibelChecker(units::dimensionless::dB_t(-10), units::dimensionless::dB_t(20)))
             .AddAttribute("TxPowerLevels",
                           "Number of transmission power levels available between "
                           "TxPowerStart and TxPowerEnd included.",
