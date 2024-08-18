@@ -225,15 +225,15 @@ InterferenceExperiment::Run(InterferenceExperiment::Input input)
     Ptr<WifiNetDevice> devA = CreateObject<WifiNetDevice>();
     m_txA = CreateObject<SpectrumWifiPhy>();
     m_txA->SetDevice(devA);
-    m_txA->SetTxPowerStart(input.txPowerLevelA);
-    m_txA->SetTxPowerEnd(input.txPowerLevelA);
+    m_txA->SetTxPowerStart(DBm{input.txPowerLevelA});
+    m_txA->SetTxPowerEnd(units::power::dBm_t(input.txPowerLevelA));
 
     Ptr<Node> nodeB = CreateObject<Node>();
     Ptr<WifiNetDevice> devB = CreateObject<WifiNetDevice>();
     m_txB = CreateObject<SpectrumWifiPhy>();
     m_txB->SetDevice(devB);
-    m_txB->SetTxPowerStart(input.txPowerLevelB);
-    m_txB->SetTxPowerEnd(input.txPowerLevelB);
+    m_txB->SetTxPowerStart(units::power::dBm_t(input.txPowerLevelB));
+    m_txB->SetTxPowerEnd(units::power::dBm_t(input.txPowerLevelB));
 
     Ptr<Node> nodeRx = CreateObject<Node>();
     Ptr<WifiNetDevice> devRx = CreateObject<WifiNetDevice>();

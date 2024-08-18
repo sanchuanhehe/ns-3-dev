@@ -918,8 +918,8 @@ TestMultipleCtsResponsesFromMuRts::DoSetup()
         phySta->AddChannel(spectrumChannel);
         phySta->ConfigureStandard(WIFI_STANDARD_80211ax);
         phySta->AssignStreams(streamNumber);
-        phySta->SetTxPowerStart(m_stasTxPower);
-        phySta->SetTxPowerEnd(m_stasTxPower);
+        phySta->SetTxPowerStart(DBm(m_stasTxPower));
+        phySta->SetTxPowerEnd(DBm(m_stasTxPower));
 
         auto channelNum = WifiPhyOperatingChannel::FindFirst(0,
                                                              MHz_u{0},

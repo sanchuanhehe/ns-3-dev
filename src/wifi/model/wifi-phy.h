@@ -838,25 +838,25 @@ class WifiPhy : public Object
      *
      * @param start the minimum transmission power level
      */
-    void SetTxPowerStart(dBm_u start);
+    void SetTxPowerStart(units::power::dBm_t start);
     /**
      * Return the minimum available transmission power level.
      *
      * @return the minimum available transmission power level
      */
-    dBm_u GetTxPowerStart() const;
+    units::power::dBm_t GetTxPowerStart() const;
     /**
      * Sets the maximum available transmission power level.
      *
      * @param end the maximum transmission power level
      */
-    void SetTxPowerEnd(dBm_u end);
+    void SetTxPowerEnd(units::power::dBm_t end);
     /**
      * Return the maximum available transmission power level.
      *
      * @return the maximum available transmission power level
      */
-    dBm_u GetTxPowerEnd() const;
+    units::power::dBm_t GetTxPowerEnd() const;
     /**
      * Sets the number of transmission power levels available between the
      * minimum level and the maximum level. Transmission power levels are
@@ -1118,7 +1118,7 @@ class WifiPhy : public Object
      *
      * @return the transmission power at the given power level
      */
-    dBm_u GetPower(uint8_t powerLevel) const;
+    units::power::dBm_t GetPower(uint8_t powerLevel) const;
 
     /**
      * Reset PHY to IDLE, with some potential TX power restrictions for the next transmission.
@@ -1626,10 +1626,10 @@ class WifiPhy : public Object
 
     units::dimensionless::dB_t m_txGain; //!< Transmission gain
     units::dimensionless::dB_t m_rxGain; //!< Reception gain
-    dBm_u m_txPowerBase;               //!< Minimum transmission power
-    dBm_u m_txPowerEnd;                //!< Maximum transmission power
-    uint8_t m_nTxPower;                //!< Number of available transmission power levels
-    dBm_per_MHz_u m_powerDensityLimit; //!< the power density limit
+    units::power::dBm_t m_txPowerBase;   //!< Minimum transmission power (dBm)
+    units::power::dBm_t m_txPowerEnd;    //!< Maximum transmission power (dBm)
+    uint8_t m_nTxPower;                  //!< Number of available transmission power levels
+    dBm_per_MHz_u m_powerDensityLimit;   //!< the power density limit
 
     bool m_powerRestricted; //!< Flag whether transmit power is restricted by OBSS PD SR
     dBm_u m_txPowerMaxSiso; //!< SISO maximum transmit power due to OBSS PD SR power restriction
