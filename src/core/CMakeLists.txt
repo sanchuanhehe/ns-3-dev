@@ -196,6 +196,7 @@ set(source_files
     model/matrix-array.cc
     model/demangle.cc
     model/decibel.cc
+    model/power.cc
 )
 
 # Define core lib headers
@@ -298,6 +299,7 @@ set(header_files
     model/uniform-random-bit-generator.h
     model/units.h
     model/decibel.h
+    model/power.h
     model/valgrind.h
     model/vector.h
     model/warnings.h

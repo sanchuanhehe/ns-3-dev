@@ -4913,6 +4913,40 @@ operator>>(std::istream& is, units::dimensionless::dB_t& decibel)
     return is;
 }
 
+/**
+ * \brief Stream extraction operator for units::power::dBm_t
+ * \param [in,out] is The stream
+ * \param [out] decibel the output value
+ * \return The stream
+ */
+inline std::istream&
+operator>>(std::istream& is, units::power::dBm_t& dBm)
+{
+    std::string value;
+    is >> value;
+    bool ok = true;
+    auto pos = value.find('_');
+    if (pos == std::string::npos)
+    {
+        ok = false;
+    }
+    auto unit = value.substr(pos + 1);
+    if (unit != "dBm")
+    {
+        ok = false;
+    }
+    auto number = value.substr(0, pos);
+    if (!ok)
+    {
+        is.setstate(std::ios_base::failbit);
+    }
+    dBm = units::power::dBm_t(std::strtod(number.c_str(), nullptr));
+    return is;
+}
+
+// aliases
+using DBm = units::power::dBm_t;
+
 } // namespace ns3
 
 #endif // units_h__
