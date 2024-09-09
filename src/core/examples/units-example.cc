@@ -286,5 +286,10 @@ main(int argc, char** argv)
     std::cout << "      phy->SetAttribute(\"TxGain\", StringValue(\"1_dB\"));" << std::endl
               << std::endl;
 
+    // Demonstration that std::min() works
+    auto x = DBm(3);
+    auto y = DBm(4);
+    std::cout << "std::min of " << x << " and " << y << " is: " << std::min(x, y) << std::endl;
+
     return 0;
 }
