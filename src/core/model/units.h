@@ -80,6 +80,8 @@ operator>>(std::istream& is, units::power::dBm_t& dBm)
 
 // aliases
 using DBm = units::power::dBm_t;
+using Watt = units::power::watt_t;
+using MilliWatt = units::power::milliwatt_t;
 
 } // namespace ns3
 
