@@ -152,7 +152,7 @@ static const std::array<BatteryPresets, 5> g_batteryPreset{{
  * \brief A generic battery model for  Li-Ion, NiCd, NiMh and Lead acid batteries
  *
  * The generic battery model can be used to describe the discharge behavior of
- * the battery chemestries supported by the model.
+ * the battery chemistries supported by the model.
  */
 class GenericBatteryModel : public EnergySource
 {
