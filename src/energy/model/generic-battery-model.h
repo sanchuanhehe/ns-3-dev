@@ -18,6 +18,8 @@
 #include <ns3/nstime.h>
 #include <ns3/traced-value.h>
 
+#include <array>
+
 namespace ns3
 {
 namespace energy
@@ -77,7 +79,7 @@ struct BatteryPresets
  *
  *  Contains the values that form the battery presents available in this module.
  */
-static BatteryPresets g_batteryPreset[] = {
+static const std::array<BatteryPresets, 5> g_batteryPreset{{
     {
         NIMH_NICD,
         "Panasonic HHR650D | NiMH | 1.2V 6.5Ah | Size: D",
@@ -143,7 +145,7 @@ static BatteryPresets g_batteryPreset[] = {
         0.7,
         0.8,
     },
-};
+}};
 
 /**
  * \ingroup energy
