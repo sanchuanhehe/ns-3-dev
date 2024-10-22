@@ -21,6 +21,7 @@
 
 #include "ns3/attribute-container.h"
 #include "ns3/channel.h"
+#include "ns3/decibel-mw.h"
 #include "ns3/dsss-phy.h"
 #include "ns3/eht-phy.h" //also includes OFDM, HT, VHT and HE
 #include "ns3/erp-ofdm-phy.h"
@@ -29,7 +30,6 @@
 #include "ns3/log.h"
 #include "ns3/mobility-model.h"
 #include "ns3/pointer.h"
-#include "ns3/power.h"
 #include "ns3/random-variable-stream.h"
 #include "ns3/simulator.h"
 #include "ns3/string.h"
@@ -186,14 +186,15 @@ WifiPhy::GetTypeId()
                           MakeUintegerChecker<uint8_t>())
             .AddAttribute("TxPowerEnd",
                           "Maximum available transmission level (dBm).",
-                          PowerValue(units::power::dBm_t(16.0206)),
-                          MakePowerAccessor(&WifiPhy::SetTxPowerEnd, &WifiPhy::GetTxPowerEnd),
-                          MakePowerChecker())
-            .AddAttribute("TxPowerStart",
-                          "Minimum available transmission level (dBm).",
-                          PowerValue(units::power::dBm_t(16.0206)),
-                          MakePowerAccessor(&WifiPhy::SetTxPowerStart, &WifiPhy::GetTxPowerStart),
-                          MakePowerChecker())
+                          DecibelMwValue(units::power::dBm_t(16.0206)),
+                          MakeDecibelMwAccessor(&WifiPhy::SetTxPowerEnd, &WifiPhy::GetTxPowerEnd),
+                          MakeDecibelMwChecker())
+            .AddAttribute(
+                "TxPowerStart",
+                "Minimum available transmission level (dBm).",
+                DecibelMwValue(units::power::dBm_t(16.0206)),
+                MakeDecibelMwAccessor(&WifiPhy::SetTxPowerStart, &WifiPhy::GetTxPowerStart),
+                MakeDecibelMwChecker())
             .AddAttribute(
                 "RxNoiseFigure",
                 "Loss (dB) in the Signal-to-Noise-Ratio due to non-idealities in the receiver."

@@ -196,7 +196,7 @@ set(source_files
     model/matrix-array.cc
     model/demangle.cc
     model/decibel.cc
-    model/power.cc
+    model/decibel-mw.cc
 )
 
 # Define core lib headers
@@ -300,7 +300,7 @@ set(header_files
     model/units-nholthaus.h
     model/units.h
     model/decibel.h
-    model/power.h
+    model/decibel-mw.h
     model/valgrind.h
     model/vector.h
     model/warnings.h
