@@ -156,6 +156,7 @@ main(int argc, char* argv[])
     Ipv4GlobalRoutingHelper::PopulateRoutingTables();
 
     std::cout << "Running the simulation" << std::endl;
+    Simulator::Stop(Seconds(31));
     Simulator::Run();
 
     QueueDisc::Stats st = queueDiscs.Get(0)->GetStats();

@@ -114,6 +114,7 @@ main(int argc, char* argv[])
     p2p.EnableAsciiAll(ascii.CreateFileStream("global-routing-slash32.tr"));
     p2p.EnablePcapAll("global-routing-slash32");
 
+    Simulator::Stop(Seconds(11));
     Simulator::Run();
     Simulator::Destroy();
 

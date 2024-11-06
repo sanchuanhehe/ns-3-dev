@@ -104,6 +104,7 @@ main(int argc, char** argv)
     csma.EnablePcapAll(std::string("fragmentation-ipv6"), true);
 
     NS_LOG_INFO("Run Simulation.");
+    Simulator::Stop(Seconds(31));
     Simulator::Run();
     Simulator::Destroy();
     NS_LOG_INFO("Done.");

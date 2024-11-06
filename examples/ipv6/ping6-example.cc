@@ -93,6 +93,7 @@ main(int argc, char** argv)
     csma.EnablePcapAll(std::string("ping6"), true);
 
     NS_LOG_INFO("Run Simulation.");
+    Simulator::Stop(Seconds(11));
     Simulator::Run();
     Simulator::Destroy();
     NS_LOG_INFO("Done.");

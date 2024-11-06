@@ -371,7 +371,7 @@ main(int argc, char* argv[])
 
     // print the list of buildings to file
     PrintGnuplottableBuildingListToFile("buildings.txt");
-
+    Simulator::Stop(simTime);
     Simulator::Run();
     Simulator::Destroy();
     return 0;

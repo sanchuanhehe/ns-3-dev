@@ -155,6 +155,7 @@ main(int argc, char* argv[])
     // If you uncomment what's below, it results in ASSERT failing since you can't
     // bind to a socket not existing on a node
     // Simulator::Schedule(Seconds(4.0),&BindSock, srcSocket, dDstRtrdDst.Get(0));
+    Simulator::Stop(Seconds(10));
     Simulator::Run();
     Simulator::Destroy();
 

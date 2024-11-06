@@ -90,6 +90,7 @@ def main(argv):
     csma.EnablePcapAll("simple-routing-ping6", True)
 
     # Run Simulation
+    ns.Simulator.Stop(ns.Seconds(21.0))
     ns.Simulator.Run()
     ns.Simulator.Destroy()
 

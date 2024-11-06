@@ -142,6 +142,7 @@ main(int argc, char** argv)
     pointToPoint.EnablePcapAll(std::string("fragmentation-ipv6-PMTU"), true);
 
     NS_LOG_INFO("Run Simulation.");
+    Simulator::Stop(Seconds(21));
     Simulator::Run();
     Simulator::Destroy();
     NS_LOG_INFO("Done.");

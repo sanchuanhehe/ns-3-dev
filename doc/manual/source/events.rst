@@ -121,6 +121,11 @@ will sequentially execute all scheduled events in order from oldest to
 most recent until there are either no more events left in the event
 queue or Simulator::Stop has been called.
 
+It is a good practice to define a simulation stop time with
+``Simulator::Stop``, to prevent the simulation from running indefinitely.
+This can happen due to timer-based events setup for timeout handling in
+different protocols.
+
 To schedule events for execution by the simulator main loop, the
 Simulator class provides the Simulator::Schedule* family of functions.
 

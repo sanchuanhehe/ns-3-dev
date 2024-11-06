@@ -270,7 +270,7 @@ main(int argc, char* argv[])
                                    IpacketSize,
                                    numPackets,
                                    interPacketInterval);
-
+    Simulator::Stop(Seconds(startTime) + (numPackets + 1) * interPacketInterval);
     Simulator::Run();
     Simulator::Destroy();
 

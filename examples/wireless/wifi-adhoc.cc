@@ -191,8 +191,8 @@ Experiment::Run(const WifiHelper& wifi,
     Simulator::Schedule(Seconds(1.5), &Experiment::AdvancePosition, this, c.Get(1));
     Ptr<Socket> recvSink = SetupPacketReceive(c.Get(1));
 
+    Simulator::Stop(Seconds(251));
     Simulator::Run();
-
     Simulator::Destroy();
 
     return m_output;

@@ -144,6 +144,7 @@ main(int argc, char* argv[])
                                    interPacketInterval);
 
     NS_LOG_INFO("Run Simulation.");
+    Simulator::Stop(Seconds(10));
     Simulator::Run();
     Simulator::Destroy();
     NS_LOG_INFO("Done.");

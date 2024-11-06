@@ -160,6 +160,7 @@ main(int argc, char* argv[])
     p2p.EnablePcapAll("simple-error-model");
 
     NS_LOG_INFO("Run Simulation.");
+    Simulator::Stop(Seconds(11));
     Simulator::Run();
     Simulator::Destroy();
     NS_LOG_INFO("Done.");

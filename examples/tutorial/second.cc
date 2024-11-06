@@ -96,6 +96,7 @@ main(int argc, char* argv[])
     pointToPoint.EnablePcapAll("second");
     csma.EnablePcap("second", csmaDevices.Get(1), true);
 
+    Simulator::Stop(Seconds(11));
     Simulator::Run();
     Simulator::Destroy();
     return 0;

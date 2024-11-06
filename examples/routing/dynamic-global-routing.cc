@@ -204,6 +204,7 @@ main(int argc, char* argv[])
     Ipv4RoutingHelper::PrintRoutingTableAllAt(Seconds(12), routingStream);
 
     NS_LOG_INFO("Run Simulation.");
+    Simulator::Stop(Seconds(17));
     Simulator::Run();
     Simulator::Destroy();
     NS_LOG_INFO("Done.");

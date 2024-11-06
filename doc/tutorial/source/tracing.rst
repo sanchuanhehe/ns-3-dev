@@ -1338,8 +1338,10 @@ during the period when the ``main`` function of your script is
 running, but before ``Simulator::Run`` is called.  The second phase
 is sometimes called "Simulation Time" and exists during
 the time period when ``Simulator::Run`` is actively executing its
-events.  After it completes executing the simulation,
-``Simulator::Run`` will return control back to the ``main`` function.
+events. The simulation will then complete either by exhausting the
+event queue or when it hits the stop time set by ``Simulator::Stop``.
+After it completes executing the simulation, ``Simulator::Run`` will
+return control back to the ``main`` function.
 When this happens, the script enters what can be called the "Teardown
 Phase," which is when the structures and objects created during setup
 are taken apart and released.
