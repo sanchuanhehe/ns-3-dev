@@ -7,6 +7,7 @@
 #ifndef WIFI_PHY_RX_TRACE_HELPER_H
 #define WIFI_PHY_RX_TRACE_HELPER_H
 
+#include "ns3/net-device-container.h"
 #include "ns3/nstime.h"
 #include "ns3/object.h"
 #include "ns3/phy-entity.h"
@@ -31,7 +32,6 @@ namespace ns3
 {
 
 class Mac48Address;
-class NetDeviceContainer;
 class Node;
 class NodeContainer;
 struct SpectrumSignalParameters;
