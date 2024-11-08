@@ -34,6 +34,10 @@ class AttributeAccessor;
 class AttributeValue;
 class TraceSourceAccessor;
 
+/// Concept of T being a subclass of Object
+template <class T>
+concept IsObject = std::is_base_of_v<Object, T>;
+
 /**
  * @ingroup core
  * @defgroup object Object

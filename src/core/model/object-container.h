@@ -13,6 +13,7 @@
 #define OBJECT_CONTAINER_H
 
 #include "names.h"
+#include "object.h"
 #include "ptr.h"
 
 #include <string>
@@ -25,7 +26,7 @@ namespace ns3
  * @brief Template class to group a set of object pointers.
  * @tparam T Typename of the container items.
  */
-template <class T>
+template <IsObject T>
 class ObjectContainer
 {
   public:
@@ -229,26 +230,26 @@ class ObjectContainer
     bool Contains(const T& item) const;
 
   protected:
-    std::vector<Ptr<T>> m_objects; //!< Object pointers
+    std::vector<Ptr<T>> m_objects{}; //!< Object pointers
 };
 
 ///////////////////////////////////////////////////////////
 // Implementation of the templates declared above
 ///////////////////////////////////////////////////////////
 
-template <class T>
+template <IsObject T>
 ObjectContainer<T>::ObjectContainer(Ptr<T> ptr)
 {
     Add(ptr);
 }
 
-template <class T>
+template <IsObject T>
 ObjectContainer<T>::ObjectContainer(std::string name)
 {
     Add(name);
 }
 
-template <class T>
+template <IsObject T>
 template <typename... Ts>
 ObjectContainer<T>::ObjectContainer(const ObjectContainer<T>& container, Ts&&... args)
 {
@@ -258,14 +259,14 @@ ObjectContainer<T>::ObjectContainer(const ObjectContainer<T>& container, Ts&&...
     Add(container, std::forward<Ts>(args)...);
 }
 
-template <class T>
+template <IsObject T>
 void
 ObjectContainer<T>::Add(Ptr<T> ptr)
 {
     m_objects.emplace_back(ptr);
 }
 
-template <class T>
+template <IsObject T>
 void
 ObjectContainer<T>::Add(std::string name)
 {
@@ -273,7 +274,7 @@ ObjectContainer<T>::Add(std::string name)
     Add(ptr);
 }
 
-template <class T>
+template <IsObject T>
 void
 ObjectContainer<T>::Add(const ObjectContainer<T>& container)
 {
@@ -283,7 +284,7 @@ ObjectContainer<T>::Add(const ObjectContainer<T>& container)
     }
 }
 
-template <class T>
+template <IsObject T>
 template <typename... Ts>
 void
 ObjectContainer<T>::Add(const ObjectContainer<T>& container, Ts&&... args)
@@ -295,7 +296,7 @@ ObjectContainer<T>::Add(const ObjectContainer<T>& container, Ts&&... args)
     Add(std::forward<Ts>(args)...);
 }
 
-template <class T>
+template <IsObject T>
 void
 ObjectContainer<T>::Create(uint32_t n)
 {
@@ -307,70 +308,70 @@ ObjectContainer<T>::Create(uint32_t n)
     }
 }
 
-template <class T>
+template <IsObject T>
 void
 ObjectContainer<T>::Clear()
 {
     m_objects.clear();
 }
 
-template <class T>
+template <IsObject T>
 typename ObjectContainer<T>::Iterator
 ObjectContainer<T>::Begin() const
 {
     return m_objects.begin();
 }
 
-template <class T>
+template <IsObject T>
 typename ObjectContainer<T>::const_iterator
 ObjectContainer<T>::begin() const
 {
     return Begin();
 }
 
-template <class T>
+template <IsObject T>
 typename ObjectContainer<T>::Iterator
 ObjectContainer<T>::End() const
 {
     return m_objects.end();
 }
 
-template <class T>
+template <IsObject T>
 typename ObjectContainer<T>::const_iterator
 ObjectContainer<T>::end() const
 {
     return End();
 }
 
-template <class T>
+template <IsObject T>
 uint32_t
 ObjectContainer<T>::GetN() const
 {
     return m_objects.size();
 }
 
-template <class T>
+template <IsObject T>
 Ptr<T>
 ObjectContainer<T>::Get(uint32_t i) const
 {
     return m_objects.at(i);
 }
 
-template <class T>
+template <IsObject T>
 Ptr<T>
 ObjectContainer<T>::operator[](uint32_t i) const
 {
     return m_objects[i];
 }
 
-template <class T>
+template <IsObject T>
 const std::vector<Ptr<T>>&
 ObjectContainer<T>::GetAllItems() const
 {
     return m_objects;
 }
 
-template <class T>
+template <IsObject T>
 bool
 ObjectContainer<T>::Contains(const T& item) const
 {
