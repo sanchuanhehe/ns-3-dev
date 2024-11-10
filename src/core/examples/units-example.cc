@@ -28,6 +28,7 @@ using namespace units::literals;
 using namespace units::length;
 using namespace units::power;
 using namespace units::dimensionless;
+using namespace units::frequency;
 
 // Program formatted to produce Markdown text
 int
@@ -240,9 +241,38 @@ main(int argc, char** argv)
     std::cout << "      phy->SetAttribute(\"TxGain\", StringValue(\"1_dB\"));\n\n";
 
     // Demonstration that std::min() works
+    std::cout << "The following demonstrates that std::min() works, for two variables\n";
+    std::cout << "declared as 'x = dBm(3)' and 'y = dBm(4)'\n";
     auto x = DBm(3);
     auto y = DBm(4);
-    std::cout << "std::min of " << x << " and " << y << " is: " << std::min(x, y) << std::endl;
+    std::cout << "std::min of " << x << " and " << y << " is: " << std::min(x, y) << std::endl
+              << std::endl;
+
+    std::cout << "The following sample code demonstrates how dimensionless dB_t can be\n";
+    std::cout << "implicitly converted to a linear scalar value (scalar_t)\n\n";
+    std::cout << "    units::dimensionless::dB_t threeDbGain(3);\n";
+    std::cout << "    units::dimensionless::scalar_t linearGain = gain; \n\n";
+
+    units::dimensionless::dB_t threeDbGain(3);
+    units::dimensionless::scalar_t linearGain = threeDbGain;
+    std::cout << "    Decibel value of " << threeDbGain << " converts to linearGain of "
+              << linearGain << std::endl
+              << std::endl;
+
+    std::cout << "Frequency value (hertz_t) declared as\n\n";
+    std::cout << "    hertz_t freq{5}\n\n";
+
+    hertz_t freq{5};
+
+    std::cout << "Yields a value in Hz printed as: " << freq << "\n\n";
+
+    std::cout << "The WifiPhy attribute RxGain is declared to be a 'DecibelValue()'\n";
+    std::cout << "This can be set in three equivalent ways:\n\n";
+    std::cout << "    Ptr<WifiPhy> phy = ...\n";
+    std::cout
+        << "    phy->SetAttribute(\"RxGain\", DecibelValue(units::dimensionless::dB_t(2)));\n";
+    std::cout << "    phy->SetAttribute(\"RxGain\", DecibelValue(2));\n";
+    std::cout << "    phy->SetAttribute(\"RxGain\", DoubleValue(2));" << std::endl;
 
     return 0;
 }
