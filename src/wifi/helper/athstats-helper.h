@@ -9,6 +9,7 @@
 #ifndef ATHSTATS_HELPER_H
 #define ATHSTATS_HELPER_H
 
+#include "ns3/net-device-container.h"
 #include "ns3/nstime.h"
 #include "ns3/object.h"
 #include "ns3/ptr.h"
@@ -25,7 +26,6 @@ namespace ns3
 
 class NetDevice;
 class NodeContainer;
-class NetDeviceContainer;
 class Packet;
 class Mac48Address;
 class WifiMode;

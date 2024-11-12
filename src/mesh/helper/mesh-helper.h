@@ -12,6 +12,7 @@
 
 #include "mesh-stack-installer.h"
 
+#include "ns3/net-device-container.h"
 #include "ns3/object-factory.h"
 #include "ns3/qos-utils.h"
 #include "ns3/wifi-standards.h"
@@ -19,7 +20,6 @@
 namespace ns3
 {
 
-class NetDeviceContainer;
 class WifiPhyHelper;
 class WifiNetDevice;
 class NodeContainer;

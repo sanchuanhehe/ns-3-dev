@@ -1,7 +1,6 @@
 build_lib(
   LIBNAME traffic-control
   SOURCE_FILES
-    helper/queue-disc-container.cc
     helper/traffic-control-helper.cc
     model/cobalt-queue-disc.cc
     model/codel-queue-disc.cc

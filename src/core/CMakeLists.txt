@@ -257,6 +257,7 @@ set(header_files
     model/node-printer.h
     model/nstime.h
     model/object-base.h
+    model/object-container.h
     model/object-factory.h
     model/object-map.h
     model/object-ptr-container.h

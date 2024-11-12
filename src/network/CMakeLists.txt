@@ -2,7 +2,6 @@ set(source_files
     helper/application-container.cc
     helper/application-helper.cc
     helper/delay-jitter-estimation.cc
-    helper/net-device-container.cc
     helper/node-container.cc
     helper/packet-socket-helper.cc
     helper/simple-net-device-helper.cc

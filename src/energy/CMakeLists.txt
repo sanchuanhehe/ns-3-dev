@@ -12,7 +12,6 @@ build_lib(
     helper/rv-battery-model-helper.cc
     model/basic-energy-harvester.cc
     model/basic-energy-source.cc
-    model/device-energy-model-container.cc
     model/device-energy-model.cc
     model/energy-harvester.cc
     model/energy-source.cc
