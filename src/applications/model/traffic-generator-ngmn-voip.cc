@@ -124,7 +124,7 @@ TrafficGeneratorNgmnVoip::UpdateState()
 {
     NS_LOG_FUNCTION(this);
     // check what is the next state
-    if (m_state == INACTIVE_STATE)
+    if (m_state == VoipState::INACTIVE)
     {
         double randomValue = m_fromInactiveToActive->GetValue();
         // throw a coin and check if lower than the probability of transmission from inactive to
@@ -133,10 +133,10 @@ TrafficGeneratorNgmnVoip::UpdateState()
         if (randomValue < m_c)
         {
             // switch to active state
-            m_state = ACTIVE_STATE;
+            m_state = VoipState::ACTIVE;
         }
     }
-    else if (m_state == ACTIVE_STATE)
+    else if (m_state == VoipState::ACTIVE)
     {
         double randomValue = m_fromActiveToInactive->GetValue();
         // throw a coin and check if lower than the probability of transitions from active to
@@ -144,7 +144,7 @@ TrafficGeneratorNgmnVoip::UpdateState()
         if (randomValue < m_a)
         {
             // switch to inactive state
-            m_state = INACTIVE_STATE;
+            m_state = VoipState::INACTIVE;
         }
     }
     // The model is assumed updated at the speech encoder frame rate R=1/T, where T
@@ -165,7 +165,7 @@ uint32_t
 TrafficGeneratorNgmnVoip::GetNextPacketSize() const
 {
     NS_LOG_FUNCTION(this);
-    if (m_state == ACTIVE_STATE)
+    if (m_state == VoipState::ACTIVE)
     {
         return m_activePayload;
     }
@@ -179,7 +179,7 @@ Time
 TrafficGeneratorNgmnVoip::GetNextPacketTime() const
 {
     NS_LOG_FUNCTION(this);
-    if (m_state == INACTIVE_STATE)
+    if (m_state == VoipState::INACTIVE)
     {
         return MilliSeconds(m_SIDPeriodicity);
     }
@@ -222,4 +222,4 @@ TrafficGeneratorNgmnVoip::AssignStreams(int64_t stream)
     return 2;
 }
 
-} // Namespace ns3
+} // namespace ns3

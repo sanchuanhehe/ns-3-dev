@@ -14,5 +14,6 @@ foreach(
       ${libpoint-to-point}
       ${libinternet}
       ${libnetwork}
+      ${libinternet-apps}
   )
 endforeach()

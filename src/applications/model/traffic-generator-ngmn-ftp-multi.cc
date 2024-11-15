@@ -128,12 +128,10 @@ TrafficGeneratorNgmnFtpMulti::GenerateNextPacketBurstSize()
         {
             break;
         }
-        else
-        {
-            NS_LOG_DEBUG("Generated file size value is higher than the maximum "
-                         "allowed value. Max value: "
-                         << m_maxFileSize << ", generated value:" << fileSize);
-        }
+
+        NS_LOG_DEBUG("Generated file size value is higher than the maximum "
+                     "allowed value. Max value: "
+                     << m_maxFileSize << ", generated value:" << fileSize);
     }
 
     NS_LOG_DEBUG("New file size:" << fileSize);
@@ -153,7 +151,6 @@ TrafficGeneratorNgmnFtpMulti::DoDispose()
     NS_LOG_FUNCTION(this);
     m_readingTime = nullptr;
     m_fileSize = nullptr;
-    // chain up
     TrafficGenerator::DoDispose();
 }
 
@@ -178,4 +175,4 @@ TrafficGeneratorNgmnFtpMulti::AssignStreams(int64_t stream)
     return 2;
 }
 
-} // Namespace ns3
+} // namespace ns3

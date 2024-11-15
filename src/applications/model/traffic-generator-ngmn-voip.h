@@ -52,10 +52,10 @@ class TrafficGeneratorNgmnVoip : public TrafficGenerator
 
     ~TrafficGeneratorNgmnVoip() override;
 
-    enum VoipState
+    enum class VoipState
     {
-        INACTIVE_STATE,
-        ACTIVE_STATE
+        INACTIVE,
+        ACTIVE
     };
 
     /**
@@ -109,14 +109,14 @@ class TrafficGeneratorNgmnVoip : public TrafficGenerator
     Ptr<UniformRandomVariable> m_fromActiveToInactive;
     Ptr<UniformRandomVariable> m_fromInactiveToActive;
 
-    uint32_t m_encoderFrameLength{0};    //!< The encoder frame length in ms
-    uint32_t m_meanTalkSpurtDuration{0}; //!< A mean talk spurt duration in ms
-    double m_voiceActivityFactor{0.0};   //!< The voice activity factor [0,1]
-    uint32_t m_activePayload{0};         //!< Active payload size in bytes
-    uint32_t m_SIDPeriodicity{0};        //!< SID periodicity in milliseconds
-    uint32_t m_SIDPayload{0};            //!<  The SID payload size in the number of bytes
-    VoipState m_state{INACTIVE_STATE};   //!< Voip application state
-    EventId m_updateState;               //! saves the event for the next update of the state
+    uint32_t m_encoderFrameLength{0};       //!< The encoder frame length in ms
+    uint32_t m_meanTalkSpurtDuration{0};    //!< A mean talk spurt duration in ms
+    double m_voiceActivityFactor{0.0};      //!< The voice activity factor [0,1]
+    uint32_t m_activePayload{0};            //!< Active payload size in bytes
+    uint32_t m_SIDPeriodicity{0};           //!< SID periodicity in milliseconds
+    uint32_t m_SIDPayload{0};               //!<  The SID payload size in the number of bytes
+    VoipState m_state{VoipState::INACTIVE}; //!< Voip application state
+    EventId m_updateState;                  //! saves the event for the next update of the state
     double m_a{0.0}; //!< The probability of transitioning from the active to the inactive state
     double m_c{0.0}; //!< The probability of transitioning from the inactive to the active state
 };

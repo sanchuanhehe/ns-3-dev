@@ -251,6 +251,7 @@ TrafficGenerator::SendNextPacket()
         NS_LOG_WARN("Ignore SendNextPacket because the application is stopped.");
         return;
     }
+
     if (!m_socket)
     {
         NS_LOG_DEBUG("Socket closed. Ignoring the call for send next packet.");
@@ -302,18 +303,16 @@ TrafficGenerator::SendNextPacket()
         NS_LOG_DEBUG("Send buffer is full.");
         return;
     }
-    else
-    {
-        m_currentBurstTotBytes += actual;
-        m_totBytes += actual;
-        m_currentBurstTotPackets++;
-        m_totPackets++;
-        NS_LOG_INFO("Sending " << actual
-                               << " bytes. "
-                                  "Total bytes: "
-                               << m_currentBurstTotBytes
-                               << ", and packetBurstSize: " << m_packetBurstSizeInBytes);
-    }
+
+    m_currentBurstTotBytes += actual;
+    m_totBytes += actual;
+    m_currentBurstTotPackets++;
+    m_totPackets++;
+    NS_LOG_INFO("Sending " << actual
+                           << " bytes. "
+                              "Total bytes: "
+                           << m_currentBurstTotBytes
+                           << ", and packetBurstSize: " << m_packetBurstSizeInBytes);
 
     if (m_currentBurstTotBytes < m_packetBurstSizeInBytes ||
         m_currentBurstTotPackets < m_packetBurstSizeInPackets || m_packetBurstSizeInPackets == 1)
@@ -437,4 +436,4 @@ TrafficGenerator::AssignStreams(int64_t stream)
     return 0;
 }
 
-} // Namespace ns3
+} // namespace ns3

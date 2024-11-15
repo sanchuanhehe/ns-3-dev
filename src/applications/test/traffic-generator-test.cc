@@ -210,14 +210,14 @@ TrafficGeneratorNgmnVideoTestCase::DoRun()
     {
         std::string fileNameVideoPacketSize = "video-packet-size.csv";
         outFileVideoPacketSize.open(fileNameVideoPacketSize.c_str(), std::ios_base::out);
-        ;
+
         NS_ABORT_MSG_IF(!outFileVideoPacketSize.is_open(),
                         "Can't open file " << fileNameVideoPacketSize);
         outFileVideoPacketSize.setf(std::ios_base::fixed);
 
         std::string fileNameVideoPacketTime = "video-packet-time.csv";
         outFileVideoPacketTime.open(fileNameVideoPacketTime.c_str(), std::ios_base::out);
-        ;
+
         NS_ABORT_MSG_IF(!outFileVideoPacketTime.is_open(),
                         "Can't open file " << fileNameVideoPacketTime);
         outFileVideoPacketTime.setf(std::ios_base::fixed);
@@ -300,14 +300,14 @@ TrafficGeneratorNgmnGamingTestCase::DoRun()
     {
         std::string fileNameGamingPacketSizeDl = "gaming-packet-size-dl.csv";
         outFileGamingPacketSizeDl.open(fileNameGamingPacketSizeDl.c_str(), std::ios_base::out);
-        ;
+
         NS_ABORT_MSG_IF(!outFileGamingPacketSizeDl.is_open(),
                         "Can't open file " << fileNameGamingPacketSizeDl);
         outFileGamingPacketSizeDl.setf(std::ios_base::fixed);
 
         std::string fileNameGamingPacketTimeDl = "gaming-packet-time-dl.csv";
         outFileGamingPacketTimeDl.open(fileNameGamingPacketTimeDl.c_str(), std::ios_base::out);
-        ;
+
         NS_ABORT_MSG_IF(!outFileGamingPacketTimeDl.is_open(),
                         "Can't open file " << fileNameGamingPacketTimeDl);
         outFileGamingPacketTimeDl.setf(std::ios_base::fixed);
@@ -315,21 +315,21 @@ TrafficGeneratorNgmnGamingTestCase::DoRun()
         std::string fileNameGamingInitPacketTimeDl = "gaming-packet-init-time-dl.csv";
         outFileGamingInitPacketTimeDl.open(fileNameGamingInitPacketTimeDl.c_str(),
                                            std::ios_base::out);
-        ;
+
         NS_ABORT_MSG_IF(!outFileGamingInitPacketTimeDl.is_open(),
                         "Can't open file " << fileNameGamingInitPacketTimeDl);
         outFileGamingInitPacketTimeDl.setf(std::ios_base::fixed);
 
         std::string fileNameGamingPacketSizeUl = "gaming-packet-size-ul.csv";
         outFileGamingPacketSizeUl.open(fileNameGamingPacketSizeUl.c_str(), std::ios_base::out);
-        ;
+
         NS_ABORT_MSG_IF(!outFileGamingPacketSizeUl.is_open(),
                         "Can't open file " << fileNameGamingPacketSizeUl);
         outFileGamingPacketSizeUl.setf(std::ios_base::fixed);
 
         std::string fileNameGamingPacketTimeUl = "gaming-packet-time-ul.csv";
         outFileGamingPacketTimeUl.open(fileNameGamingPacketTimeUl.c_str(), std::ios_base::out);
-        ;
+
         NS_ABORT_MSG_IF(!outFileGamingPacketTimeUl.is_open(),
                         "Can't open file " << fileNameGamingPacketTimeUl);
         outFileGamingPacketTimeUl.setf(std::ios_base::fixed);
@@ -337,7 +337,7 @@ TrafficGeneratorNgmnGamingTestCase::DoRun()
         std::string fileNameGamingInitPacketTimeUl = "gaming-packet-init-time-ul.csv";
         outFileGamingInitPacketTimeUl.open(fileNameGamingInitPacketTimeUl.c_str(),
                                            std::ios_base::out);
-        ;
+
         NS_ABORT_MSG_IF(!outFileGamingInitPacketTimeUl.is_open(),
                         "Can't open file " << fileNameGamingInitPacketTimeUl);
         outFileGamingInitPacketTimeUl.setf(std::ios_base::fixed);
@@ -595,20 +595,20 @@ TrafficGeneratorThreeGppHttpTestCase::DoRun()
 
         std::string fileNameObjectSize = "http-object-size.csv";
         outFileHttpObjectSize.open(fileNameObjectSize.c_str(), std::ios_base::out);
-        ;
+
         NS_ABORT_MSG_IF(!outFileHttpObjectSize.is_open(), "Can't open file " << fileNameObjectSize);
         outFileHttpObjectSize.setf(std::ios_base::fixed);
 
         std::string fileNameEmbObjectSize = "http-embedded-object-size.csv";
         outFileHttpEmbeddedObjectSize.open(fileNameEmbObjectSize.c_str(), std::ios_base::out);
-        ;
+
         NS_ABORT_MSG_IF(!outFileHttpEmbeddedObjectSize.is_open(),
                         "Can't open file " << fileNameEmbObjectSize);
         outFileHttpEmbeddedObjectSize.setf(std::ios_base::fixed);
 
         std::string fileNameNumber = "http-number-objects.csv";
         outFileHttpNumber.open(fileNameNumber.c_str(), std::ios_base::out);
-        ;
+
         NS_ABORT_MSG_IF(!outFileHttpNumber.is_open(), "Can't open file " << fileNameNumber);
         outFileHttpNumber.setf(std::ios_base::fixed);
     }
@@ -701,7 +701,6 @@ TrafficGeneratorTestSuite::TrafficGeneratorTestSuite()
     AddTestCase(new TrafficGeneratorNgmnGamingTestCase(), Duration::QUICK);
     AddTestCase(new TrafficGeneratorNgmnVoipTestCase("ns3::UdpSocketFactory"), Duration::QUICK);
     AddTestCase(new TrafficGeneratorNgmnVoipTestCase("ns3::TcpSocketFactory"), Duration::QUICK);
-    //  AddTestCase(new TrafficGeneratorThreeGppHttpTestCase(), Duration::QUICK);
 }
 
 static TrafficGeneratorTestSuite

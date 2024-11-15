@@ -194,4 +194,4 @@ TrafficGeneratorNgmnVideo::AssignStreams(int64_t stream)
     return 2;
 }
 
-} // Namespace ns3
+} // namespace ns3
