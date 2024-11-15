@@ -7,6 +7,7 @@ build_lib(
     helper/three-gpp-http-helper.cc
     helper/udp-client-server-helper.cc
     helper/udp-echo-helper.cc
+    helper/traffic-generator-helper.cc
     model/application-packet-probe.cc
     model/bulk-send-application.cc
     model/onoff-application.cc
@@ -26,6 +27,11 @@ build_lib(
     model/udp-echo-server.cc
     model/udp-server.cc
     model/udp-trace-client.cc
+    model/traffic-generator-ngmn-ftp-multi.cc
+    model/traffic-generator-ngmn-gaming.cc
+    model/traffic-generator-ngmn-video.cc
+    model/traffic-generator-ngmn-voip.cc
+    model/traffic-generator.cc
   HEADER_FILES
     helper/bulk-send-helper.h
     helper/on-off-helper.h
@@ -33,6 +39,7 @@ build_lib(
     helper/three-gpp-http-helper.h
     helper/udp-client-server-helper.h
     helper/udp-echo-helper.h
+    helper/traffic-generator-helper.h
     model/application-packet-probe.h
     model/bulk-send-application.h
     model/onoff-application.h
@@ -52,9 +59,15 @@ build_lib(
     model/udp-echo-server.h
     model/udp-server.h
     model/udp-trace-client.h
+    model/traffic-generator-ngmn-ftp-multi.h
+    model/traffic-generator-ngmn-gaming.h
+    model/traffic-generator-ngmn-video.h
+    model/traffic-generator-ngmn-voip.h
+    model/traffic-generator.h
   LIBRARIES_TO_LINK ${libinternet}
   TEST_SOURCES
     test/three-gpp-http-client-server-test.cc
     test/bulk-send-application-test-suite.cc
     test/udp-client-server-test.cc
+    test/traffic-generator-test.cc
 )
