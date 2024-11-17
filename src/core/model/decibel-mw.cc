@@ -13,8 +13,8 @@
 #include <cstdlib>
 
 /**
- * \file
- * \ingroup attribute_DecibelMw
+ * @file
+ * @ingroup attribute_DecibelMw
  * ns3::DecibelMwValue attribute value implementation.
  */
 

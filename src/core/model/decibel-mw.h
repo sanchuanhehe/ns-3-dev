@@ -14,8 +14,8 @@
 #include "units.h"
 
 /**
- * \file
- * \ingroup attribute_dBm_t
+ * @file
+ * @ingroup attribute_dBm_t
  * attribute value declaration
  *
  * wraps units::power::dBm_t
