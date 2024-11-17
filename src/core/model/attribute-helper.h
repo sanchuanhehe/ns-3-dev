@@ -272,9 +272,9 @@ MakeSimpleAttributeChecker(std::string name, std::string underlying)
  * and the \c MaketypeChecker function for class \pname{type},
  * with the addition of a Value class converter.
  *
- * \param [in] baseType The underlying type that is being wrapped
- * \param [in] type The name of the class
- * \param [in] converterType The name of the converter (value) class
+ * @param [in] baseType The underlying type that is being wrapped
+ * @param [in] type The name of the class
+ * @param [in] converterType The name of the converter (value) class
  *
  * This macro declares the \pname{typeChecker} class and the associated
  * \c MaketypeChecker function.
@@ -299,7 +299,7 @@ MakeSimpleAttributeChecker(std::string name, std::string underlying)
     Ptr<const AttributeChecker> Make##type##Checker(baseType min, baseType max)
 
 /**
- * \ingroup attributehelper
+ * @ingroup attributehelper
  *
  * Define the class methods belonging to
  * the attribute value class \pname{nameValue}
@@ -410,8 +410,8 @@ MakeSimpleAttributeChecker(std::string name, std::string underlying)
  *
  * Define the \c MaketypeChecker function for class \pname{type}.
  *
- * \param [in] baseType The underlying type.
- * \param [in] type The name of the class.
+ * @param [in] baseType The underlying type.
+ * @param [in] type The name of the class.
  *
  * This macro implements the \c MaketypeChecker function
  * for class \pname{type}.
@@ -487,7 +487,7 @@ MakeSimpleAttributeChecker(std::string name, std::string underlying)
     }
 
 /**
- * \ingroup attributehelper
+ * @ingroup attributehelper
  *
  * Declare the attribute value, accessor and checkers for class \pname{type}
  *
