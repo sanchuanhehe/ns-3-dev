@@ -17,10 +17,10 @@ namespace ns3
 // within Attributes or ns-3 CommandLine
 
 /**
- * \brief Stream extraction operator for units::dimensionless::dB_t
- * \param [in,out] is The stream
- * \param [out] decibel the output value
- * \return The stream
+ * @brief Stream extraction operator for units::dimensionless::dB_t
+ * @param [in,out] is The stream
+ * @param [out] decibel the output value
+ * @return The stream
  */
 inline std::istream&
 operator>>(std::istream& is, units::dimensionless::dB_t& decibel)
@@ -48,10 +48,10 @@ operator>>(std::istream& is, units::dimensionless::dB_t& decibel)
 }
 
 /**
- * \brief Stream extraction operator for units::power::dBm_t
- * \param [in,out] is The stream
- * \param [out] decibel the output value
- * \return The stream
+ * @brief Stream extraction operator for units::power::dBm_t
+ * @param [in,out] is The stream
+ * @param [out] decibel the output value
+ * @return The stream
  */
 inline std::istream&
 operator>>(std::istream& is, units::power::dBm_t& dBm)
