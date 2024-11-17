@@ -20,13 +20,13 @@ using namespace units::power;
 // based on Google C++ Test framework.  Below tests are for ns-3-specific usage.
 
 /**
- * \defgroup units-tests Tests for units
- * \ingroup units
- * \ingroup tests
+ * @defgroup units-tests Tests for units
+ * @ingroup units
+ * @ingroup tests
  */
 
 /**
- * \ingroup units-tests
+ * @ingroup units-tests
  * Test case for frequency units
  */
 class UnitsFrequencyTestCase : public TestCase
@@ -81,7 +81,7 @@ UnitsFrequencyTestCase::DoRun()
 }
 
 /**
- * \ingroup units-tests
+ * @ingroup units-tests
  * Test case for power units
  */
 class UnitsPowerTestCase : public TestCase
@@ -134,7 +134,7 @@ UnitsPowerTestCase::DoRun()
 }
 
 /**
- * \ingroup units-tests
+ * @ingroup units-tests
  * TestSuite for units
  */
 class UnitsTestSuite : public TestSuite
@@ -151,7 +151,7 @@ UnitsTestSuite::UnitsTestSuite()
 }
 
 /**
- * \ingroup units-tests
+ * @ingroup units-tests
  * Static variable for test initialization
  */
 static UnitsTestSuite unitsTestSuite_g;
