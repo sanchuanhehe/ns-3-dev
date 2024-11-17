@@ -12,8 +12,8 @@
 #include "units.h"
 
 /**
- * \file
- * \ingroup attribute_dB_t
+ * @file
+ * @ingroup attribute_dB_t
  * attribute value declaration
  *
  * wraps units::dimensionless::dB_t

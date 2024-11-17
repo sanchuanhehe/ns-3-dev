@@ -11,8 +11,8 @@
 #include <cstdlib>
 
 /**
- * \file
- * \ingroup attribute_Decibel
+ * @file
+ * @ingroup attribute_Decibel
  * ns3::DecibelValue attribute value implementation.
  */
 
