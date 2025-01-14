@@ -45,6 +45,7 @@ The required Doxygen version for documentation generation is version 1.11.
 - (energy) Added new information and reformatted energy module documentation.
 - (wifi) Added a new `MainPhySwitch` trace source to EmlsrManager, which is fired when the main PHY switches channel to operate on another link and provides information about the reason for starting the switch.
 - (build) Scan for contrib modules in `ns-3-external-contrib` directory, at the same level of the ns-3 directory (e.g. `./ns-3-dev/../ns-3-external-contrib/`).
+- (build) New ns-3 script `ns3 --compile-or-die base_commit head_commit` to checkout, compile and test each commit between base_commit and head_commit.
 
 ### Bugs fixed
 
