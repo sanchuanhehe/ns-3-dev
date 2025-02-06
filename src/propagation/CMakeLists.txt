@@ -35,6 +35,7 @@ build_lib(
   LIBRARIES_TO_LINK ${libmobility}
   TEST_SOURCES
     test/channel-condition-model-test-suite.cc
+    test/first-order-deterministic-path-loss-test-suite.cc
     test/itu-r-1411-los-test-suite.cc
     test/itu-r-1411-nlos-over-rooftop-test-suite.cc
     test/kun-2600-mhz-test-suite.cc
