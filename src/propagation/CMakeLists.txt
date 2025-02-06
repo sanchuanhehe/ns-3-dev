@@ -3,6 +3,7 @@ build_lib(
   SOURCE_FILES
     model/channel-condition-model.cc
     model/cost231-propagation-loss-model.cc
+    model/first-order-buildings-aware-propagation-loss-model.cc
     model/itu-r-1411-los-propagation-loss-model.cc
     model/itu-r-1411-nlos-over-rooftop-propagation-loss-model.cc
     model/jakes-process.cc
@@ -17,6 +18,7 @@ build_lib(
   HEADER_FILES
     model/channel-condition-model.h
     model/cost231-propagation-loss-model.h
+    model/first-order-buildings-aware-propagation-loss-model.h
     model/itu-r-1411-los-propagation-loss-model.h
     model/itu-r-1411-nlos-over-rooftop-propagation-loss-model.h
     model/jakes-process.h
