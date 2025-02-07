@@ -7,10 +7,8 @@
  */
 
 #include "first-order-buildings-aware-propagation-loss-model.h"
-
 #include "building-list.h"
 #include "building.h"
-#include "mobility-building-info.h"
 
 #include "ns3/double.h"
 #include "ns3/log.h"
@@ -361,7 +359,7 @@ FirstOrderBuildingsAwarePropagationLossModel::ReflectionLoss(
                     refl_coef = 0.6;
                     break;
                 case Building::ConcreteWithoutWindows:
-                    refl_coef = 0.6;
+                    refl_coef = 0.61;
                     break;
                 case Building::StoneBlocks:
                     refl_coef = 0.9;
@@ -410,7 +408,7 @@ FirstOrderBuildingsAwarePropagationLossModel::Noise(double loss) const
     double y = 0.25 * loss + 5;
     double top = y * 1.1;
     double bot = y * (1 - .1);
-    double borne = abs(top - bot);
+    double borne = std::abs(top - bot);
     uni_rdm->SetAttribute("Min", DoubleValue(-borne));
     uni_rdm->SetAttribute("Max", DoubleValue(+borne));
     return uni_rdm->GetValue();

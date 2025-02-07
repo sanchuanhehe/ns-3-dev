@@ -43,6 +43,7 @@ build_lib(
     test/buildings-penetration-loss-pathloss-test.cc
     test/building-position-allocator-test.cc
     test/buildings-shadowing-test.cc
+    test/first-order-deterministic-path-loss-test-suite.cc
     test/outdoor-random-walk-test.cc
     test/three-gpp-v2v-channel-condition-model-test.cc
 )

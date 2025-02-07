@@ -84,7 +84,7 @@ selfsetWaypoints(Ptr<Node> node, std::deque<Waypoint> waypoints)
     mob.Install(node);
     Ptr<WaypointMobilityModel> wayMobility;
     wayMobility = node->GetObject<WaypointMobilityModel>();
-    for (std::deque<Waypoint>::iterator w = waypoints.begin(); w != waypoints.end(); ++w)
+    for (auto w = waypoints.begin(); w != waypoints.end(); ++w)
     {
         wayMobility->AddWaypoint(*w);
     }
