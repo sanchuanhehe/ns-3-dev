@@ -9,6 +9,7 @@ build_lib(
     model/building.cc
     model/buildings-channel-condition-model.cc
     model/buildings-propagation-loss-model.cc
+    model/first-order-buildings-aware-propagation-loss-model.cc
     model/hybrid-buildings-propagation-loss-model.cc
     model/itu-r-1238-propagation-loss-model.cc
     model/mobility-building-info.cc
@@ -25,6 +26,7 @@ build_lib(
     model/building.h
     model/buildings-channel-condition-model.h
     model/buildings-propagation-loss-model.h
+    model/first-order-buildings-aware-propagation-loss-model.h
     model/hybrid-buildings-propagation-loss-model.h
     model/itu-r-1238-propagation-loss-model.h
     model/mobility-building-info.h
@@ -35,6 +37,7 @@ build_lib(
   LIBRARIES_TO_LINK ${libpropagation}
   TEST_SOURCES
     test/buildings-channel-condition-model-test.cc
+    test/first-order-deterministic-path-loss-test-suite.cc
     test/buildings-helper-test.cc
     test/buildings-pathloss-test.cc
     test/buildings-penetration-loss-pathloss-test.cc

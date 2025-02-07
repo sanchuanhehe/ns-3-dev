@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2024 Office National d'Etude et de Recherche Aérospatiale (ONERA)
+ *
+ * SPDX-License-Identifier: GPL-2.0-only
+ *
+ * Author: Hugo LE DIRACH  <hugo.le_dirach@onera.fr>
+ */
+
 //--- Core (Ptr, Time, Creatobject...) ---
 #include "ns3/core-module.h"
 //--- mobility (helper) ---

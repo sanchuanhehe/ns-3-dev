@@ -9,10 +9,10 @@
 #ifndef FIRST_ORDER_DETERMINISTIC_PATHLOSS_H
 #define FIRST_ORDER_DETERMINISTIC_PATHLOSS_H
 
-#include "propagation-environment.h"
-#include "propagation-loss-model.h"
+#include "nlos-assess.h"
 
-#include "ns3/nlos-assess.h"
+#include "ns3/propagation-environment.h"
+#include "ns3/propagation-loss-model.h"
 
 namespace ns3
 {

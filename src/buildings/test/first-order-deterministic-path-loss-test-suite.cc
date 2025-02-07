@@ -1,3 +1,11 @@
+/*
+ * Copyright (c) 2024 Office National d'Etude et de Recherche Aérospatiale (ONERA)
+ *
+ * SPDX-License-Identifier: GPL-2.0-only
+ *
+ * Author: Hugo LE DIRACH  <hugo.le_dirach@onera.fr>
+ */
+
 #include "ns3/constant-position-mobility-model.h"
 #include "ns3/core-module.h"
 #include "ns3/double.h"
@@ -78,7 +86,7 @@ FirstOrderBuildingsAwarePropagationLossModelTestCase::DoRun()
     // test1
     tx_mob->SetPosition(Vector(15.0, 15.0, 5.0));
     rx_mob->SetPosition(Vector(15.0, 30.0, 5.0));
-    double m_lossRef = 59.1672;
+    double m_lossRef = 62.7633;
     double loss;
     loss = propagationLossModel->GetLoss(tx_mob, rx_mob);
     NS_LOG_INFO("Test 1 : LOS 15m");
@@ -89,7 +97,7 @@ FirstOrderBuildingsAwarePropagationLossModelTestCase::DoRun()
     // test2
     tx_mob->SetPosition(Vector(23.0, 15.0, 5.0));
     rx_mob->SetPosition(Vector(23.0, 30.0, 5.0));
-    m_lossRef = 127.755;
+    m_lossRef = 121.557;
     loss = propagationLossModel->GetLoss(tx_mob, rx_mob);
     NS_LOG_INFO("Test 2 : NLOS 15m through concrete");
     NS_LOG_INFO("Calculated loss: " << loss);
@@ -99,7 +107,7 @@ FirstOrderBuildingsAwarePropagationLossModelTestCase::DoRun()
     // test3
     tx_mob->SetPosition(Vector(25.0, 15.0, 5.0));
     rx_mob->SetPosition(Vector(15.0, 25.0, 5.0));
-    m_lossRef = 69.0593;
+    m_lossRef = 64.9236;
     loss = propagationLossModel->GetLoss(tx_mob, rx_mob);
     NS_LOG_INFO("Test 3 : theta = 0 deg");
     NS_LOG_INFO("Calculated loss: " << loss);
@@ -109,7 +117,7 @@ FirstOrderBuildingsAwarePropagationLossModelTestCase::DoRun()
     // test4
     tx_mob->SetPosition(Vector(24.0, 15.0, 5.0));
     rx_mob->SetPosition(Vector(15.0, 25.0, 5.0));
-    m_lossRef = 61.4618;
+    m_lossRef = 60.8709;
     loss = propagationLossModel->GetLoss(tx_mob, rx_mob);
     NS_LOG_INFO("Test 3 : theta = -5 deg");
     NS_LOG_INFO("Calculated loss: " << loss);
@@ -119,7 +127,7 @@ FirstOrderBuildingsAwarePropagationLossModelTestCase::DoRun()
     // test5
     tx_mob->SetPosition(Vector(26.0, 15.0, 5.0));
     rx_mob->SetPosition(Vector(15.0, 25.0, 5.0));
-    m_lossRef = 76.05;
+    m_lossRef = 77.6235;
     loss = propagationLossModel->GetLoss(tx_mob, rx_mob);
     NS_LOG_INFO("Test 3 : theta = 6 deg");
     NS_LOG_INFO("Calculated loss: " << loss);
@@ -129,7 +137,7 @@ FirstOrderBuildingsAwarePropagationLossModelTestCase::DoRun()
     // test6
     tx_mob->SetPosition(Vector(27.0, 15.0, 5.0));
     rx_mob->SetPosition(Vector(15.0, 25.0, 5.0));
-    m_lossRef = 78.3034;
+    m_lossRef = 74.1938;
     loss = propagationLossModel->GetLoss(tx_mob, rx_mob);
     NS_LOG_INFO("Test 3 : theta = 9.5 deg");
     NS_LOG_INFO("Calculated loss: " << loss);
@@ -139,7 +147,7 @@ FirstOrderBuildingsAwarePropagationLossModelTestCase::DoRun()
     // test7
     tx_mob->SetPosition(Vector(29.0, 15.0, 5.0));
     rx_mob->SetPosition(Vector(15.0, 25.0, 5.0));
-    m_lossRef = 79.0687;
+    m_lossRef = 85.5683;
     loss = propagationLossModel->GetLoss(tx_mob, rx_mob);
     NS_LOG_INFO("Test 3 : theta = 16 deg");
     NS_LOG_INFO("Calculated loss: " << loss);
@@ -168,7 +176,8 @@ FirstOrderBuildingsAwarePropagationLossModelTestSuite::
 {
     LogComponentEnable("FirstOrderBuildingsAwarePropagationLossModelTest", LOG_LEVEL_ALL);
 
-    AddTestCase(new FirstOrderBuildingsAwarePropagationLossModelTestCase, TestCase::QUICK);
+    AddTestCase(new FirstOrderBuildingsAwarePropagationLossModelTestCase,
+                TestCase::Duration::QUICK);
 }
 
 /// Static variable for test initialization

@@ -8,11 +8,12 @@
 
 #include "first-order-buildings-aware-propagation-loss-model.h"
 
-#include "ns3/building-list.h"
-#include "ns3/building.h"
+#include "building-list.h"
+#include "building.h"
+#include "mobility-building-info.h"
+
 #include "ns3/double.h"
 #include "ns3/log.h"
-#include "ns3/mobility-building-info.h"
 #include "ns3/mobility-model.h"
 #include "ns3/node-list.h"
 #include "ns3/pointer.h"
@@ -20,7 +21,7 @@
 #include "ns3/yans-wifi-phy.h"
 
 // Loss models
-#include "itu-r-1411-los-propagation-loss-model.h"
+#include "ns3/itu-r-1411-los-propagation-loss-model.h"
 
 #include <algorithm>
 #include <cmath>
