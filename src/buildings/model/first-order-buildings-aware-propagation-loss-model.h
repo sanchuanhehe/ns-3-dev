@@ -10,6 +10,7 @@
 #define FIRST_ORDER_DETERMINISTIC_PATHLOSS_H
 
 #include "nlos-assess.h"
+
 #include "ns3/propagation-environment.h"
 #include "ns3/propagation-loss-model.h"
 
