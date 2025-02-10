@@ -29,7 +29,7 @@ class ItuR1411LosPropagationLossModel;
  * the strongest diffraction and reflection, then use the least loss amoung LOS, penetration,
  * difraction and reflection to use as loss to apply to the signal.
  *
- *  @warning This model is meant to introduce realistic path loss by considering interaction
+ * @warning This model is meant to introduce realistic path loss by considering interaction
  * of the signal with buildings, however, it has a level of abstraction, it does not reflect
  * the exact behavior that the signal would have in real life.
  *
