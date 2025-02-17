@@ -70,9 +70,9 @@ class NLOSassess : public Object
     /**
      * @brief Gives the corners that may produce diffraction between Rx and Tx
      *
+     * @param CurrBuild Current Building to evaluate
      * @param rx the mobility model of the destination
      * @param tx the mobility model of the source
-     * @param CurrBuild Current Building to evaluate
      * @return the corners of buildings that may produce a diffraction
      */
     std::vector<Vector> GetCorner(Ptr<Building> CurrBuild,
@@ -82,9 +82,9 @@ class NLOSassess : public Object
     /**
      * @brief Gives the corners that may produce reflection between Rx and Tx
      *
+     * @param Building Current Building to evaluate
      * @param rx the mobility model of the destination
      * @param tx the mobility model of the source
-     * @param Building Current Building to evaluate
      * @return the coordinates on the surface that may produce a diffraction
      */
     std::optional<Vector> Getreflectionpoint(Ptr<Building> Building,

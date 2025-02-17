@@ -49,14 +49,14 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
     /**
      * set the propagation frequency
      *
-     * @param freq
+     * @param freq frequency in GHz
      */
     void SetFrequency(double freq);
 
     /**
      * set the emmittsing power
      *
-     * @param freq
+     * @param gain Gain in dB
      */
     void SetGain(double gain);
 
@@ -116,6 +116,7 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      * reflection we are sure it wont be selected.
      *
      * @param NLOSBuildings the buildings between the sight of the two nodes
+     * @param AllBuildings List of all the buildings in the simulation
      * @param rx the mobility model of the destination
      * @param tx the mobility model of the source
      * @returns the diffraction loss (in dB)
@@ -128,7 +129,7 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
     /**
      * @brief Compute the path loss that is diffracted by the building(s) with negative angles
      *
-     * @param NLOSBuildings the buildings between the sight of the two nodes
+     * @param AllBuildings the buildings between the sight of the two nodes
      * @param rx the mobility model of the destination
      * @param tx the mobility model of the source
      * @returns the diffraction loss (in dB)
@@ -160,9 +161,9 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
     /**
      * @brief Calculate the angle between AB and BC on the x-y plan
      *
-     * @param A a 3D point
+     * @param rx a 3D point
      * @param B a 3D point
-     * @param C a 3D point
+     * @param tx a 3D point
      * @returns The angle (in degrees) between AB and BC
      */
     double calculateAngle(Ptr<MobilityModel> rx, Vector B, Ptr<MobilityModel> tx) const;
@@ -178,16 +179,21 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
     /**
      * @brief Get the loss between two node according to ItuR1411
      *
-     * @param angle angle of the shadow between tx, the corner and rx
+     * @param rx the mobility model of the destination
+     * @param tx the mobility model of the source
      * @returns loss (in dB)
      */
     double ItuR1411(Ptr<MobilityModel> rx, Ptr<MobilityModel> tx) const;
 
-    /// ItuR1411LosPropagationLossModel
+    // ItuR1411LosPropagationLossModel
     Ptr<ItuR1411LosPropagationLossModel> m_ituR1411Los;
+    // FOBA toolbox
     Ptr<NLOSassess> m_assess;
+    // Operating frequency
     double m_frequency;
+    // Emiting gain
     double txGain;
+    // RandomVariable object
     Ptr<UniformRandomVariable> uni_rdm;
 };
 

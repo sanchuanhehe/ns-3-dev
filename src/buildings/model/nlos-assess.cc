@@ -296,6 +296,7 @@ NLOSassess::GetCorner(Ptr<Building> CurrBuild, Ptr<MobilityModel> rx, Ptr<Mobili
         Corners.push_back(Corner_pos);
         return Corners;
     }
+    // Two corners scenario
     if ((zone_comb == "CG") || (zone_comb == "GC"))
     {
         Vector Corner_pos_2;
@@ -307,6 +308,7 @@ NLOSassess::GetCorner(Ptr<Building> CurrBuild, Ptr<MobilityModel> rx, Ptr<Mobili
         Corners.push_back(Corner_pos_2);
         return Corners;
     }
+    // Two corners scenario
     if ((zone_comb == "AE") || (zone_comb == "EA"))
     {
         Vector Corner_pos_2;
