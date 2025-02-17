@@ -7,6 +7,7 @@
  */
 
 #include "first-order-buildings-aware-propagation-loss-model.h"
+
 #include "building-list.h"
 #include "building.h"
 
