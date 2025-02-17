@@ -185,16 +185,12 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      */
     double ItuR1411(Ptr<MobilityModel> rx, Ptr<MobilityModel> tx) const;
 
-    // ItuR1411LosPropagationLossModel
-    Ptr<ItuR1411LosPropagationLossModel> m_ituR1411Los;
-    // FOBA toolbox
-    Ptr<NLOSassess> m_assess;
-    // Operating frequency
-    double m_frequency;
-    // Emiting gain
-    double txGain;
-    // RandomVariable object
-    Ptr<UniformRandomVariable> uni_rdm;
+    Ptr<ItuR1411LosPropagationLossModel>
+        m_ituR1411Los;                  ///< ItuR1411LosPropagationLossModel variable holder
+    Ptr<NLOSassess> m_assess;           ///< FOBA toolbox
+    double m_frequency;                 ///< Operating frequency
+    double txGain;                      ///< Emiting gain
+    Ptr<UniformRandomVariable> uni_rdm; ///< RandomVariable object
 };
 
 } // namespace ns3
