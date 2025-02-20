@@ -9,7 +9,7 @@
 #ifndef FIRST_ORDER_DETERMINISTIC_PATHLOSS_H
 #define FIRST_ORDER_DETERMINISTIC_PATHLOSS_H
 
-#include "nlos-assess.h"
+#include "foba-toolbox.h"
 
 #include "ns3/propagation-environment.h"
 #include "ns3/propagation-loss-model.h"

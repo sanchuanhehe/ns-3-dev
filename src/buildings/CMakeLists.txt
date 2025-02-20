@@ -13,7 +13,7 @@ build_lib(
     model/hybrid-buildings-propagation-loss-model.cc
     model/itu-r-1238-propagation-loss-model.cc
     model/mobility-building-info.cc
-    model/nlos-assess.cc
+    model/foba-toolbox.cc
     model/oh-buildings-propagation-loss-model.cc
     model/random-walk-2d-outdoor-mobility-model.cc
     model/three-gpp-v2v-channel-condition-model.cc
@@ -30,7 +30,7 @@ build_lib(
     model/hybrid-buildings-propagation-loss-model.h
     model/itu-r-1238-propagation-loss-model.h
     model/mobility-building-info.h
-    model/nlos-assess.h
+    model/foba-toolbox.h
     model/oh-buildings-propagation-loss-model.h
     model/random-walk-2d-outdoor-mobility-model.h
     model/three-gpp-v2v-channel-condition-model.h

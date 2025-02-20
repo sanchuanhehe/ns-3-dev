@@ -95,8 +95,6 @@ FirstOrderBuildingsAwarePropagationLossModel::GetLoss(Ptr<MobilityModel> rx,
                   "FirstOrderBuildingsAwarePropagationLossModel does not support underground nodes "
                   "(placed at z < 0)");
 
-    // double dist_rx_tx = rx->GetDistanceFrom(tx);
-
     double loss = 0.0;
 
     // Need to check if both node are outside
@@ -104,8 +102,8 @@ FirstOrderBuildingsAwarePropagationLossModel::GetLoss(Ptr<MobilityModel> rx,
 
     // For now singular loss model ITU-R-1411
     loss = ItuR1411(rx, tx);
+    //if (true){return loss;} // TEMP BYPASS for testing
     NS_LOG_DEBUG("Initial loss (before first order path loss) : " << loss);
-    // std::cout << "init loss : " << loss << "\n";
     std::vector<Ptr<Building>> NLOSBuildings;
     std::vector<Ptr<Building>> AllBuildings;
     Vector rxPos = rx->GetPosition();
@@ -121,11 +119,10 @@ FirstOrderBuildingsAwarePropagationLossModel::GetLoss(Ptr<MobilityModel> rx,
         AllBuildings.push_back(CurBu);
     }
 
-    if (!NLOSBuildings.empty())
+    if (!NLOSBuildings.empty() && (loss < 90))
     {
         double direct_path_loss = loss + PenetrationLoss(NLOSBuildings);
         NS_LOG_DEBUG("NLOS first order buildings aware, direct path loss : " << direct_path_loss);
-        // std::cout << "direct_path_loss : " << direct_path_loss << "\n";
         double diffracted_path_loss =
             loss + NLOSDiffractionLoss(NLOSBuildings, AllBuildings, rx, tx);
         NS_LOG_DEBUG(
@@ -133,16 +130,13 @@ FirstOrderBuildingsAwarePropagationLossModel::GetLoss(Ptr<MobilityModel> rx,
         double reflected_path_loss = ReflectionLoss(AllBuildings, rx, tx);
         NS_LOG_DEBUG(
             "NLOS first order buildings aware, reflected path loss : " << reflected_path_loss);
-        // std::cout << "reflected_path_loss : " << reflected_path_loss << "\n";
         loss = std::min(std::min(direct_path_loss, diffracted_path_loss),
                         reflected_path_loss); // #include <algorithm>
         NS_LOG_INFO(this << "0-0 NLOS first order buildings aware loss : " << loss);
         loss += Noise(loss);
         return loss;
     }
-    // std::cout << "LOS : " << loss;
     loss += LOSDiffractionLoss(AllBuildings, rx, tx);
-    // std::cout << "Loss is : " << loss <<  " noise is " << Noise(loss) << "\n";
     NS_LOG_INFO(this << "0-0 LOS first order buildings aware loss : " << loss);
     loss += Noise(loss);
     return loss;
