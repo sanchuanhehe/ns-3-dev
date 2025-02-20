@@ -102,7 +102,6 @@ FirstOrderBuildingsAwarePropagationLossModel::GetLoss(Ptr<MobilityModel> rx,
 
     // For now singular loss model ITU-R-1411
     loss = ItuR1411(rx, tx);
-    //if (true){return loss;} // TEMP BYPASS for testing
     NS_LOG_DEBUG("Initial loss (before first order path loss) : " << loss);
     std::vector<Ptr<Building>> NLOSBuildings;
     std::vector<Ptr<Building>> AllBuildings;
