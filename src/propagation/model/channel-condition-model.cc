@@ -7,6 +7,8 @@
 
 #include "channel-condition-model.h"
 
+#include "hexagonal-wraparound-model.h"
+
 #include "ns3/boolean.h"
 #include "ns3/double.h"
 #include "ns3/geocentric-constant-position-mobility-model.h"
@@ -213,6 +215,22 @@ ChannelConditionModel::ChannelConditionModel()
 
 ChannelConditionModel::~ChannelConditionModel()
 {
+}
+
+std::pair<Vector3D, Vector3D>
+ChannelConditionModel::GetPositions(ns3::Ptr<const ns3::MobilityModel> a,
+                                    ns3::Ptr<const ns3::MobilityModel> b)
+{
+    auto aLoc = a->GetPosition();
+    auto bLoc = b->GetPosition();
+    auto wraparound = a->GetObject<HexagonalWraparoundModel>();
+    if (wraparound)
+    {
+        // when wraparound model is aggregated then
+        // the relative position of b node is calculated respective to a node
+        bLoc = wraparound->GetRelativeVirtualPosition(aLoc, bLoc);
+    }
+    return std::make_pair(aLoc, bLoc);
 }
 
 // ------------------------------------------------------------------------- //
@@ -622,8 +640,9 @@ double
 ThreeGppRmaChannelConditionModel::ComputePlos(Ptr<const MobilityModel> a,
                                               Ptr<const MobilityModel> b) const
 {
+    auto [aPos, bPos] = GetPositions(a, b);
     // compute the 2D distance between a and b
-    double distance2D = Calculate2dDistance(a->GetPosition(), b->GetPosition());
+    double distance2D = Calculate2dDistance(aPos, bPos);
 
     // NOTE: no indication is given about the heights of the BS and the UT used
     // to derive the LOS probability
@@ -669,11 +688,12 @@ double
 ThreeGppUmaChannelConditionModel::ComputePlos(Ptr<const MobilityModel> a,
                                               Ptr<const MobilityModel> b) const
 {
+    auto [aPos, bPos] = GetPositions(a, b);
     // compute the 2D distance between a and b
-    double distance2D = Calculate2dDistance(a->GetPosition(), b->GetPosition());
+    double distance2D = Calculate2dDistance(aPos, bPos);
 
     // retrieve h_UT, it should be smaller than 23 m
-    double h_UT = std::min(a->GetPosition().z, b->GetPosition().z);
+    double h_UT = std::min(aPos.z, bPos.z);
     if (h_UT > 23.0)
     {
         NS_LOG_WARN(
@@ -741,15 +761,16 @@ double
 ThreeGppUmiStreetCanyonChannelConditionModel::ComputePlos(Ptr<const MobilityModel> a,
                                                           Ptr<const MobilityModel> b) const
 {
+    auto [aPos, bPos] = GetPositions(a, b);
     // compute the 2D distance between a and b
-    double distance2D = Calculate2dDistance(a->GetPosition(), b->GetPosition());
+    double distance2D = Calculate2dDistance(aPos, bPos);
 
     // NOTE: no indication is given about the UT height used to derive the
     // LOS probability
 
     // h_BS should be equal to 10 m. We check if at least one of the two
     // nodes has height equal to 10 m
-    if (a->GetPosition().z != 10.0 && b->GetPosition().z != 10.0)
+    if (aPos.z != 10.0 && bPos.z != 10.0)
     {
         NS_LOG_WARN("The LOS probability was derived assuming BS antenna heights of 10 m (see TR "
                     "38.901, Table 7.4.2-1)");

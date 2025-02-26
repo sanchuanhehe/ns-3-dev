@@ -14,6 +14,7 @@ build_lib(
     model/propagation-loss-model.cc
     model/three-gpp-propagation-loss-model.cc
     model/three-gpp-v2v-propagation-loss-model.cc
+    model/hexagonal-wraparound-model.cc
   HEADER_FILES
     model/channel-condition-model.h
     model/cost231-propagation-loss-model.h
@@ -30,6 +31,7 @@ build_lib(
     model/propagation-loss-model.h
     model/three-gpp-propagation-loss-model.h
     model/three-gpp-v2v-propagation-loss-model.h
+    model/hexagonal-wraparound-model.h
   LIBRARIES_TO_LINK ${libmobility}
   TEST_SOURCES
     test/channel-condition-model-test-suite.cc
@@ -41,4 +43,5 @@ build_lib(
     test/propagation-loss-model-test-suite.cc
     test/three-gpp-propagation-loss-model-test-suite.cc
     test/three-gpp-ntn-propagation-loss-model-test-suite.cc
+    test/wraparound-model-test.cc
 )

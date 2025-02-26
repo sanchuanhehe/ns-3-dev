@@ -133,8 +133,7 @@ std::tuple<double, double, double, double>
 GetBsUtDistancesAndHeights(ns3::Ptr<const ns3::MobilityModel> a,
                            ns3::Ptr<const ns3::MobilityModel> b)
 {
-    auto aPos = a->GetPosition();
-    auto bPos = b->GetPosition();
+    auto [aPos, bPos] = ns3::ChannelConditionModel::GetPositions(a, b);
     double distance2D = ns3::ThreeGppChannelConditionModel::Calculate2dDistance(aPos, bPos);
     double distance3D = ns3::CalculateDistance(aPos, bPos);
     double hBs = std::max(aPos.z, bPos.z);
@@ -681,11 +680,7 @@ ThreeGppPropagationLossModel::DoAssignStreams(int64_t stream)
 double
 ThreeGppPropagationLossModel::Calculate2dDistance(Vector a, Vector b)
 {
-    double x = a.x - b.x;
-    double y = a.y - b.y;
-    double distance2D = sqrt(x * x + y * y);
-
-    return distance2D;
+    return ThreeGppChannelConditionModel::Calculate2dDistance(a, b);
 }
 
 uint32_t
@@ -708,13 +703,15 @@ ThreeGppPropagationLossModel::GetVectorDifference(Ptr<MobilityModel> a, Ptr<Mobi
     uint32_t x1 = a->GetObject<Node>()->GetId();
     uint32_t x2 = b->GetObject<Node>()->GetId();
 
+    auto [aLoc, bLoc] = ChannelConditionModel::GetPositions(a, b);
+
     if (x1 < x2)
     {
-        return b->GetPosition() - a->GetPosition();
+        return bLoc - aLoc;
     }
     else
     {
-        return a->GetPosition() - b->GetPosition();
+        return aLoc - bLoc;
     }
 }
 
@@ -896,13 +893,15 @@ ThreeGppRmaPropagationLossModel::GetShadowingStd(Ptr<MobilityModel> a,
     NS_LOG_FUNCTION(this);
     double shadowingStd;
 
+    auto [aLoc, bLoc] = ChannelConditionModel::GetPositions(a, b);
+
     if (cond == ChannelCondition::LosConditionValue::LOS)
     {
         // compute the 2D distance between the two nodes
-        double distance2d = Calculate2dDistance(a->GetPosition(), b->GetPosition());
+        double distance2d = Calculate2dDistance(aLoc, bLoc);
 
         // compute the breakpoint distance (see 3GPP TR 38.901, Table 7.4.1-1, note 5)
-        double distanceBp = GetBpDistance(m_frequency, a->GetPosition().z, b->GetPosition().z);
+        double distanceBp = GetBpDistance(m_frequency, aLoc.z, bLoc.z);
 
         if (distance2d <= distanceBp)
         {
@@ -1259,9 +1258,10 @@ ThreeGppUmiStreetCanyonPropagationLossModel::GetLossLos(Ptr<MobilityModel> a,
 {
     NS_LOG_FUNCTION(this);
 
-    double distance2D = Calculate2dDistance(a->GetPosition(), b->GetPosition());
-    double distance3D = CalculateDistance(a->GetPosition(), b->GetPosition());
-    auto [hBs, hUt] = GetBsUtHeightsUmiStreetCanyon(a->GetPosition().z, b->GetPosition().z);
+    auto [aPos, bPos] = ChannelConditionModel::GetPositions(a, b);
+    double distance2D = Calculate2dDistance(aPos, bPos);
+    double distance3D = CalculateDistance(aPos, bPos);
+    auto [hBs, hUt] = GetBsUtHeightsUmiStreetCanyon(aPos.z, bPos.z);
 
     // check if hBS and hUT are within the validity range
     if (hUt < 1.5 || hUt >= 10.0)
@@ -1322,9 +1322,10 @@ ThreeGppUmiStreetCanyonPropagationLossModel::GetLossNlos(Ptr<MobilityModel> a,
 {
     NS_LOG_FUNCTION(this);
 
-    double distance2D = Calculate2dDistance(a->GetPosition(), b->GetPosition());
-    double distance3D = CalculateDistance(a->GetPosition(), b->GetPosition());
-    auto [hBs, hUt] = GetBsUtHeightsUmiStreetCanyon(a->GetPosition().z, b->GetPosition().z);
+    auto [aPos, bPos] = ChannelConditionModel::GetPositions(a, b);
+    double distance2D = Calculate2dDistance(aPos, bPos);
+    double distance3D = CalculateDistance(aPos, bPos);
+    auto [hBs, hUt] = GetBsUtHeightsUmiStreetCanyon(aPos.z, bPos.z);
 
     // check if hBS and hUT are within the validity range
     if (hUt < 1.5 || hUt >= 10.0)

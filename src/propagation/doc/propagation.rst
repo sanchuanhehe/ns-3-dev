@@ -884,6 +884,111 @@ The test suite :cpp:class:`ChannelConditionModelsTestSuite` contains a single te
 
 * :cpp:class:`ThreeGppChannelConditionModelTestCase`, which tests all the 3GPP channel condition models. It determines the channel condition between two nodes multiple times, estimates the LOS probability, and compares it with the value given by the formulas in 3GPP TR 38.901 [38901]_, Table 7.4.2-1
 
+Hexagonal wraparound model
+**************************
+
+Wraparound is a method adopted by 3GPP for simulations, evaluations and calibrations in cellular outdoor scenarios,
+which typically follow hexagonal deployments. According the wraparound method, the network is extended with additional copies of the
+original hexagonal deployment, so that all cells (in inner and outer rings) experience symmetric behavior.
+It is typical for cellular evaluations following hexagonal deployments, and so it applies to UMi, UMa, and RMa 3GPP propagation models.
+The purpose of this model is to avoid simulating these outer rings, and in such way this model allows to speed up large-scale simulations.
+
+The ns-3 wraparound model is implemented in `HexagonalWraparoundModel`. `HexagonalWraparoundModel` generates the virtual position of a node in
+respect to the different site centroids of an hexagonal deployment. In this way, nodes in border sites will be wrapped around the hexagonal deployment,
+interfering with nodes from sites on the opposite site of the hexagonal deployment [Panwar2017]_.
+This ensures each site has the same number of neighboring sites, generating more consistent result more efficiently,
+instead of requiring the simulation of an additional number of rings and then filtering nodes in the most external rings out [Panwar2017]_.
+In ns-3 `HexagonalWraparoundModel` is supported by 3GPP hexagonal deployments, such as UMa, RMa, and UMi scenarios whose propagation models are
+implemented in `ThreeGppUmaPropagationLossModel`, `ThreeGppRmaPropagationLossModel`, and `ThreeGppUmiStreetCanyonPropagationLossModel`, respectively.
+Also, ns-3::ChannelConditionModel and ns-3::ThreeGppChannelModel support the wraparound model. `HexagonalWraparoundModel` supports
+hexagonal deployments of 0, 1 or 3 rings.
+
+The `HexagonalWraparoundModel` can be configured in simulations as follows:
+
+.. sourcecode:: cpp
+
+    // Ring 1 site coordinates
+    //        site04      site03
+    //
+    //  site05      site01      site02
+    //
+    //        site06      site07
+    std::vector<Vector3D> siteCoordinates = {
+        Vector3D(0, 0, 30),       // Site 01
+        Vector3D(1000, 0, 30),    // Site 02
+        Vector3D(500, 866, 30),   // Site 03
+        Vector3D(-500, 866, 30),  // Site 04
+        Vector3D(-1000, 0, 30),   // Site 05
+        Vector3D(-500, -866, 30), // Site 06
+        Vector3D(500, -866, 30),  // Site 07
+    };
+
+    // Create the HexagonalWraparoundModel, or some other Wraparound model
+    Ptr<HexagonalWraparoundModel> wraparoundModel = CreateObject<HexagonalWraparoundModel>();
+
+    // Configure the wraparound model with the site positions for ring 1
+    wraparoundModel->SetSiteDistance(1000);               // inter-site distance
+    wraparoundModel->SetNumSites(siteCoordinates.size()); // number of sites
+    wraparoundModel->SetSitePositions(siteCoordinates);   // add site coordinates
+
+    // Create position allocator for sites
+    Ptr<ListPositionAllocator> positionAlloc = CreateObject<ListPositionAllocator>();
+    for (auto coord : siteCoordinates)
+    {
+        positionAlloc->Add(coord);
+    }
+
+    // Configure Mobility helper, with mobility model, position allocator and
+    // the wraparound model
+    MobilityHelper mobilityHelper;
+    mobilityHelper.SetMobilityModel("ns3::ConstantPositionMobilityModel");
+    mobilityHelper.SetPositionAllocator(positionAlloc);
+
+    // Create site nodes
+    NodeContainer sites(7);
+
+    // Install mobility to nodes
+    mobilityHelper.Install(sites);
+
+    // Now we can create an user device
+    NodeContainer userDevice(1);
+    mobilityHelper.Install(userDevice);
+    auto userDeviceMobilityModel = userDevice.Get(0)->GetObject<MobilityModel>();
+
+    // Due to wraparound, if we put this user (*) at site02 plus (+800,+800), we should land on
+    // site04
+    //                                      site04      site03
+    //                                      *(1800, 800)
+    //        site04      site03      site05      site01      site02
+    //
+    //  site05      site01      site02
+    //              (0,0)       (1000,0)
+    //        site06      site07
+    const auto site02pos = siteCoordinates.at(1);
+    auto virtualDevicePos = site02pos;
+    virtualDevicePos.x += 800;
+    virtualDevicePos.y += 800;
+    userDeviceMobilityModel->SetPosition(virtualDevicePos);
+    // if it is aggregated in this way it will be correctly detected and used
+    // by 3GPP propagation, spectrum and channel models
+    userDeviceMobilityModel->AggregateObject(wraparoundModel);
+
+    // Check whether we are actually there in site04
+    int site = std::distance(siteCoordinates.begin(),
+                             std::find(siteCoordinates.begin(),
+                                       siteCoordinates.end(),
+                                       wraparoundModel->GetSitePosition(virtualDevicePos)));
+    auto nearestSitePos = wraparoundModel->GetSitePosition(virtualDevicePos);
+    std::cout << "Virtual device position " << virtualDevicePos << " corresponds to site " << site
+              << ", at position (" << nearestSitePos << ")=="
+              << "(" << siteCoordinates.at(site) << ")" << std::endl;
+    NS_ASSERT_MSG(site == 4, "Incorrect wrapped site");
+
+.. [Panwar2017] R. S. Panwar and K. M. Sivalingam. Implementation of wrap around mechanism for system level
+   simulation of LTE cellular networks in NS3," 2017 IEEE 18th International Symposium on A World of Wireless,
+   Mobile and Multimedia Networks (WoWMoM), Macau, 2017, pp. 1-9, doi: 10.1109/WoWMoM.2017.7974289.
+
+
 
 PropagationDelayModel
 *********************

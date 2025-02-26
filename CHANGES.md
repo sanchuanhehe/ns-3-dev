@@ -21,6 +21,7 @@ This file is a best-effort approach to solving this issue; we will do our best b
 * (applications) Added an `OnOffState` trace source to `OnOffApplication`, to track whether the application is transmitting or not.
 * (zigbee) Added Zigbee module support. The module includes a NWK layer with joining and routing capabilities. No APS layer included.
 * (antenna) Add `SymmetricAdjacencyMatrix` utility class, used to track the necessity of channel state between every `PhasedArrayModel` pair.
+* (propagation) Added the `HexagonalWraparoundModel` class with the wraparound model implementation for hexagonal cell deployments with 0, 1 or 3 rings.
 
 ### Changes to existing API
 

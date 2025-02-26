@@ -266,6 +266,18 @@ class ChannelConditionModel : public Object
      * @return the number of stream indices assigned by this model
      */
     virtual int64_t AssignStreams(int64_t stream) = 0;
+
+    /**
+     * @brief Get the positions considering the wraparound model if it is set.
+     *
+     * @param a the mobility model of terminal a
+     * @param b the mobility model of terminal b
+     *
+     * @return The pair of the positions of the terminal a and b considering the wraparound
+     * model if it is set.
+     */
+    static std::pair<Vector3D, Vector3D> GetPositions(ns3::Ptr<const ns3::MobilityModel> a,
+                                                      ns3::Ptr<const ns3::MobilityModel> b);
 };
 
 /**
