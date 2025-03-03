@@ -28,6 +28,9 @@ class ItuR1411LosPropagationLossModel;
  * diffraction effect (thus 'First Order'). Based on dominant path method, we compute only
  * the strongest diffraction and reflection, then use the least loss amoung LOS, penetration,
  * difraction and reflection to use as loss to apply to the signal.
+ * 
+ * This model differs from HybridBuildingsPropagationLoss by the fact that it consider every
+ * buildings in the simulation and takes into account the buildings for outside to outside links.
  *
  * @warning This model is meant to introduce realistic path loss by considering interaction
  * of the signal with buildings, however, it has a level of abstraction, it does not reflect
@@ -187,7 +190,7 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
 
     Ptr<ItuR1411LosPropagationLossModel>
         m_ituR1411Los;                  ///< ItuR1411LosPropagationLossModel variable holder
-    Ptr<NLOSassess> m_assess;           ///< FOBA toolbox
+    Ptr<FobaToolBox> m_assess;           ///< FOBA toolbox
     double m_frequency;                 ///< Operating frequency
     double txGain;                      ///< Emiting gain
     Ptr<UniformRandomVariable> uni_rdm; ///< RandomVariable object

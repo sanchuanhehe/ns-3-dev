@@ -6,8 +6,8 @@
  * Author: Hugo LE DIRACH  <hugo.le_dirach@onera.fr>
  */
 
-#ifndef NLOSASSESS_H
-#define NLOSASSESS_H
+#ifndef FOBA_TOOL_BOX_H
+#define FOBA_TOOL_BOX_H
 
 #include "building.h"
 
@@ -42,7 +42,7 @@ class Building;
  * but if they are in NLOS, their is an abiguity that is lifted by the computation of the line
  * between the nodes and it's intersection with the building.
  */
-class NLOSassess : public Object
+class FobaToolBox : public Object
 {
   public:
     /**
@@ -52,8 +52,8 @@ class NLOSassess : public Object
     static TypeId GetTypeId();
     TypeId GetInstanceTypeId() const override;
 
-    NLOSassess();
-    ~NLOSassess() override;
+    FobaToolBox();
+    ~FobaToolBox() override;
 
     /**
      * @brief Assesses the number of buildings that cause NLOS.
@@ -104,7 +104,7 @@ class NLOSassess : public Object
      * @param b building that will be used to categorize the point.
      * @return the zone in which the point belong relatively to the building.
      */
-    char zone(Ptr<MobilityModel> mob, Ptr<Building> b);
+    char GetZone(Ptr<MobilityModel> mob, Ptr<Building> b);
 
     /**
      * @brief Assesses if the building causes NLOS.
@@ -115,7 +115,7 @@ class NLOSassess : public Object
      * @return true if the building causes a NLOS, false if there is LOS
      * between eva and ave.
      */
-    bool NLOSplan(Ptr<MobilityModel> eva, Ptr<MobilityModel> ave, Ptr<Building> b);
+    bool PlanEval(Ptr<MobilityModel> eva, Ptr<MobilityModel> ave, Ptr<Building> b);
 };
 
 } // namespace ns3

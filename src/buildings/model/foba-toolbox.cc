@@ -24,33 +24,33 @@
 namespace ns3
 {
 
-NS_LOG_COMPONENT_DEFINE("NLOSassess");
+NS_LOG_COMPONENT_DEFINE("FobaToolBox");
 
 TypeId
-NLOSassess::GetTypeId()
+FobaToolBox::GetTypeId()
 {
-    static TypeId tid = TypeId("ns3::NLOSassess").SetParent<Object>().SetGroupName("Buildings")
-        //.AddConstructor<NLOSassess> ()
+    static TypeId tid = TypeId("ns3::FobaToolBox").SetParent<Object>().SetGroupName("Buildings")
+        //.AddConstructor<FobaToolBox> ()
         ;
     return tid;
 }
 
 TypeId
-NLOSassess::GetInstanceTypeId() const
+FobaToolBox::GetInstanceTypeId() const
 {
-    return NLOSassess::GetTypeId();
+    return FobaToolBox::GetTypeId();
 }
 
-NLOSassess::NLOSassess()
+FobaToolBox::FobaToolBox()
 {
 }
 
-NLOSassess::~NLOSassess()
+FobaToolBox::~FobaToolBox()
 {
 }
 
 char
-NLOSassess::zone(Ptr<MobilityModel> mob, Ptr<Building> b)
+FobaToolBox::GetZone(Ptr<MobilityModel> mob, Ptr<Building> b)
 {
     NS_LOG_FUNCTION(this);
 
@@ -107,7 +107,7 @@ NLOSassess::zone(Ptr<MobilityModel> mob, Ptr<Building> b)
 return True for NLOS
 */
 bool
-NLOSassess::NLOSplan(Ptr<MobilityModel> eva, Ptr<MobilityModel> ave, Ptr<Building> b)
+FobaToolBox::PlanEval(Ptr<MobilityModel> eva, Ptr<MobilityModel> ave, Ptr<Building> b)
 {
     NS_LOG_FUNCTION(this);
 
@@ -165,7 +165,7 @@ NLOSassess::NLOSplan(Ptr<MobilityModel> eva, Ptr<MobilityModel> ave, Ptr<Buildin
 }
 
 std::vector<Ptr<Building>>
-NLOSassess::GetBuildingsBetween(Ptr<MobilityModel> eva,
+FobaToolBox::GetBuildingsBetween(Ptr<MobilityModel> eva,
                                 Ptr<MobilityModel> ave,
                                 std::vector<Ptr<Building>> buildings)
 {
@@ -213,8 +213,8 @@ NLOSassess::GetBuildingsBetween(Ptr<MobilityModel> eva,
         double building_zMax = building->GetBoundaries().zMax;
         double a_z = eva->GetPosition().z;
         double b_z = ave->GetPosition().z;
-        zone_a = zone(eva, building);
-        zone_b = zone(ave, building);
+        zone_a = GetZone(eva, building);
+        zone_b = GetZone(ave, building);
         zone_comb = std::string(1, zone_a) + zone_b;
         NS_ASSERT_MSG(zone_a != 'Z', "Undefined zone, check if node is note in the walls");
         NS_ASSERT_MSG(zone_b != 'Z', "Undefined zone, check if node is note in the walls");
@@ -237,7 +237,7 @@ NLOSassess::GetBuildingsBetween(Ptr<MobilityModel> eva,
         }
         if (std::find(evaluator.begin(), evaluator.end(), zone_a) != evaluator.end())
         {
-            if (NLOSplan(eva, ave, building))
+            if (PlanEval(eva, ave, building))
             {
                 NLOSbuildings.push_back(building);
             }
@@ -249,7 +249,7 @@ NLOSassess::GetBuildingsBetween(Ptr<MobilityModel> eva,
 }
 
 std::vector<Vector>
-NLOSassess::GetCorner(Ptr<Building> CurrBuild, Ptr<MobilityModel> rx, Ptr<MobilityModel> tx)
+FobaToolBox::GetCorner(Ptr<Building> CurrBuild, Ptr<MobilityModel> rx, Ptr<MobilityModel> tx)
 {
     NS_LOG_FUNCTION(this);
 
@@ -264,8 +264,8 @@ NLOSassess::GetCorner(Ptr<Building> CurrBuild, Ptr<MobilityModel> rx, Ptr<Mobili
 
     Vector Corner_pos;
     std::vector<Vector> Corners;
-    char zone_a = zone(rx, CurrBuild);
-    char zone_b = zone(tx, CurrBuild);
+    char zone_a = GetZone(rx, CurrBuild);
+    char zone_b = GetZone(tx, CurrBuild);
     std::string zone_comb = std::string(1, zone_a) + zone_b;
 
     if (std::find(Top_left.begin(), Top_left.end(), zone_comb) != Top_left.end())
@@ -325,7 +325,7 @@ NLOSassess::GetCorner(Ptr<Building> CurrBuild, Ptr<MobilityModel> rx, Ptr<Mobili
 }
 
 std::optional<Vector>
-NLOSassess::Getreflectionpoint(Ptr<Building> Building, Ptr<MobilityModel> rx, Ptr<MobilityModel> tx)
+FobaToolBox::Getreflectionpoint(Ptr<Building> Building, Ptr<MobilityModel> rx, Ptr<MobilityModel> tx)
 {
     NS_LOG_FUNCTION(this);
 
@@ -338,8 +338,8 @@ NLOSassess::Getreflectionpoint(Ptr<Building> Building, Ptr<MobilityModel> rx, Pt
     // y_max areas
     std::vector<std::string> x_max = {"CD", "DC", "DE", "ED", "EC", "CE", "DD"};
 
-    char zone_a = zone(rx, Building);
-    char zone_b = zone(tx, Building);
+    char zone_a = GetZone(rx, Building);
+    char zone_b = GetZone(tx, Building);
     std::string zone_comb = std::string(1, zone_a) + zone_b;
 
     if (std::find(y_min.begin(), y_min.end(), zone_comb) != y_min.end())

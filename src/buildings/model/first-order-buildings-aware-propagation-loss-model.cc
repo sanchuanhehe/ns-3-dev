@@ -35,7 +35,7 @@ NS_OBJECT_ENSURE_REGISTERED(FirstOrderBuildingsAwarePropagationLossModel);
 FirstOrderBuildingsAwarePropagationLossModel::FirstOrderBuildingsAwarePropagationLossModel()
 {
     m_ituR1411Los = CreateObject<ItuR1411LosPropagationLossModel>();
-    m_assess = CreateObject<NLOSassess>();
+    m_assess = CreateObject<FobaToolBox>();
     m_frequency = 2160e6;
     txGain = 25;
     uni_rdm = CreateObject<UniformRandomVariable>();
