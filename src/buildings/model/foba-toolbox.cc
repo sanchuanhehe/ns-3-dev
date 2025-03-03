@@ -237,7 +237,7 @@ FobaToolBox::GetBuildingsBetween(Ptr<MobilityModel> eva,
         }
         if (std::find(evaluator.begin(), evaluator.end(), zone_a) != evaluator.end())
         {
-            if (PlanEval(eva, ave, building))
+            if (IsBuildingCausingNlos(eva, ave, building))
             {
                 NLOSbuildings.push_back(building);
             }

@@ -123,7 +123,7 @@ FirstOrderBuildingsAwarePropagationLossModel::GetLoss(Ptr<MobilityModel> rx,
         double direct_path_loss = loss + PenetrationLoss(NLOSBuildings);
         NS_LOG_DEBUG("NLOS first order buildings aware, direct path loss : " << direct_path_loss);
         double diffracted_path_loss =
-            loss + NLOSDiffractionLoss(NLOSBuildings, AllBuildings, rx, tx);
+            loss + NlosDiffractionLoss(NLOSBuildings, AllBuildings, rx, tx);
         NS_LOG_DEBUG(
             "NLOS first order buildings aware, diffracted path loss : " << diffracted_path_loss);
         double reflected_path_loss = ReflectionLoss(AllBuildings, rx, tx);
@@ -135,7 +135,7 @@ FirstOrderBuildingsAwarePropagationLossModel::GetLoss(Ptr<MobilityModel> rx,
         loss += Noise(loss);
         return loss;
     }
-    loss += LOSDiffractionLoss(AllBuildings, rx, tx);
+    loss += LosDiffractionLoss(AllBuildings, rx, tx);
     NS_LOG_INFO(this << "0-0 LOS first order buildings aware loss : " << loss);
     loss += Noise(loss);
     return loss;
@@ -156,7 +156,7 @@ FirstOrderBuildingsAwarePropagationLossModel::DoAssignStreams(int64_t stream)
 {
     NS_LOG_FUNCTION(this);
 
-    uni_rdm->SetStream(stream);
+    m_UniRdm->SetStream(stream);
 
     return 1;
 }
@@ -221,10 +221,10 @@ FirstOrderBuildingsAwarePropagationLossModel::NlosDiffractionLoss(
                 m_assess->GetBuildingsBetween(corner_pos, tx, AllBuildings);
             if (NLOScorner.empty())
             {
-                double theta = calculateAngle(tx, CornersPos[0], rx);
+                double theta = CalculateAngle(tx, CornersPos[0], rx);
                 NS_LOG_DEBUG("NLOS diffraction, theta : " << theta << " on corner "
                                                           << CornersPos[0]);
-                return DiffFunct(theta);
+                return DiffractionValueCalc(theta);
             }
         }
         if (size_cor == 2)
@@ -237,13 +237,13 @@ FirstOrderBuildingsAwarePropagationLossModel::NlosDiffractionLoss(
                 m_assess->GetBuildingsBetween(corner_pos_2, tx, AllBuildings);
             if (NLOScorner_1.empty() || NLOScorner_2.empty())
             {
-                double theta_1 = calculateAngle(tx, CornersPos[0], rx);
-                double theta_2 = calculateAngle(tx, CornersPos[1], rx);
+                double theta_1 = CalculateAngle(tx, CornersPos[0], rx);
+                double theta_2 = CalculateAngle(tx, CornersPos[1], rx);
                 NS_LOG_DEBUG("NLOS diffraction, theta_1 : "
                              << theta_1 << " on corner " << CornersPos[0]
                              << " theta_2 : " << theta_2 << " on corner " << CornersPos[1]);
-                double loss_1 = DiffFunct(theta_1);
-                double loss_2 = DiffFunct(theta_2);
+                double loss_1 = DiffractionValueCalc(theta_1);
+                double loss_2 = DiffractionValueCalc(theta_2);
                 return std::min(loss_1, loss_2);
             }
         }
@@ -284,10 +284,10 @@ FirstOrderBuildingsAwarePropagationLossModel::LosDiffractionLoss(
                 m_assess->GetBuildingsBetween(corner_pos, tx, AllBuildings);
             if (NLOScorner.empty())
             {
-                double theta = -calculateAngle(tx, CornersPos[0], rx);
+                double theta = -CalculateAngle(tx, CornersPos[0], rx);
                 NS_LOG_DEBUG("NLOS diffraction, theta : " << theta << " on corner "
                                                           << CornersPos[0]);
-                losses.push_back(DiffFunct(theta));
+                losses.push_back(DiffractionValueCalc(theta));
             }
         }
         if (size_cor > 1)
@@ -335,7 +335,7 @@ FirstOrderBuildingsAwarePropagationLossModel::ReflectionLoss(
     for (size_t i = 0; i < AllBuildings.size(); ++i)
     {
         std::optional<Vector> reflection_point =
-            m_assess->Getreflectionpoint(AllBuildings[i], rx, tx);
+            m_assess->GetReflectionPoint(AllBuildings[i], rx, tx);
         if (reflection_point)
         {
             // Check if NLOS conditions are met
