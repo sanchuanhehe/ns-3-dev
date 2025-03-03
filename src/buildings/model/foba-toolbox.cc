@@ -166,8 +166,8 @@ FobaToolBox::PlanEval(Ptr<MobilityModel> eva, Ptr<MobilityModel> ave, Ptr<Buildi
 
 std::vector<Ptr<Building>>
 FobaToolBox::GetBuildingsBetween(Ptr<MobilityModel> eva,
-                                Ptr<MobilityModel> ave,
-                                std::vector<Ptr<Building>> buildings)
+                                 Ptr<MobilityModel> ave,
+                                 std::vector<Ptr<Building>> buildings)
 {
     NS_LOG_FUNCTION(this);
 
@@ -325,7 +325,9 @@ FobaToolBox::GetCorner(Ptr<Building> CurrBuild, Ptr<MobilityModel> rx, Ptr<Mobil
 }
 
 std::optional<Vector>
-FobaToolBox::Getreflectionpoint(Ptr<Building> Building, Ptr<MobilityModel> rx, Ptr<MobilityModel> tx)
+FobaToolBox::Getreflectionpoint(Ptr<Building> Building,
+                                Ptr<MobilityModel> rx,
+                                Ptr<MobilityModel> tx)
 {
     NS_LOG_FUNCTION(this);
 
