@@ -107,7 +107,7 @@ FobaToolBox::GetZone(Ptr<MobilityModel> mob, Ptr<Building> b)
 return True for NLOS
 */
 bool
-FobaToolBox::PlanEval(Ptr<MobilityModel> eva, Ptr<MobilityModel> ave, Ptr<Building> b)
+FobaToolBox::IsBuildingCausingNlos(Ptr<MobilityModel> eva, Ptr<MobilityModel> ave, Ptr<Building> b)
 {
     NS_LOG_FUNCTION(this);
 
@@ -325,7 +325,7 @@ FobaToolBox::GetCorner(Ptr<Building> CurrBuild, Ptr<MobilityModel> rx, Ptr<Mobil
 }
 
 std::optional<Vector>
-FobaToolBox::Getreflectionpoint(Ptr<Building> Building,
+FobaToolBox::GetReflectionPoint(Ptr<Building> Building,
                                 Ptr<MobilityModel> rx,
                                 Ptr<MobilityModel> tx)
 {

@@ -26,7 +26,7 @@ class ItuR1411LosPropagationLossModel;
  * or not of buildings in the sight of nodes to compute loss. To limit the complexity and
  * computation overhead, we limit the reflection of signal to one and consider only one
  * diffraction effect (thus 'First Order'). Based on dominant path method, we compute only
- * the strongest diffraction and reflection, then use the least loss amoung LOS, penetration,
+ * the strongest diffraction and reflection, then use the least loss among LOS, penetration,
  * difraction and reflection to use as loss to apply to the signal.
  *
  * This model differs from HybridBuildingsPropagationLoss by the fact that it consider every
@@ -57,9 +57,9 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
     void SetFrequency(double freq);
 
     /**
-     * set the emmittsing power
+     * set the emitting power
      *
-     * @param gain Gain in dB
+     * @param gain Gain in dBm
      */
     void SetGain(double gain);
 
@@ -124,7 +124,7 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      * @param tx the mobility model of the source
      * @returns the diffraction loss (in dB)
      */
-    double NLOSDiffractionLoss(const std::vector<Ptr<Building>>& NLOSBuildings,
+    double NlosDiffractionLoss(const std::vector<Ptr<Building>>& NLOSBuildings,
                                const std::vector<Ptr<Building>>& AllBuildings,
                                Ptr<MobilityModel> rx,
                                Ptr<MobilityModel> tx) const;
@@ -137,7 +137,7 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      * @param tx the mobility model of the source
      * @returns the diffraction loss (in dB)
      */
-    double LOSDiffractionLoss(const std::vector<Ptr<Building>>& AllBuildings,
+    double LosDiffractionLoss(const std::vector<Ptr<Building>>& AllBuildings,
                               Ptr<MobilityModel> rx,
                               Ptr<MobilityModel> tx) const;
 
@@ -169,7 +169,7 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      * @param tx a 3D point
      * @returns The angle (in degrees) between AB and BC
      */
-    double calculateAngle(Ptr<MobilityModel> rx, Vector B, Ptr<MobilityModel> tx) const;
+    double CalculateAngle(Ptr<MobilityModel> rx, Vector B, Ptr<MobilityModel> tx) const;
 
     /**
      * @brief Signal attenuation as a function of the shadowing angle
@@ -177,7 +177,7 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      * @param angle angle of the shadow between tx, the corner and rx
      * @returns loss (in dB)
      */
-    double DiffFunct(double angle) const;
+    double DiffractionValueCalc(double angle) const;
 
     /**
      * @brief Get the loss between two node according to ItuR1411
@@ -189,11 +189,11 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
     double ItuR1411(Ptr<MobilityModel> rx, Ptr<MobilityModel> tx) const;
 
     Ptr<ItuR1411LosPropagationLossModel>
-        m_ituR1411Los;                  ///< ItuR1411LosPropagationLossModel variable holder
-    Ptr<FobaToolBox> m_assess;          ///< FOBA toolbox
-    double m_frequency;                 ///< Operating frequency
-    double txGain;                      ///< Emiting gain
-    Ptr<UniformRandomVariable> uni_rdm; ///< RandomVariable object
+        m_ituR1411Los;                   ///< ItuR1411LosPropagationLossModel variable holder
+    Ptr<FobaToolBox> m_assess;           ///< FOBA toolbox
+    double m_frequency;                  ///< Operating frequency
+    double m_txGain;                     ///< Emiting gain
+    Ptr<UniformRandomVariable> m_UniRdm; ///< RandomVariable object
 };
 
 } // namespace ns3

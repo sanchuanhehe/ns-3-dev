@@ -87,7 +87,7 @@ class FobaToolBox : public Object
      * @param tx the mobility model of the source
      * @return the coordinates on the surface that may produce a diffraction
      */
-    std::optional<Vector> Getreflectionpoint(Ptr<Building> Building,
+    std::optional<Vector> GetReflectionPoint(Ptr<Building> Building,
                                              Ptr<MobilityModel> rx,
                                              Ptr<MobilityModel> tx);
 
@@ -115,7 +115,7 @@ class FobaToolBox : public Object
      * @return true if the building causes a NLOS, false if there is LOS
      * between eva and ave.
      */
-    bool PlanEval(Ptr<MobilityModel> eva, Ptr<MobilityModel> ave, Ptr<Building> b);
+    bool IsBuildingCausingNlos(Ptr<MobilityModel> eva, Ptr<MobilityModel> ave, Ptr<Building> b);
 };
 
 } // namespace ns3

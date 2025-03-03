@@ -37,8 +37,8 @@ FirstOrderBuildingsAwarePropagationLossModel::FirstOrderBuildingsAwarePropagatio
     m_ituR1411Los = CreateObject<ItuR1411LosPropagationLossModel>();
     m_assess = CreateObject<FobaToolBox>();
     m_frequency = 2160e6;
-    txGain = 25;
-    uni_rdm = CreateObject<UniformRandomVariable>();
+    m_txGain = 25;
+    m_UniRdm = CreateObject<UniformRandomVariable>();
 }
 
 FirstOrderBuildingsAwarePropagationLossModel::~FirstOrderBuildingsAwarePropagationLossModel()
@@ -61,7 +61,7 @@ FirstOrderBuildingsAwarePropagationLossModel::GetTypeId()
                 MakeDoubleChecker<double>())
             .AddAttribute(
                 "TxGain",
-                "Emminting Power (default 20 dBm)",
+                "Emitting Power (default 20 dBm)",
                 DoubleValue(20),
                 MakeDoubleAccessor(&FirstOrderBuildingsAwarePropagationLossModel::SetGain),
                 MakeDoubleChecker<double>());
@@ -82,7 +82,7 @@ void
 FirstOrderBuildingsAwarePropagationLossModel::SetGain(double gain)
 {
     NS_LOG_FUNCTION(this);
-    txGain = gain;
+    m_txGain = gain;
 }
 
 double
@@ -188,14 +188,14 @@ FirstOrderBuildingsAwarePropagationLossModel::PenetrationLoss(
         }
         else
         {
-            NS_LOG_ERROR(this << " Unkwnon Wall Type");
+            NS_LOG_ERROR(this << " Unknown Wall Type");
         }
     }
     return loss;
 }
 
 double
-FirstOrderBuildingsAwarePropagationLossModel::NLOSDiffractionLoss(
+FirstOrderBuildingsAwarePropagationLossModel::NlosDiffractionLoss(
     const std::vector<Ptr<Building>>& NLOSBuildings,
     const std::vector<Ptr<Building>>& AllBuildings,
     Ptr<MobilityModel> rx,
@@ -258,7 +258,7 @@ FirstOrderBuildingsAwarePropagationLossModel::NLOSDiffractionLoss(
 }
 
 double
-FirstOrderBuildingsAwarePropagationLossModel::LOSDiffractionLoss(
+FirstOrderBuildingsAwarePropagationLossModel::LosDiffractionLoss(
     const std::vector<Ptr<Building>>& AllBuildings,
     Ptr<MobilityModel> rx,
     Ptr<MobilityModel> tx) const
@@ -368,13 +368,13 @@ FirstOrderBuildingsAwarePropagationLossModel::ReflectionLoss(
                              << " Tx-reflection-point loss : " << ItuR1411(tx, reflectionMobility)
                              << " reflection-point-Rx loss : " << ItuR1411(reflectionMobility, rx));
                 // Calculate the 'first half'
-                double first_half = txGain - ItuR1411(tx, reflectionMobility);
+                double first_half = m_txGain - ItuR1411(tx, reflectionMobility);
                 // Apply attenuation coefficient
                 double rxGain =
                     (first_half > 0)
                         ? (first_half * refl_coef - ItuR1411(reflectionMobility, rx))
                         : (first_half * (1 + (1 - refl_coef)) - ItuR1411(reflectionMobility, rx));
-                double loss = txGain - rxGain;
+                double loss = m_txGain - rxGain;
                 // double loss =
                 //     ItuR1411(tx, reflectionMobility) + ItuR1411(reflectionMobility, rx) +
                 //     refl_coef;
@@ -403,13 +403,13 @@ FirstOrderBuildingsAwarePropagationLossModel::Noise(double loss) const
     double top = y * 1.1;
     double bot = y * (1 - .1);
     double borne = std::abs(top - bot);
-    uni_rdm->SetAttribute("Min", DoubleValue(-borne));
-    uni_rdm->SetAttribute("Max", DoubleValue(+borne));
-    return uni_rdm->GetValue();
+    m_UniRdm->SetAttribute("Min", DoubleValue(-borne));
+    m_UniRdm->SetAttribute("Max", DoubleValue(+borne));
+    return m_UniRdm->GetValue();
 }
 
 double
-FirstOrderBuildingsAwarePropagationLossModel::calculateAngle(Ptr<MobilityModel> rx,
+FirstOrderBuildingsAwarePropagationLossModel::CalculateAngle(Ptr<MobilityModel> rx,
                                                              Vector B,
                                                              Ptr<MobilityModel> tx) const
 { // Test available at Angletest.cc
@@ -439,7 +439,7 @@ FirstOrderBuildingsAwarePropagationLossModel::calculateAngle(Ptr<MobilityModel> 
 }
 
 double
-FirstOrderBuildingsAwarePropagationLossModel::DiffFunct(double angle) const
+FirstOrderBuildingsAwarePropagationLossModel::DiffractionValueCalc(double angle) const
 {
     NS_LOG_FUNCTION(this);
 
