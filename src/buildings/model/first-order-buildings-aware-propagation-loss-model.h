@@ -67,8 +67,8 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      * @brief Compute the path loss according to the nodes position
      * and the presence or not of buildings in between.
      *
-     * @param rx the mobility model of the destination
-     * @param tx the mobility model of the source
+     * @param rxMob the mobility model of the destination
+     * @param txMob the mobility model of the source
      * @returns the propagation loss (in dB)
      */
     double GetLoss(Ptr<MobilityModel> rxMob, Ptr<MobilityModel> txMob) const;
@@ -79,8 +79,8 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      * 3GPP TR 38.901
      *
      * @param txPowerDbm tx power in dBm
-     * @param a tx mobility model
-     * @param b rx mobility model
+     * @param rxMob tx mobility model
+     * @param txMob rx mobility model
      * @return the rx power in dBm
      */
     double DoCalcRxPower(double txPowerDbm,
@@ -101,7 +101,7 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
     /**
      * @brief Compute the path loss with additionnal loss for all walls traversed.
      *
-     * @param NLOSBuildings the buildings between the sight of the two nodes
+     * @param nlosBuildings the buildings between the sight of the two nodes
      * @returns the penetration loss (in dB)
      */
     double PenetrationLoss(const std::vector<Ptr<Building>>& nlosBuildings) const;
@@ -118,10 +118,10 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      * do so, we return a +infinity loss value so that when it is compare to penetration and
      * reflection we are sure it wont be selected.
      *
-     * @param NLOSBuildings the buildings between the sight of the two nodes
-     * @param AllBuildings List of all the buildings in the simulation
-     * @param rx the mobility model of the destination
-     * @param tx the mobility model of the source
+     * @param nlosBuildings the buildings between the sight of the two nodes
+     * @param allBuildings List of all the buildings in the simulation
+     * @param rxMob the mobility model of the destination
+     * @param txMob the mobility model of the source
      * @returns the diffraction loss (in dB)
      */
     double NlosDiffractionLoss(const std::vector<Ptr<Building>>& nlosBuildings,
@@ -132,9 +132,9 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
     /**
      * @brief Compute the path loss that is diffracted by the building(s) with negative angles
      *
-     * @param AllBuildings the buildings between the sight of the two nodes
-     * @param rx the mobility model of the destination
-     * @param tx the mobility model of the source
+     * @param allBuildings the buildings between the sight of the two nodes
+     * @param rxMob the mobility model of the destination
+     * @param txMob the mobility model of the source
      * @returns the diffraction loss (in dB)
      */
     double LosDiffractionLoss(const std::vector<Ptr<Building>>& allBuildings,
@@ -144,9 +144,9 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
     /**
      * @brief Compute the path loss that is reflected on the building(s)
      *
-     * @param AllBuildings All the buildings in the simulation
-     * @param rx the mobility model of the destination
-     * @param tx the mobility model of the source
+     * @param allBuildings All the buildings in the simulation
+     * @param rxMob the mobility model of the destination
+     * @param txMob the mobility model of the source
      * @returns the reflection loss (in dB)
      */
     double ReflectionLoss(const std::vector<Ptr<Building>>& allBuildings,
@@ -164,9 +164,9 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
     /**
      * @brief Calculate the angle between AB and BC on the x-y plan
      *
-     * @param rx a 3D point
-     * @param B a 3D point
-     * @param tx a 3D point
+     * @param rxMob a 3D point
+     * @param vectorB a 3D point
+     * @param txMob a 3D point
      * @returns The angle (in degrees) between AB and BC
      */
     double CalculateAngle(Ptr<MobilityModel> rxMob, Vector vectorB, Ptr<MobilityModel> txMob) const;
@@ -182,8 +182,8 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
     /**
      * @brief Get the loss between two node according to ItuR1411
      *
-     * @param rx the mobility model of the destination
-     * @param tx the mobility model of the source
+     * @param rxMob the mobility model of the destination
+     * @param txMob the mobility model of the source
      * @returns loss (in dB)
      */
     double ItuR1411(Ptr<MobilityModel> rxMob, Ptr<MobilityModel> txMob) const;
