@@ -63,8 +63,8 @@ class FobaToolBox : public Object
      * @param buildings contains the buildings to evaluate.
      * @return the buildings that intersect the line between the two points.
      */
-    std::vector<Ptr<Building>> GetBuildingsBetween(Ptr<MobilityModel> eva,
-                                                   Ptr<MobilityModel> ave,
+    std::vector<Ptr<Building>> GetBuildingsBetween(Ptr<MobilityModel> firstMob,
+                                                   Ptr<MobilityModel> secondMob,
                                                    std::vector<Ptr<Building>> buildings);
 
     /**
@@ -75,9 +75,9 @@ class FobaToolBox : public Object
      * @param tx the mobility model of the source
      * @return the corners of buildings that may produce a diffraction
      */
-    std::vector<Vector> GetCorner(Ptr<Building> CurrBuild,
-                                  Ptr<MobilityModel> rx,
-                                  Ptr<MobilityModel> tx);
+    std::vector<Vector> GetCorner(Ptr<Building> currBuild,
+                                  Ptr<MobilityModel> rxMob,
+                                  Ptr<MobilityModel> txMob);
 
     /**
      * @brief Gives the corners that may produce reflection between Rx and Tx
@@ -87,9 +87,9 @@ class FobaToolBox : public Object
      * @param tx the mobility model of the source
      * @return the coordinates on the surface that may produce a diffraction
      */
-    std::optional<Vector> GetReflectionPoint(Ptr<Building> Building,
-                                             Ptr<MobilityModel> rx,
-                                             Ptr<MobilityModel> tx);
+    std::optional<Vector> GetReflectionPoint(Ptr<Building> building,
+                                             Ptr<MobilityModel> rxMob,
+                                             Ptr<MobilityModel> txMob);
 
   private:
     /** @brief The point is allocated to one of the zone detailed in the figure bellow.
@@ -100,11 +100,11 @@ class FobaToolBox : public Object
      *     -------+--------+-------
      *        G   |   F    |   E
      *
-     * @param mob point to locate relatively to the building.
-     * @param b building that will be used to categorize the point.
+     * @param currMob point to locate relatively to the building.
+     * @param currBuilding building that will be used to categorize the point.
      * @return the zone in which the point belong relatively to the building.
      */
-    char GetZone(Ptr<MobilityModel> mob, Ptr<Building> b);
+    char GetZone(Ptr<MobilityModel> currMob, Ptr<Building> currBuilding);
 
     /**
      * @brief Assesses if the building causes NLOS.
@@ -115,7 +115,9 @@ class FobaToolBox : public Object
      * @return true if the building causes a NLOS, false if there is LOS
      * between eva and ave.
      */
-    bool IsBuildingCausingNlos(Ptr<MobilityModel> eva, Ptr<MobilityModel> ave, Ptr<Building> b);
+    bool IsBuildingCausingNlos(Ptr<MobilityModel> firstMob,
+                               Ptr<MobilityModel> secondMob,
+                               Ptr<Building> currBuilding);
 };
 
 } // namespace ns3

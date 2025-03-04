@@ -71,7 +71,7 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      * @param tx the mobility model of the source
      * @returns the propagation loss (in dB)
      */
-    double GetLoss(Ptr<MobilityModel> rx, Ptr<MobilityModel> tx) const;
+    double GetLoss(Ptr<MobilityModel> rxMob, Ptr<MobilityModel> txMob) const;
 
   private:
     /**
@@ -84,8 +84,8 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      * @return the rx power in dBm
      */
     double DoCalcRxPower(double txPowerDbm,
-                         Ptr<MobilityModel> a,
-                         Ptr<MobilityModel> b) const override;
+                         Ptr<MobilityModel> rxMob,
+                         Ptr<MobilityModel> txMob) const override;
 
     /**
      * Assign a fixed random variable stream number to the random variables used by this model.
@@ -104,7 +104,7 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      * @param NLOSBuildings the buildings between the sight of the two nodes
      * @returns the penetration loss (in dB)
      */
-    double PenetrationLoss(const std::vector<Ptr<Building>>& NLOSBuildings) const;
+    double PenetrationLoss(const std::vector<Ptr<Building>>& nlosBuildings) const;
 
     /**
      * @brief Compute the path loss that is diffracted by a building with positive angles.
@@ -124,10 +124,10 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      * @param tx the mobility model of the source
      * @returns the diffraction loss (in dB)
      */
-    double NlosDiffractionLoss(const std::vector<Ptr<Building>>& NLOSBuildings,
-                               const std::vector<Ptr<Building>>& AllBuildings,
-                               Ptr<MobilityModel> rx,
-                               Ptr<MobilityModel> tx) const;
+    double NlosDiffractionLoss(const std::vector<Ptr<Building>>& nlosBuildings,
+                               const std::vector<Ptr<Building>>& allBuildings,
+                               Ptr<MobilityModel> rxMob,
+                               Ptr<MobilityModel> txMob) const;
 
     /**
      * @brief Compute the path loss that is diffracted by the building(s) with negative angles
@@ -137,9 +137,9 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      * @param tx the mobility model of the source
      * @returns the diffraction loss (in dB)
      */
-    double LosDiffractionLoss(const std::vector<Ptr<Building>>& AllBuildings,
-                              Ptr<MobilityModel> rx,
-                              Ptr<MobilityModel> tx) const;
+    double LosDiffractionLoss(const std::vector<Ptr<Building>>& allBuildings,
+                              Ptr<MobilityModel> rxMob,
+                              Ptr<MobilityModel> txMob) const;
 
     /**
      * @brief Compute the path loss that is reflected on the building(s)
@@ -149,9 +149,9 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      * @param tx the mobility model of the source
      * @returns the reflection loss (in dB)
      */
-    double ReflectionLoss(const std::vector<Ptr<Building>>& AllBuildings,
-                          Ptr<MobilityModel> rx,
-                          Ptr<MobilityModel> tx) const;
+    double ReflectionLoss(const std::vector<Ptr<Building>>& allBuildings,
+                          Ptr<MobilityModel> rxMob,
+                          Ptr<MobilityModel> txMob) const;
 
     /**
      * @brief Adds noise to the loss, proportionnaly to it's strength
@@ -169,7 +169,7 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      * @param tx a 3D point
      * @returns The angle (in degrees) between AB and BC
      */
-    double CalculateAngle(Ptr<MobilityModel> rx, Vector B, Ptr<MobilityModel> tx) const;
+    double CalculateAngle(Ptr<MobilityModel> rxMob, Vector vectorB, Ptr<MobilityModel> txMob) const;
 
     /**
      * @brief Signal attenuation as a function of the shadowing angle
@@ -186,7 +186,7 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
      * @param tx the mobility model of the source
      * @returns loss (in dB)
      */
-    double ItuR1411(Ptr<MobilityModel> rx, Ptr<MobilityModel> tx) const;
+    double ItuR1411(Ptr<MobilityModel> rxMob, Ptr<MobilityModel> txMob) const;
 
     Ptr<ItuR1411LosPropagationLossModel>
         m_ituR1411Los;                   ///< ItuR1411LosPropagationLossModel variable holder

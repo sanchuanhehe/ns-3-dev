@@ -50,40 +50,41 @@ FobaToolBox::~FobaToolBox()
 }
 
 char
-FobaToolBox::GetZone(Ptr<MobilityModel> mob, Ptr<Building> b)
+FobaToolBox::GetZone(Ptr<MobilityModel> currMob, Ptr<Building> currBuilding)
 {
     NS_LOG_FUNCTION(this);
 
-    double x = mob->GetPosition().x;
-    double y = mob->GetPosition().y;
+    double currX = currMob->GetPosition().x;
+    double currY = currMob->GetPosition().y;
 
-    if (((x < b->GetBoundaries().xMax) &&
-         (x > b->GetBoundaries()
-                  .xMin)) && // since the comparaison is stric, mob on bound is consider outside
-        ((y < b->GetBoundaries().yMax) && (y > b->GetBoundaries().yMin)))
+    if (((currX < currBuilding->GetBoundaries().xMax) &&
+         (currX > currBuilding->GetBoundaries().xMin)) &&
+        ((currY < currBuilding->GetBoundaries().yMax) &&
+         (currY > currBuilding->GetBoundaries().yMin)))
     {
-        return 'Z'; // Node in walls
+        return 'Z'; // Node in walls, since the comparaison is stric, mob on bound is consider
+                    // outside
     }
 
-    if (x <= b->GetBoundaries().xMin)
+    if (currX <= currBuilding->GetBoundaries().xMin)
     {
-        if (y >= b->GetBoundaries().yMax)
+        if (currY >= currBuilding->GetBoundaries().yMax)
         {
             return 'A';
         }
-        if (y <= b->GetBoundaries().yMin)
+        if (currY <= currBuilding->GetBoundaries().yMin)
         {
             return 'G';
         }
         return 'H';
     }
-    if (x >= b->GetBoundaries().xMax)
+    if (currX >= currBuilding->GetBoundaries().xMax)
     {
-        if (y >= b->GetBoundaries().yMax)
+        if (currY >= currBuilding->GetBoundaries().yMax)
         {
             return 'C';
         }
-        if (y <= b->GetBoundaries().yMin)
+        if (currY <= currBuilding->GetBoundaries().yMin)
         {
             return 'E';
         }
@@ -91,11 +92,11 @@ FobaToolBox::GetZone(Ptr<MobilityModel> mob, Ptr<Building> b)
     }
     else
     {
-        if (y >= b->GetBoundaries().yMax)
+        if (currY >= currBuilding->GetBoundaries().yMax)
         {
             return 'B';
         }
-        if (y <= b->GetBoundaries().yMin)
+        if (currY <= currBuilding->GetBoundaries().yMin)
         {
             return 'F';
         }
@@ -107,55 +108,63 @@ FobaToolBox::GetZone(Ptr<MobilityModel> mob, Ptr<Building> b)
 return True for NLOS
 */
 bool
-FobaToolBox::IsBuildingCausingNlos(Ptr<MobilityModel> eva, Ptr<MobilityModel> ave, Ptr<Building> b)
+FobaToolBox::IsBuildingCausingNlos(Ptr<MobilityModel> firstMob,
+                                   Ptr<MobilityModel> secondMob,
+                                   Ptr<Building> currBuilding)
 {
     NS_LOG_FUNCTION(this);
 
-    double eva_x = eva->GetPosition().x;
-    double eva_y = eva->GetPosition().y;
-    double eva_z = eva->GetPosition().z;
-    double ave_x = ave->GetPosition().x;
-    double ave_y = ave->GetPosition().y;
-    double ave_z = ave->GetPosition().z;
+    double firstMobX = firstMob->GetPosition().x;
+    double firstMobY = firstMob->GetPosition().y;
+    double firstMobZ = firstMob->GetPosition().z;
+    double secondMobX = secondMob->GetPosition().x;
+    double secondMobY = secondMob->GetPosition().y;
+    double secondMobZ = secondMob->GetPosition().z;
 
-    double BxMax = b->GetBoundaries().xMax;
-    double ByMax = b->GetBoundaries().yMax;
-    double BzMax = b->GetBoundaries().zMax;
-    double BxMin = b->GetBoundaries().xMin;
-    double ByMin = b->GetBoundaries().yMin;
+    double buildindXMax = currBuilding->GetBoundaries().xMax;
+    double buildindYMax = currBuilding->GetBoundaries().yMax;
+    double buildindZMax = currBuilding->GetBoundaries().zMax;
+    double buildindXMin = currBuilding->GetBoundaries().xMin;
+    double buildindYMin = currBuilding->GetBoundaries().yMin;
 
-    double z1_diff = eva_z - BzMax;
-    double z2_diff = ave_z - BzMax;
+    double firstHeightDiff = firstMobZ - buildindZMax;
+    double secondHeightDiff = secondMobZ - buildindZMax;
 
-    if ((z1_diff > 0) && (z2_diff > 0))
+    if ((firstHeightDiff > 0) && (secondHeightDiff > 0))
     { // both node are strictly over roof top height
         return false;
     }
-    if (z1_diff * z2_diff <= 0)
+    if (firstHeightDiff * secondHeightDiff <= 0)
     { // one of the node is below or at roof height
 
         // Check if the line crosses the box on each plan, if so -> NLOS
         // Parameters for the X-Z plan
-        double alpha_x = (eva_x - ave_x) / (eva_z - ave_z);
-        double beta_x = eva_z - alpha_x * eva_x;
+        double alphaX = (firstMobX - secondMobX) / (firstMobZ - secondMobZ);
+        double betaX = firstMobZ - alphaX * firstMobX;
         // Parameters for the Y-Z plan
-        double alpha_y = (eva_y - ave_y) / (eva_z - ave_z);
-        double beta_y = eva_z - alpha_y * eva_y;
+        double alphaY = (firstMobY - secondMobY) / (firstMobZ - secondMobZ);
+        double betaY = firstMobZ - alphaY * firstMobY;
         // Parameters for the X-Y plan
-        double alpha_z = (eva_y - ave_y) / (eva_x - ave_x);
-        double beta_z = eva_y - alpha_z * eva_x;
+        double alphaZ = (firstMobY - secondMobY) / (firstMobX - secondMobX);
+        double betaZ = firstMobY - alphaZ * firstMobX;
 
-        if (((alpha_x * BxMin - beta_x < BzMax) || (alpha_x * BxMax - beta_x < BzMax)) &&
-            ((alpha_y * ByMin - beta_y < BzMax) || (alpha_y * ByMax - beta_y < BzMax)))
+        if (((alphaX * buildindXMin - betaX < buildindZMax) ||
+             (alphaX * buildindXMax - betaX < buildindZMax)) &&
+            ((alphaY * buildindYMin - betaY < buildindZMax) ||
+             (alphaY * buildindYMax - betaY < buildindZMax)))
         {
-            if (((eva_x == ave_x) && ((eva_x == BxMax) || (eva_x == BxMin))) ||
-                ((eva_y == ave_y) && ((eva_y == ByMax) || (eva_y == ByMin))))
+            if (((firstMobX == secondMobX) &&
+                 ((firstMobX == buildindXMax) || (firstMobX == buildindXMin))) ||
+                ((firstMobY == secondMobY) &&
+                 ((firstMobY == buildindYMax) || (firstMobY == buildindYMin))))
             {
                 return true;
             }
 
-            if (((alpha_z * BxMin - beta_z <= ByMax) && (alpha_z * BxMin - beta_z >= ByMin)) ||
-                ((alpha_z * BxMax - beta_z <= ByMax) && (alpha_z * BxMax - beta_z >= ByMin)))
+            if (((alphaZ * buildindXMin - betaZ <= buildindYMax) &&
+                 (alphaZ * buildindXMin - betaZ >= buildindYMin)) ||
+                ((alphaZ * buildindXMax - betaZ <= buildindYMax) &&
+                 (alphaZ * buildindXMax - betaZ >= buildindYMin)))
             {
                 return true;
             }
@@ -165,8 +174,8 @@ FobaToolBox::IsBuildingCausingNlos(Ptr<MobilityModel> eva, Ptr<MobilityModel> av
 }
 
 std::vector<Ptr<Building>>
-FobaToolBox::GetBuildingsBetween(Ptr<MobilityModel> eva,
-                                 Ptr<MobilityModel> ave,
+FobaToolBox::GetBuildingsBetween(Ptr<MobilityModel> firstMob,
+                                 Ptr<MobilityModel> secondMob,
                                  std::vector<Ptr<Building>> buildings)
 {
     NS_LOG_FUNCTION(this);
@@ -192,201 +201,201 @@ FobaToolBox::GetBuildingsBetween(Ptr<MobilityModel> eva,
      *      G   |   F    |   E
      */
     // All LOS cases that are automatic LOS --> no assesment needed
-    std::vector<std::string> default_LOS = {"AA", "BB", "CC", "DD", "EE", "FF", "GG", "HH",
-                                            "AB", "BA", "AC", "CA", "AH", "HA", "BC", "CB",
-                                            "CD", "DC", "CE", "EC", "DE", "ED", "EF", "FE",
-                                            "EG", "GE", "FG", "GF", "GH", "HG", "AG", "GA"};
+    std::vector<std::string> defaultLos = {"AA", "BB", "CC", "DD", "EE", "FF", "GG", "HH",
+                                           "AB", "BA", "AC", "CA", "AH", "HA", "BC", "CB",
+                                           "CD", "DC", "CE", "EC", "DE", "ED", "EF", "FE",
+                                           "EG", "GE", "FG", "GF", "GH", "HG", "AG", "GA"};
     // All LOS cases that are automatic NLOS
-    std::vector<std::string> default_NLOS = {"HD", "DH", "BF", "FB"};
+    std::vector<std::string> defaultNlos = {"HD", "DH", "BF", "FB"};
     // Zone from which we evaluate the NLOS
     std::vector<char> evaluator = {'A', 'B', 'F', 'G', 'H'};
 
-    char zone_a;
-    char zone_b;
-    std::string zone_comb;
+    char zoneA;
+    char zoneB;
+    std::string zoneCombin;
     int limit = buildings.size();
-    std::vector<Ptr<Building>> NLOSbuildings;
+    std::vector<Ptr<Building>> nlosBuildings;
 
     for (int index = 0; index < limit; index++)
     {
         Ptr<Building> building = buildings[index];
         double building_zMax = building->GetBoundaries().zMax;
-        double a_z = eva->GetPosition().z;
-        double b_z = ave->GetPosition().z;
-        zone_a = GetZone(eva, building);
-        zone_b = GetZone(ave, building);
-        zone_comb = std::string(1, zone_a) + zone_b;
-        NS_ASSERT_MSG(zone_a != 'Z', "Undefined zone, check if node is note in the walls");
-        NS_ASSERT_MSG(zone_b != 'Z', "Undefined zone, check if node is note in the walls");
+        double firstMobZ = firstMob->GetPosition().z;
+        double secondMobZ = secondMob->GetPosition().z;
+        zoneA = GetZone(firstMob, building);
+        zoneB = GetZone(secondMob, building);
+        zoneCombin = std::string(1, zoneA) + zoneB;
+        NS_ASSERT_MSG(zoneA != 'Z', "Undefined zone, check if node is note in the walls");
+        NS_ASSERT_MSG(zoneB != 'Z', "Undefined zone, check if node is note in the walls");
 
-        if (std::find(default_LOS.begin(), default_LOS.end(), zone_comb) != default_LOS.end())
+        if (std::find(defaultLos.begin(), defaultLos.end(), zoneCombin) != defaultLos.end())
         {
             // We have LOS for this building
             continue;
         }
-        if (std::find(default_NLOS.begin(), default_NLOS.end(), zone_comb) != default_NLOS.end())
+        if (std::find(defaultNlos.begin(), defaultNlos.end(), zoneCombin) != defaultNlos.end())
         {
             // We have NLOS for this building
-            NLOSbuildings.push_back(building);
+            nlosBuildings.push_back(building);
             continue;
         }
-        if ((a_z >= building_zMax) && (b_z >= building_zMax))
+        if ((firstMobZ >= building_zMax) && (secondMobZ >= building_zMax))
         {
             // We have LOS for this building
             continue;
         }
-        if (std::find(evaluator.begin(), evaluator.end(), zone_a) != evaluator.end())
+        if (std::find(evaluator.begin(), evaluator.end(), zoneA) != evaluator.end())
         {
-            if (IsBuildingCausingNlos(eva, ave, building))
+            if (IsBuildingCausingNlos(firstMob, secondMob, building))
             {
-                NLOSbuildings.push_back(building);
+                nlosBuildings.push_back(building);
             }
             continue;
         }
         NS_LOG_DEBUG("Could not asses NLOS");
     }
-    return NLOSbuildings;
+    return nlosBuildings;
 }
 
 std::vector<Vector>
-FobaToolBox::GetCorner(Ptr<Building> CurrBuild, Ptr<MobilityModel> rx, Ptr<MobilityModel> tx)
+FobaToolBox::GetCorner(Ptr<Building> currBuild, Ptr<MobilityModel> rxMob, Ptr<MobilityModel> txMob)
 {
     NS_LOG_FUNCTION(this);
 
     // Area where the diffraction happens in top left corner
-    std::vector<std::string> Top_left = {"BG", "GB", "HB", "BH", "HC", "CH"};
+    std::vector<std::string> topLeft = {"BG", "GB", "HB", "BH", "HC", "CH"};
     // Area where the diffraction happens in top right corner
-    std::vector<std::string> Top_right = {"BE", "EB", "DB", "BD", "DA", "AD"};
+    std::vector<std::string> topRight = {"BE", "EB", "DB", "BD", "DA", "AD"};
     // Area where the diffraction happens in bottom left corner
-    std::vector<std::string> Bot_left = {"HE", "EH", "FH", "HF", "FA", "AF"};
+    std::vector<std::string> botLeft = {"HE", "EH", "FH", "HF", "FA", "AF"};
     // Area where the diffraction happens in bottom left corner
-    std::vector<std::string> Bot_right = {"DG", "GD", "FD", "DF", "FC", "CF"};
+    std::vector<std::string> botRight = {"DG", "GD", "FD", "DF", "FC", "CF"};
 
-    Vector Corner_pos;
-    std::vector<Vector> Corners;
-    char zone_a = GetZone(rx, CurrBuild);
-    char zone_b = GetZone(tx, CurrBuild);
-    std::string zone_comb = std::string(1, zone_a) + zone_b;
+    Vector cornerPos;
+    std::vector<Vector> corners;
+    char zoneA = GetZone(rxMob, currBuild);
+    char zoneB = GetZone(txMob, currBuild);
+    std::string zoneCombin = std::string(1, zoneA) + zoneB;
 
-    if (std::find(Top_left.begin(), Top_left.end(), zone_comb) != Top_left.end())
+    if (std::find(topLeft.begin(), topLeft.end(), zoneCombin) != topLeft.end())
     {
-        Corner_pos.x = CurrBuild->GetBoundaries().xMin;
-        Corner_pos.y = CurrBuild->GetBoundaries().yMax;
-        Corners.push_back(Corner_pos);
-        return Corners;
+        cornerPos.x = currBuild->GetBoundaries().xMin;
+        cornerPos.y = currBuild->GetBoundaries().yMax;
+        corners.push_back(cornerPos);
+        return corners;
     }
-    if (std::find(Top_right.begin(), Top_right.end(), zone_comb) != Top_right.end())
+    if (std::find(topRight.begin(), topRight.end(), zoneCombin) != topRight.end())
     {
-        Corner_pos.x = CurrBuild->GetBoundaries().xMax;
-        Corner_pos.y = CurrBuild->GetBoundaries().yMax;
-        Corners.push_back(Corner_pos);
-        return Corners;
+        cornerPos.x = currBuild->GetBoundaries().xMax;
+        cornerPos.y = currBuild->GetBoundaries().yMax;
+        corners.push_back(cornerPos);
+        return corners;
     }
-    if (std::find(Bot_left.begin(), Bot_left.end(), zone_comb) != Bot_left.end())
+    if (std::find(botLeft.begin(), botLeft.end(), zoneCombin) != botLeft.end())
     {
-        Corner_pos.x = CurrBuild->GetBoundaries().xMin;
-        Corner_pos.y = CurrBuild->GetBoundaries().yMin;
-        Corners.push_back(Corner_pos);
-        return Corners;
+        cornerPos.x = currBuild->GetBoundaries().xMin;
+        cornerPos.y = currBuild->GetBoundaries().yMin;
+        corners.push_back(cornerPos);
+        return corners;
     }
-    if (std::find(Bot_right.begin(), Bot_right.end(), zone_comb) != Bot_right.end())
+    if (std::find(botRight.begin(), botRight.end(), zoneCombin) != botRight.end())
     {
-        Corner_pos.x = CurrBuild->GetBoundaries().xMin;
-        Corner_pos.y = CurrBuild->GetBoundaries().yMax;
-        Corners.push_back(Corner_pos);
-        return Corners;
+        cornerPos.x = currBuild->GetBoundaries().xMin;
+        cornerPos.y = currBuild->GetBoundaries().yMax;
+        corners.push_back(cornerPos);
+        return corners;
     }
     // Two corners scenario
-    if ((zone_comb == "CG") || (zone_comb == "GC"))
+    if ((zoneCombin == "CG") || (zoneCombin == "GC"))
     {
-        Vector Corner_pos_2;
-        Corner_pos.x = CurrBuild->GetBoundaries().xMin;
-        Corner_pos.y = CurrBuild->GetBoundaries().yMax;
-        Corner_pos_2.x = CurrBuild->GetBoundaries().xMax;
-        Corner_pos_2.y = CurrBuild->GetBoundaries().yMin;
-        Corners.push_back(Corner_pos);
-        Corners.push_back(Corner_pos_2);
-        return Corners;
+        Vector secCornerPos;
+        cornerPos.x = currBuild->GetBoundaries().xMin;
+        cornerPos.y = currBuild->GetBoundaries().yMax;
+        secCornerPos.x = currBuild->GetBoundaries().xMax;
+        secCornerPos.y = currBuild->GetBoundaries().yMin;
+        corners.push_back(cornerPos);
+        corners.push_back(secCornerPos);
+        return corners;
     }
     // Two corners scenario
-    if ((zone_comb == "AE") || (zone_comb == "EA"))
+    if ((zoneCombin == "AE") || (zoneCombin == "EA"))
     {
-        Vector Corner_pos_2;
-        Corner_pos.x = CurrBuild->GetBoundaries().xMin;
-        Corner_pos.y = CurrBuild->GetBoundaries().yMin;
-        Corner_pos_2.x = CurrBuild->GetBoundaries().xMax;
-        Corner_pos_2.y = CurrBuild->GetBoundaries().yMax;
-        Corners.push_back(Corner_pos);
-        Corners.push_back(Corner_pos_2);
-        return Corners;
+        Vector secCornerPos;
+        cornerPos.x = currBuild->GetBoundaries().xMin;
+        cornerPos.y = currBuild->GetBoundaries().yMin;
+        secCornerPos.x = currBuild->GetBoundaries().xMax;
+        secCornerPos.y = currBuild->GetBoundaries().yMax;
+        corners.push_back(cornerPos);
+        corners.push_back(secCornerPos);
+        return corners;
     }
 
-    return Corners;
+    return corners;
 }
 
 std::optional<Vector>
-FobaToolBox::GetReflectionPoint(Ptr<Building> Building,
-                                Ptr<MobilityModel> rx,
-                                Ptr<MobilityModel> tx)
+FobaToolBox::GetReflectionPoint(Ptr<Building> building,
+                                Ptr<MobilityModel> rxMob,
+                                Ptr<MobilityModel> txMob)
 {
     NS_LOG_FUNCTION(this);
 
-    // y_min areas
-    std::vector<std::string> y_min = {"GF", "FG", "FE", "EF", "EG", "GE", "FF"};
-    // y_max areas
-    std::vector<std::string> y_max = {"AB", "BA", "BC", "CB", "AC", "CA", "BB"};
-    // y_min areas
-    std::vector<std::string> x_min = {"AH", "HA", "HG", "GH", "GA", "AG", "HH"};
-    // y_max areas
-    std::vector<std::string> x_max = {"CD", "DC", "DE", "ED", "EC", "CE", "DD"};
+    // yMin areas
+    std::vector<std::string> yMin = {"GF", "FG", "FE", "EF", "EG", "GE", "FF"};
+    // yMax areas
+    std::vector<std::string> yMax = {"AB", "BA", "BC", "CB", "AC", "CA", "BB"};
+    // yMin areas
+    std::vector<std::string> xMin = {"AH", "HA", "HG", "GH", "GA", "AG", "HH"};
+    // yMax areas
+    std::vector<std::string> xMax = {"CD", "DC", "DE", "ED", "EC", "CE", "DD"};
 
-    char zone_a = GetZone(rx, Building);
-    char zone_b = GetZone(tx, Building);
-    std::string zone_comb = std::string(1, zone_a) + zone_b;
+    char zoneA = GetZone(rxMob, building);
+    char zoneB = GetZone(txMob, building);
+    std::string zoneCombin = std::string(1, zoneA) + zoneB;
 
-    if (std::find(y_min.begin(), y_min.end(), zone_comb) != y_min.end())
+    if (std::find(yMin.begin(), yMin.end(), zoneCombin) != yMin.end())
     {
-        double y_refl = Building->GetBoundaries().yMin;
-        double rx_x = rx->GetPosition().x;
-        double rx_y = rx->GetPosition().y;
-        double tx_x = tx->GetPosition().x;
-        double tx_y = tx->GetPosition().y;
-        double x_refl =
-            (rx_x * (y_refl - tx_y) - tx_x * (rx_y - y_refl)) / ((y_refl - tx_y) - (rx_y - y_refl));
-        return Vector(x_refl, y_refl, 1);
+        double yRefl = building->GetBoundaries().yMin;
+        double rxMobX = rxMob->GetPosition().x;
+        double rxMobY = rxMob->GetPosition().y;
+        double txMobX = txMob->GetPosition().x;
+        double txMobY = txMob->GetPosition().y;
+        double xRefl = (rxMobX * (yRefl - txMobY) - txMobX * (rxMobY - yRefl)) /
+                       ((yRefl - txMobY) - (rxMobY - yRefl));
+        return Vector(xRefl, yRefl, 1);
     }
-    if (std::find(y_max.begin(), y_max.end(), zone_comb) != y_max.end())
+    if (std::find(yMax.begin(), yMax.end(), zoneCombin) != yMax.end())
     {
-        double y_refl = Building->GetBoundaries().yMax;
-        double rx_x = rx->GetPosition().x;
-        double rx_y = rx->GetPosition().y;
-        double tx_x = tx->GetPosition().x;
-        double tx_y = tx->GetPosition().y;
-        double x_refl =
-            (rx_x * (y_refl - tx_y) - tx_x * (rx_y - y_refl)) / ((y_refl - tx_y) - (rx_y - y_refl));
-        return Vector(x_refl, y_refl, 1);
+        double yRefl = building->GetBoundaries().yMax;
+        double rxMobX = rxMob->GetPosition().x;
+        double rxMobY = rxMob->GetPosition().y;
+        double txMobX = txMob->GetPosition().x;
+        double txMobY = txMob->GetPosition().y;
+        double xRefl = (rxMobX * (yRefl - txMobY) - txMobX * (rxMobY - yRefl)) /
+                       ((yRefl - txMobY) - (rxMobY - yRefl));
+        return Vector(xRefl, yRefl, 1);
     }
-    if (std::find(x_min.begin(), x_min.end(), zone_comb) != x_min.end())
+    if (std::find(xMin.begin(), xMin.end(), zoneCombin) != xMin.end())
     {
-        double x_refl = Building->GetBoundaries().xMin;
-        double rx_x = rx->GetPosition().x;
-        double rx_y = rx->GetPosition().y;
-        double tx_x = tx->GetPosition().x;
-        double tx_y = tx->GetPosition().y;
-        double y_refl =
-            (rx_y * (x_refl - tx_x) + tx_y * (x_refl - rx_x)) / ((x_refl - tx_y) + (x_refl - rx_x));
-        return Vector(x_refl, y_refl, 1);
+        double xRefl = building->GetBoundaries().xMin;
+        double rxMobX = rxMob->GetPosition().x;
+        double rxMobY = rxMob->GetPosition().y;
+        double txMobX = txMob->GetPosition().x;
+        double txMobY = txMob->GetPosition().y;
+        double yRefl = (rxMobY * (xRefl - txMobX) + txMobY * (xRefl - rxMobX)) /
+                       ((xRefl - txMobY) + (xRefl - rxMobX));
+        return Vector(xRefl, yRefl, 1);
     }
-    if (std::find(x_max.begin(), x_max.end(), zone_comb) != x_max.end())
+    if (std::find(xMax.begin(), xMax.end(), zoneCombin) != xMax.end())
     {
-        double x_refl = Building->GetBoundaries().xMax;
-        double rx_x = rx->GetPosition().x;
-        double rx_y = rx->GetPosition().y;
-        double tx_x = tx->GetPosition().x;
-        double tx_y = tx->GetPosition().y;
-        double y_refl =
-            (rx_y * (x_refl - tx_x) + tx_y * (x_refl - rx_x)) / ((x_refl - tx_y) + (x_refl - rx_x));
-        return Vector(x_refl, y_refl, 1);
+        double xRefl = building->GetBoundaries().xMax;
+        double rxMobX = rxMob->GetPosition().x;
+        double rxMobY = rxMob->GetPosition().y;
+        double txMobX = txMob->GetPosition().x;
+        double txMobY = txMob->GetPosition().y;
+        double yRefl = (rxMobY * (xRefl - txMobX) + txMobY * (xRefl - rxMobX)) /
+                       ((xRefl - txMobY) + (xRefl - rxMobX));
+        return Vector(xRefl, yRefl, 1);
     }
     return std::nullopt;
 }
