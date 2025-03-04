@@ -58,8 +58,8 @@ class FobaToolBox : public Object
     /**
      * @brief Assesses the number of buildings that cause NLOS.
      *
-     * @param eva first point of the line to evaluate.
-     * @param ave second point of the line to evaluate.
+     * @param firstMob first point of the line to evaluate.
+     * @param secondMob second point of the line to evaluate.
      * @param buildings contains the buildings to evaluate.
      * @return the buildings that intersect the line between the two points.
      */
@@ -70,9 +70,9 @@ class FobaToolBox : public Object
     /**
      * @brief Gives the corners that may produce diffraction between Rx and Tx
      *
-     * @param CurrBuild Current Building to evaluate
-     * @param rx the mobility model of the destination
-     * @param tx the mobility model of the source
+     * @param currBuild Current Building to evaluate
+     * @param rxMob the mobility model of the destination
+     * @param txMob the mobility model of the source
      * @return the corners of buildings that may produce a diffraction
      */
     std::vector<Vector> GetCorner(Ptr<Building> currBuild,
@@ -82,9 +82,9 @@ class FobaToolBox : public Object
     /**
      * @brief Gives the corners that may produce reflection between Rx and Tx
      *
-     * @param Building Current Building to evaluate
-     * @param rx the mobility model of the destination
-     * @param tx the mobility model of the source
+     * @param building Current Building to evaluate
+     * @param rxMob the mobility model of the destination
+     * @param txMob the mobility model of the source
      * @return the coordinates on the surface that may produce a diffraction
      */
     std::optional<Vector> GetReflectionPoint(Ptr<Building> building,
@@ -109,9 +109,9 @@ class FobaToolBox : public Object
     /**
      * @brief Assesses if the building causes NLOS.
      *
-     * @param eva first point of the line to evaluate.
-     * @param ave second point of the line to evaluate.
-     * @param b building to evaluate.
+     * @param firstMob first point of the line to evaluate.
+     * @param secondMob second point of the line to evaluate.
+     * @param currBuilding building to evaluate.
      * @return true if the building causes a NLOS, false if there is LOS
      * between eva and ave.
      */
