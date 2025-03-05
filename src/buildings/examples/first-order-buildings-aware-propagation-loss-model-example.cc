@@ -29,7 +29,7 @@
 using namespace ns3;
 
 void
-savePathlossData(double current_time, double pathloss)
+savePathlossData(double currentTime, double pathloss)
 {
     try
     {
@@ -48,11 +48,11 @@ savePathlossData(double current_time, double pathloss)
         // Write the header if the file is newly created
         if (std::filesystem::file_size(file_path) == 0)
         {
-            file << "current_time,pathloss\n";
+            file << "currentTime,pathloss\n";
         }
 
         // Write the data
-        file << current_time << "," << pathloss << "\n"; // ERROR HERE
+        file << currentTime << "," << pathloss << "\n"; // ERROR HERE
 
         file.flush();
         file.close();
@@ -71,8 +71,8 @@ printPathloss(Time period,
 {
     double loss;
     loss = model->GetLoss(sender->GetObject<MobilityModel>(), receiver->GetObject<MobilityModel>());
-    double current_time = ns3::Simulator::Now().GetSeconds();
-    savePathlossData(current_time, loss);
+    double currentTime = ns3::Simulator::Now().GetSeconds();
+    savePathlossData(currentTime, loss);
     Simulator::Schedule(period, &printPathloss, period, model, sender, receiver);
 }
 
@@ -133,32 +133,32 @@ main(int argc, char* argv[])
 
     selfsetWaypoints(nodes.Get(1), waypoints);
 
-    double x_min = 20.0;
-    double x_max = 25.0;
-    double y_min = 20.0;
-    double y_max = 25.0;
-    double z_min = 0.0;
-    double z_max = 15.0;
+    double xMin = 20.0;
+    double xMax = 25.0;
+    double yMin = 20.0;
+    double yMax = 25.0;
+    double zMin = 0.0;
+    double zMax = 15.0;
 
-    Ptr<Building> b1 = CreateObject<Building>();
-    b1->SetBoundaries(Box(x_min, x_max, y_min, y_max, z_min, z_max));
-    b1->SetBuildingType(Building::Residential);
-    b1->SetExtWallsType(Building::ConcreteWithWindows);
+    Ptr<Building> building = CreateObject<Building>();
+    building->SetBoundaries(Box(xMin, xMax, yMin, yMax, zMin, zMax));
+    building->SetBuildingType(Building::Residential);
+    building->SetExtWallsType(Building::ConcreteWithWindows);
 
     /*
-    double x_min2 = 30.0;
-    double y_min2 = 20.0;
-    double y_max2 = 25.0;
+    double xMin2 = 30.0;
+    double yMin2 = 20.0;
+    double yMax2 = 25.0;
     Ptr<Building> b2 = CreateObject<Building>();
-    b2->SetBoundaries(Box(x_min2, x_max, y_min2, y_max2, z_min, z_max));
+    b2->SetBoundaries(Box(xMin2, xMax, yMin2, yMax2, zMin, zMax));
     b2->SetBuildingType(Building::Residential);
     b2->SetExtWallsType(Building::ConcreteWithWindows);
 
-    double x_min3 = 40.0;
-    double y_min3 = 25.0;
-    double y_max3 = 30.0;
+    double xMin3 = 40.0;
+    double yMin3 = 25.0;
+    double yMax3 = 30.0;
     Ptr<Building> b3 = CreateObject<Building>();
-    b3->SetBoundaries(Box(x_min3, x_max, y_min3, y_max3, z_min, z_max));
+    b3->SetBoundaries(Box(xMin3, xMax, yMin3, yMax3, zMin, zMax));
     b3->SetBuildingType(Building::Residential);
     b3->SetExtWallsType(Building::ConcreteWithWindows);
     */
