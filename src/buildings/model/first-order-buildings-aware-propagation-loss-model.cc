@@ -11,6 +11,7 @@
 #include "building-list.h"
 #include "building.h"
 
+#include "ns3/angles.h"
 #include "ns3/double.h"
 #include "ns3/log.h"
 #include "ns3/mobility-model.h"
@@ -415,29 +416,15 @@ FirstOrderBuildingsAwarePropagationLossModel::CalculateAngle(Ptr<MobilityModel> 
                                                              Vector vectorB,
                                                              Ptr<MobilityModel> txMob) const
 { // Test available at Angletest.cc
+    Vector A = rxMob->GetPosition();
+    Vector C = txMob->GetPosition();
 
-    Vector vectorA = rxMob->GetPosition();
-    Vector vectorC = txMob->GetPosition();
-    // Vector AB
-    double ABx = vectorB.x - vectorA.x;
-    double ABy = vectorB.y - vectorA.y;
+    Vector2D AB(vectorB.x - A.x, vectorB.y - A.y);
+    Vector2D BC(C.x - vectorB.x, C.y - vectorB.y);
 
-    // Vector BC
-    double BCx = vectorC.x - vectorB.x;
-    double BCy = vectorC.y - vectorB.y;
+    double cosTheta = (AB * BC) / (AB.GetLength() * BC.GetLength());
 
-    // Dot product of AB and BC
-    double dotProduct = (ABx * BCx) + (ABy * BCy);
-
-    // Magnitudes of AB and BC
-    double magnitudeAB = std::sqrt(ABx * ABx + ABy * ABy);
-    double magnitudeBC = std::sqrt(BCx * BCx + BCy * BCy);
-
-    // Cosine of the angle
-    double cosTheta = dotProduct / (magnitudeAB * magnitudeBC);
-
-    // Return the angle in degrees
-    return std::acos(cosTheta) * 180.0 / M_PI;
+    return RadiansToDegrees(std::acos(cosTheta));
 }
 
 double

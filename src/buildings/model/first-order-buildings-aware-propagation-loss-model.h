@@ -162,7 +162,7 @@ class FirstOrderBuildingsAwarePropagationLossModel : public PropagationLossModel
     double Noise(double loss) const;
 
     /**
-     * @brief Calculate the angle between AB and BC on the x-y plan
+     * @brief Calculate the angle between rxMob, B and txMob on the x-y plan
      *
      * @param rxMob a 3D point
      * @param vectorB a 3D point
