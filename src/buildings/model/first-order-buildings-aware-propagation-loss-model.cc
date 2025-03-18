@@ -138,7 +138,7 @@ FirstOrderBuildingsAwarePropagationLossModel::GetLoss(Ptr<MobilityModel> rxMob,
     }
     loss += LosDiffractionLoss(allBuildings, rxMob, txMob);
     NS_LOG_INFO(this << "0-0 LOS first order buildings aware loss : " << loss);
-    // loss += Noise(loss);
+    loss += Noise(loss);
     return loss;
 }
 
