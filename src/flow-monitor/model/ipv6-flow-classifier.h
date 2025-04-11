@@ -12,10 +12,11 @@
 
 #include "flow-classifier.h"
 
+#include "ns3/ipv6-address.h"
 #include "ns3/ipv6-header.h"
 
-#include <map>
 #include <stdint.h>
+#include <unordered_map>
 
 namespace ns3
 {
@@ -37,6 +38,33 @@ class Ipv6FlowClassifier : public FlowClassifier
         uint8_t protocol;               //!< Protocol
         uint16_t sourcePort;            //!< Source port
         uint16_t destinationPort;       //!< Destination port
+    };
+
+    /// Structure providing a hash function for FiveTuple (used in unordered_map)
+    struct FiveTupleHash
+    {
+        /// \brief Hash function for FiveTuple
+        ///
+        /// \param tuple the input FiveTuple
+        /// \return the hashed value of the input FiveTuple
+        std::size_t operator()(const FiveTuple& tuple) const
+        {
+            // Compute individual hash values for each member
+            std::size_t h1 = Ipv6AddressHash()(tuple.sourceAddress);
+            std::size_t h2 = Ipv6AddressHash()(tuple.destinationAddress);
+            std::size_t h3 = std::hash<uint8_t>{}(tuple.protocol);
+            std::size_t h4 = std::hash<uint16_t>{}(tuple.sourcePort);
+            std::size_t h5 = std::hash<uint16_t>{}(tuple.destinationPort);
+
+            // Combine the hash values, with a hash combination inspired by boost::hash_combine
+            std::size_t seed = 0;
+            seed ^= h1 + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            seed ^= h2 + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            seed ^= h3 + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            seed ^= h4 + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            seed ^= h5 + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+            return seed;
+        }
     };
 
     Ipv6FlowClassifier();
@@ -83,12 +111,14 @@ class Ipv6FlowClassifier : public FlowClassifier
     void SerializeToXmlStream(std::ostream& os, uint16_t indent) const override;
 
   private:
-    /// Map to Flows Identifiers to FlowIds
-    std::map<FiveTuple, FlowId> m_flowMap;
-    /// Map to FlowIds to FlowPacketId
-    std::map<FlowId, FlowPacketId> m_flowPktIdMap;
-    /// Map FlowIds to (DSCP value, packet count) pairs
-    std::map<FlowId, std::map<Ipv6Header::DscpType, uint32_t>> m_flowDscpMap;
+    /// Map flow FiveTuple to FlowId
+    std::unordered_map<FiveTuple, FlowId, FiveTupleHash> m_flowMap;
+    /// Map FlowId to flow FiveTuple
+    std::unordered_map<FlowId, FiveTuple> m_inverseFlowMap;
+    /// Map FlowId to FlowPacketId
+    std::unordered_map<FlowId, FlowPacketId> m_flowPktIdMap;
+    /// Map FlowId to (DSCP value, packet count) pairs
+    std::unordered_map<FlowId, std::unordered_map<Ipv6Header::DscpType, uint32_t>> m_flowDscpMap;
 };
 
 /**

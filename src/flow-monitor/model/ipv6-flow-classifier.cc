@@ -14,6 +14,7 @@
 #include "ns3/udp-header.h"
 
 #include <algorithm>
+#include <map>
 
 namespace ns3
 {
@@ -144,6 +145,7 @@ Ipv6FlowClassifier::Classify(const Ipv6Header& ipHeader,
         insert.first->second = newFlowId;
         m_flowPktIdMap[newFlowId] = 0;
         m_flowDscpMap[newFlowId];
+        m_inverseFlowMap[newFlowId] = tuple;
     }
     else
     {
@@ -170,12 +172,10 @@ Ipv6FlowClassifier::Classify(const Ipv6Header& ipHeader,
 Ipv6FlowClassifier::FiveTuple
 Ipv6FlowClassifier::FindFlow(FlowId flowId) const
 {
-    for (auto iter = m_flowMap.begin(); iter != m_flowMap.end(); iter++)
+    auto flowTuple = m_inverseFlowMap.find(flowId);
+    if (flowTuple != m_inverseFlowMap.end())
     {
-        if (iter->second == flowId)
-        {
-            return iter->first;
-        }
+        return flowTuple->second;
     }
     NS_FATAL_ERROR("Could not find the flow with ID " << flowId);
     FiveTuple retval = {Ipv6Address::GetZero(), Ipv6Address::GetZero(), 0, 0, 0};
@@ -212,7 +212,10 @@ Ipv6FlowClassifier::SerializeToXmlStream(std::ostream& os, uint16_t indent) cons
     os << "<Ipv6FlowClassifier>\n";
 
     indent += 2;
-    for (auto iter = m_flowMap.begin(); iter != m_flowMap.end(); iter++)
+
+    // serialize flows sorted by FiveTuple
+    std::map<FiveTuple, FlowId> sortedMap(m_flowMap.begin(), m_flowMap.end());
+    for (auto iter = sortedMap.begin(); iter != sortedMap.end(); iter++)
     {
         Indent(os, indent);
         os << "<Flow flowId=\"" << iter->second << "\""

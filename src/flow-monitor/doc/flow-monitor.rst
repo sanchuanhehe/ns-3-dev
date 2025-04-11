@@ -14,11 +14,13 @@ The Flow Monitor module goal is to provide a flexible system to measure the
 performance of network protocols. The module uses probes, installed in network
 nodes, to track the packets exchanged by the nodes, and it will measure
 a number of parameters. Packets are divided according to the flow they belong
-to, where each flow is defined according to the probe's characteristics (e.g.,
-for IP, a flow is defined as the packets with the same {protocol, source (IP, port),
-destination (IP, port)} tuple.
+to, where each flow is defined according to the probe's characteristics.
+For IP, for example, a flow is defined as the packets with the same
+{protocol, source (IP, port), destination (IP, port)} tuple (which in the following
+we call `FiveTuple`).
 
-The statistics are collected for each flow can be exported in XML format. Moreover,
+The statistics are collected for each flow and can be exported in XML format, where
+flows are ordered by their characteristics (e.g. `FiveTuple` for IP). Moreover,
 the user can access the probes directly to request specific stats about each flow.
 
 
@@ -83,7 +85,8 @@ The data collected for each flow are:
 It is worth pointing out that the probes measure the packet bytes including IP headers.
 The L2 headers are not included in the measure.
 
-These stats will be written in XML form upon request (see the Usage section).
+These stats will be written in XML form upon request (see the Usage section),
+ordered by flow characteristics (e.g. `FiveTuple` for IP).
 
 Due to the above design, FlowMonitor can not generate statistics when used with DSR routing
 protocol (because DSR forwards packets using broadcast addresses)
