@@ -197,6 +197,7 @@ set(source_files
     model/demangle.cc
     model/decibel.cc
     model/decibel-mw.cc
+    model/decibel-w.cc
 )
 
 # Define core lib headers
@@ -301,6 +302,7 @@ set(header_files
     model/units.h
     model/decibel.h
     model/decibel-mw.h
+    model/decibel-w.h
     model/valgrind.h
     model/vector.h
     model/warnings.h
