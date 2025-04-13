@@ -40,6 +40,7 @@
 #include "ns3/wifi-spectrum-signal-parameters.h"
 #include "ns3/wifi-spectrum-value-helper.h"
 #include "ns3/wifi-utils.h"
+#include "ns3/units.h"
 
 #include <optional>
 
@@ -82,7 +83,7 @@ class WifiPhyReceptionTest : public TestCase
      * @param packetSize the size of the packet in bytes
      * @param mcs the MCS to transmit the packet
      */
-    void SendPacket(dBm_u rxPower, uint32_t packetSize, uint8_t mcs);
+    void SendPacket(units::power::dBm_t rxPower, uint32_t packetSize, uint8_t mcs);
 
     /**
      * Schedule now to check  the PHY state
@@ -105,7 +106,7 @@ WifiPhyReceptionTest::WifiPhyReceptionTest(std::string test_name)
 }
 
 void
-WifiPhyReceptionTest::SendPacket(dBm_u rxPower, uint32_t packetSize, uint8_t mcs)
+WifiPhyReceptionTest::SendPacket(units::power::dBm_t rxPower, uint32_t packetSize, uint8_t mcs)
 {
     WifiTxVector txVector = WifiTxVector(HePhy::GetHeMcs(mcs),
                                          0,
@@ -300,7 +301,7 @@ TestThresholdPreambleDetectionWithoutFrameCapture::DoRun()
     m_phy->AssignStreams(streamNumber);
 
     // RX power > CCA-ED > CCA-PD
-    dBm_u rxPower{-50};
+    units::power::dBm_t rxPower{-50};
 
     // CASE 1: send one packet and check PHY state:
     // All reception stages should succeed and PHY state should be RX for the duration of the packet
@@ -550,7 +551,7 @@ TestThresholdPreambleDetectionWithoutFrameCapture::DoRun()
                         1);
 
     // CCA-PD < RX power < CCA-ED
-    rxPower = dBm_u{-70};
+    rxPower = units::power::dBm_t{-70};
 
     // CASE 6: send one packet and check PHY state:
     // All reception stages should succeed and PHY state should be RX for the duration of the packet
@@ -749,7 +750,7 @@ TestThresholdPreambleDetectionWithoutFrameCapture::DoRun()
     // detection (-82 dBm) and check PHY state: preamble detection should succeed and PHY state
     // should move to RX.
 
-    rxPower = dBm_u{-81};
+    rxPower = units::power::dBm_t{-81};
 
     Simulator::Schedule(Seconds(11),
                         &TestThresholdPreambleDetectionWithoutFrameCapture::SendPacket,
@@ -788,7 +789,7 @@ TestThresholdPreambleDetectionWithoutFrameCapture::DoRun()
                         WifiPhyState::IDLE);
 
     // RX power < CCA-PD < CCA-ED
-    rxPower = dBm_u{-83};
+    rxPower = units::power::dBm_t{-83};
 
     // CASE 12: send one packet with a power slightly below the minimum RSSI needed for the preamble
     // detection (-82 dBm) and check PHY state: preamble detection should fail and PHY should be
@@ -920,7 +921,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     m_phy->AssignStreams(streamNumber);
 
     // RX power > CCA-ED > CCA-PD
-    dBm_u rxPower{-50};
+    units::power::dBm_t rxPower{-50};
 
     // CASE 1: send one packet and check PHY state:
     // All reception stages should succeed and PHY state should be RX for the duration of the packet
@@ -1477,7 +1478,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
                         4);
 
     // CCA-PD < RX power < CCA-ED
-    rxPower = dBm_u{-70};
+    rxPower = units::power::dBm_t{-70};
 
     // CASE 12: send one packet and check PHY state:
     // All reception stages should succeed and PHY state should be RX for the duration of the packet
@@ -1739,7 +1740,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
                         2,
                         6);
 
-    rxPower = dBm_u{-50};
+    rxPower = units::power::dBm_t{-50};
     // CASE 18: send two packets with second one 50 dB higher within the 4us window
 
     Simulator::Schedule(Seconds(18),
@@ -1985,7 +1986,7 @@ TestSimpleFrameCaptureModel::DoRun()
     RngSeedManager::SetSeed(1);
     RngSeedManager::SetRun(1);
     int64_t streamNumber = 2;
-    dBm_u rxPower{-30};
+    units::power::dBm_t rxPower{-30};
     m_phy->AssignStreams(streamNumber);
 
     // CASE 1: send two packets with same power within the capture window:
@@ -2100,7 +2101,7 @@ TestPhyHeadersReception::DoRun()
     m_phy->AssignStreams(streamNumber);
 
     // RX power > CCA-ED
-    dBm_u rxPower{-50};
+    units::power::dBm_t rxPower{-50};
 
     // CASE 1: send one packet followed by a second one with same power between the end of the 4us
     // preamble detection window and the start of L-SIG of the first packet: reception should be
@@ -2264,7 +2265,7 @@ TestPhyHeadersReception::DoRun()
                         WifiPhyState::IDLE);
 
     // RX power < CCA-ED
-    rxPower = dBm_u{-70};
+    rxPower = units::power::dBm_t{-70};
 
     // CASE 5: send one packet followed by a second one with same power between the end of the 4us
     // preamble detection window and the start of L-SIG of the first packet: reception should be
@@ -2473,7 +2474,7 @@ class TestAmpduReception : public WifiPhyReceptionTest
      * @param referencePacketSize the reference size of the packets in bytes (i-th MSDU will have
      * 100 bytes more than (i-1)-th)
      */
-    void SendAmpduWithThreeMpdus(dBm_u rxPower, uint32_t referencePacketSize);
+    void SendAmpduWithThreeMpdus(units::power::dBm_t rxPower, uint32_t referencePacketSize);
 
     /**
      * Check the RX success bitmap for A-MPDU 1
@@ -2727,7 +2728,7 @@ TestAmpduReception::CheckPhyState(WifiPhyState expectedState)
 }
 
 void
-TestAmpduReception::SendAmpduWithThreeMpdus(dBm_u rxPower, uint32_t referencePacketSize)
+TestAmpduReception::SendAmpduWithThreeMpdus(units::power::dBm_t rxPower, uint32_t referencePacketSize)
 {
     WifiTxVector txVector = WifiTxVector(HePhy::GetHeMcs0(),
                                          0,
@@ -2799,7 +2800,7 @@ TestAmpduReception::DoRun()
     RngSeedManager::SetSeed(1);
     RngSeedManager::SetRun(2);
     int64_t streamNumber = 1;
-    dBm_u rxPower{-30};
+    units::power::dBm_t rxPower{-30};
     m_phy->AssignStreams(streamNumber);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4289,7 +4290,7 @@ TestUnsupportedBandwidthReception::SendPpdu(MHz_u centerFreq, MHz_u bandwidth)
     auto txPowerSpectrum =
         WifiSpectrumValueHelper::CreateHeOfdmTxPowerSpectralDensity(centerFreq,
                                                                     bandwidth,
-                                                                    DbmToW(dBm_u{-50}),
+                                                                    DbmToW(units::power::dBm_t{-50}),
                                                                     bandwidth);
 
     auto txParams = Create<WifiSpectrumSignalParameters>();

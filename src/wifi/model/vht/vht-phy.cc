@@ -19,6 +19,7 @@
 #include "ns3/wifi-phy.h" //only used for static mode constructor
 #include "ns3/wifi-psdu.h"
 #include "ns3/wifi-utils.h"
+#include "ns3/utils.h"
 
 #undef NS_LOG_APPEND_CONTEXT
 #define NS_LOG_APPEND_CONTEXT WIFI_PHY_NS_LOG_APPEND_CONTEXT(m_wifiPhy)
@@ -70,11 +71,11 @@ const VhtPhy::NesExceptionMap VhtPhy::m_exceptionsMap {
 /**
  * @brief map a given channel list type to the corresponding scaling factor
  */
-const std::map<WifiChannelListType, dBm_u> channelTypeToScalingFactor{
-    {WIFI_CHANLIST_PRIMARY, dBm_u{0.0}},
-    {WIFI_CHANLIST_SECONDARY, dBm_u{0.0}},
-    {WIFI_CHANLIST_SECONDARY40, dBm_u{3.0}},
-    {WIFI_CHANLIST_SECONDARY80, dBm_u{6.0}},
+const std::map<WifiChannelListType, units::power::dBm_t> channelTypeToScalingFactor{
+    {WIFI_CHANLIST_PRIMARY, units::power::dBm_t{0.0}},
+    {WIFI_CHANLIST_SECONDARY, units::power::dBm_t{0.0}},
+    {WIFI_CHANLIST_SECONDARY40, units::power::dBm_t{3.0}},
+    {WIFI_CHANLIST_SECONDARY80, units::power::dBm_t{6.0}},
 };
 
 /**
@@ -533,7 +534,7 @@ VhtPhy::GetMaxPsduSize() const
     return 4692480;
 }
 
-dBm_u
+units::power::dBm_t
 VhtPhy::GetCcaThreshold(const Ptr<const WifiPpdu> ppdu, WifiChannelListType channelType) const
 {
     if (ppdu)

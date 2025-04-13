@@ -17,6 +17,7 @@
 #include "ns3/assert.h"
 #include "ns3/fatal-error.h"
 #include "ns3/log.h"
+#include "ns3/units.h"
 
 #include <algorithm>
 #include <cmath>
@@ -718,10 +719,10 @@ WifiSpectrumValueHelper::CreateSpectrumMaskForOfdm(
     NS_LOG_LOGIC("Power per band " << txPowerPerBand << "W");
 
     // Different power levels
-    dBm_u txPowerRef{10.0 * std::log10(txPowerPerBand * 1000.0)};
-    dBm_u txPowerInnerBandMin{txPowerRef + minInnerBand};
-    dBm_u txPowerMiddleBandMin{txPowerRef + minOuterBand};
-    dBm_u txPowerOuterBandMin{txPowerRef +
+    units::power::dBm_t txPowerRef{10.0 * std::log10(txPowerPerBand * 1000.0)};
+    units::power::dBm_t txPowerInnerBandMin{txPowerRef + minInnerBand};
+    units::power::dBm_t txPowerMiddleBandMin{txPowerRef + minOuterBand};
+    units::power::dBm_t txPowerOuterBandMin{txPowerRef +
                               lowestPoint}; // TODO also take into account dBm/MHz constraints
 
     // Different widths (in number of bands)

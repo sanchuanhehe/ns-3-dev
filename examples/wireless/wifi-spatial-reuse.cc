@@ -91,6 +91,7 @@
 #include "ns3/spectrum-wifi-helper.h"
 #include "ns3/ssid.h"
 #include "ns3/string.h"
+#include "ns3/units.h"
 #include "ns3/wifi-net-device.h"
 
 using namespace ns3;
@@ -149,21 +150,21 @@ main(int argc, char* argv[])
     meter_u d1{30.0};
     meter_u d2{30.0};
     meter_u d3{150.0};
-    dBm_u powSta1{10.0};
-    dBm_u powSta2{10.0};
-    dBm_u powAp1{21.0};
-    dBm_u powAp2{21.0};
-    dBm_u ccaEdTrSta1{-62};
-    dBm_u ccaEdTrSta2{-62};
-    dBm_u ccaEdTrAp1{-62};
-    dBm_u ccaEdTrAp2{-62};
-    dBm_u minimumRssi{-82};
+    units::power::dBm_t powSta1{10.0};
+    units::power::dBm_t powSta2{10.0};
+    units::power::dBm_t powAp1{21.0};
+    units::power::dBm_t powAp2{21.0};
+    units::power::dBm_t ccaEdTrSta1{-62};
+    units::power::dBm_t ccaEdTrSta2{-62};
+    units::power::dBm_t ccaEdTrAp1{-62};
+    units::power::dBm_t ccaEdTrAp2{-62};
+    units::power::dBm_t minimumRssi{-82};
     int channelWidth{20};       // MHz
     uint32_t payloadSize{1500}; // bytes
     uint32_t mcs{0};            // MCS value
     Time interval{"1ms"};
     bool enableObssPd{true};
-    dBm_u obssPdThreshold{-72.0};
+    units::power::dBm_t obssPdThreshold{-72.0};
 
     CommandLine cmd(__FILE__);
     cmd.AddValue("duration", "Duration of simulation", duration);

@@ -23,6 +23,7 @@
 #include "ns3/wifi-spectrum-signal-parameters.h"
 #include "ns3/wifi-spectrum-value-helper.h"
 #include "ns3/wifi-utils.h"
+#include "ns3/units.h"
 
 using namespace ns3;
 
@@ -291,7 +292,7 @@ WifiPhyThresholdsWeakWifiSignalTest::WifiPhyThresholdsWeakWifiSignalTest()
 void
 WifiPhyThresholdsWeakWifiSignalTest::DoRun()
 {
-    const auto txPower = DbmToW(dBm_u{-110});
+    const auto txPower = DbmToW(units::power::dBm_t{-110});
 
     Simulator::Schedule(Seconds(1),
                         &WifiPhyThresholdsWeakWifiSignalTest::SendSignal,
@@ -341,7 +342,7 @@ WifiPhyThresholdsWeakForeignSignalTest::~WifiPhyThresholdsWeakForeignSignalTest(
 void
 WifiPhyThresholdsWeakForeignSignalTest::DoRun()
 {
-    const auto txPower = DbmToW(dBm_u{-90});
+    const auto txPower = DbmToW(units::power::dBm_t{-90});
 
     Simulator::Schedule(Seconds(1),
                         &WifiPhyThresholdsWeakForeignSignalTest::SendSignal,
@@ -390,7 +391,7 @@ WifiPhyThresholdsStrongWifiSignalTest::~WifiPhyThresholdsStrongWifiSignalTest()
 void
 WifiPhyThresholdsStrongWifiSignalTest::DoRun()
 {
-    const auto txPower = DbmToW(dBm_u{-60});
+    const auto txPower = DbmToW(units::power::dBm_t{-60});
 
     Simulator::Schedule(Seconds(1),
                         &WifiPhyThresholdsStrongWifiSignalTest::SendSignal,
@@ -443,7 +444,7 @@ WifiPhyThresholdsStrongForeignSignalTest::~WifiPhyThresholdsStrongForeignSignalT
 void
 WifiPhyThresholdsStrongForeignSignalTest::DoRun()
 {
-    const auto txPower = DbmToW(dBm_u{-60});
+    const auto txPower = DbmToW(units::power::dBm_t{-60});
 
     Simulator::Schedule(Seconds(1),
                         &WifiPhyThresholdsStrongForeignSignalTest::SendSignal,

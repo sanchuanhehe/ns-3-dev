@@ -15,6 +15,7 @@
 #include "wifi-mac-trailer.h"
 
 #include "ns3/packet.h"
+#include "ns3/units.h"
 
 #include <cmath>
 
@@ -30,12 +31,12 @@ DbToRatio(dB_u val)
 }
 
 Watt_u
-DbmToW(dBm_u val)
+DbmToW(units::power::dBm_t val)
 {
     return std::pow(10.0, 0.1 * (val - 30.0));
 }
 
-dBm_u
+units::power::dBm_t
 WToDbm(Watt_u val)
 {
     NS_ASSERT(val > 0.);

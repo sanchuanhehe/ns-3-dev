@@ -12,6 +12,8 @@
 
 #include "wifi-phy-common.h"
 
+#include "ns3/units.h"
+
 #include <vector>
 
 namespace ns3
@@ -66,7 +68,7 @@ class WifiPhyListener
      * channel implicitly reverts to the idle state
      * unless they have received a CCA busy report.
      */
-    virtual void NotifyTxStart(Time duration, dBm_u txPower) = 0;
+    virtual void NotifyTxStart(Time duration, units::power::dBm_t txPower) = 0;
     /**
      * @param duration the expected busy duration.
      * @param channelType the channel type for which the CCA busy state is reported.

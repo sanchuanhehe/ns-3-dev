@@ -794,39 +794,39 @@ class WifiPhy : public Object
      *
      * @param threshold the receive sensitivity threshold
      */
-    void SetRxSensitivity(dBm_u threshold);
+    void SetRxSensitivity(units::power::dBm_t threshold);
     /**
      * Return the receive sensitivity threshold.
      *
      * @return the receive sensitivity threshold
      */
-    dBm_u GetRxSensitivity() const;
+    units::power::dBm_t GetRxSensitivity() const;
     /**
      * Sets the CCA energy detection threshold. The energy of a all received signals
      * should be higher than this threshold to allow the PHY layer to declare CCA BUSY state.
      *
      * @param threshold the CCA threshold
      */
-    void SetCcaEdThreshold(dBm_u threshold);
+    void SetCcaEdThreshold(units::power::dBm_t threshold);
     /**
      * Return the CCA energy detection threshold.
      *
      * @return the CCA energy detection threshold
      */
-    dBm_u GetCcaEdThreshold() const;
+    units::power::dBm_t GetCcaEdThreshold() const;
     /**
      * Sets the CCA sensitivity threshold. The energy of a received wifi signal
      * should be higher than this threshold to allow the PHY layer to declare CCA BUSY state.
      *
      * @param threshold the CCA sensitivity threshold
      */
-    void SetCcaSensitivityThreshold(dBm_u threshold);
+    void SetCcaSensitivityThreshold(units::power::dBm_t threshold);
     /**
      * Return the CCA sensitivity threshold.
      *
      * @return the CCA sensitivity threshold
      */
-    dBm_u GetCcaSensitivityThreshold() const;
+    units::power::dBm_t GetCcaSensitivityThreshold() const;
     /**
      * Sets the RX loss in the Signal-to-Noise-Ratio due to non-idealities in the receiver.
      *
@@ -1129,8 +1129,8 @@ class WifiPhy : public Object
      * @param txPowerMaxMimo the MIMO transmit power restriction for the next transmission
      */
     void ResetCca(bool powerRestricted,
-                  dBm_u txPowerMaxSiso = dBm_u{0},
-                  dBm_u txPowerMaxMimo = dBm_u{0});
+                  units::power::dBm_t txPowerMaxSiso = units::power::dBm_t{0},
+                  units::power::dBm_t txPowerMaxMimo = units::power::dBm_t{0});
     /**
      * Compute the transmit power for the next transmission.
      * The returned power will satisfy the power density constraints
@@ -1139,7 +1139,7 @@ class WifiPhy : public Object
      * @param ppdu the PPDU to transmit
      * @return the transmit power for the next transmission
      */
-    dBm_u GetTxPowerForTransmission(Ptr<const WifiPpdu> ppdu) const;
+    units::power::dBm_t GetTxPowerForTransmission(Ptr<const WifiPpdu> ppdu) const;
     /**
      * Notify the PHY that an access to the channel was requested.
      * This is typically called by the channel access manager to
@@ -1619,9 +1619,9 @@ class WifiPhy : public Object
     Time m_ackTxTime;      //!< estimated Ack TX time
     Time m_blockAckTxTime; //!< estimated BlockAck TX time
 
-    dBm_u m_rxSensitivity;  //!< Receive sensitivity threshold
-    dBm_u m_ccaEdThreshold; //!< Clear channel assessment (CCA) energy detection (ED) threshold
-    dBm_u m_ccaSensitivityThreshold; //!< Clear channel assessment (CCA) modulation and coding rate
+    units::power::dBm_t m_rxSensitivity;  //!< Receive sensitivity threshold
+    units::power::dBm_t m_ccaEdThreshold; //!< Clear channel assessment (CCA) energy detection (ED) threshold
+    units::power::dBm_t m_ccaSensitivityThreshold; //!< Clear channel assessment (CCA) modulation and coding rate
                                      //!< sensitivity threshold
 
     units::dimensionless::dB_t m_txGain; //!< Transmission gain
@@ -1632,8 +1632,8 @@ class WifiPhy : public Object
     dBm_per_MHz_u m_powerDensityLimit;   //!< the power density limit
 
     bool m_powerRestricted; //!< Flag whether transmit power is restricted by OBSS PD SR
-    dBm_u m_txPowerMaxSiso; //!< SISO maximum transmit power due to OBSS PD SR power restriction
-    dBm_u m_txPowerMaxMimo; //!< MIMO maximum transmit power due to OBSS PD SR power restriction
+    units::power::dBm_t m_txPowerMaxSiso; //!< SISO maximum transmit power due to OBSS PD SR power restriction
+    units::power::dBm_t m_txPowerMaxMimo; //!< MIMO maximum transmit power due to OBSS PD SR power restriction
     bool m_channelAccessRequested; //!< Flag if channels access has been requested (used for OBSS_PD
                                    //!< SR)
 

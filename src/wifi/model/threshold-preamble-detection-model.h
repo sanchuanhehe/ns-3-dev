@@ -12,6 +12,8 @@
 #include "preamble-detection-model.h"
 #include "wifi-units.h"
 
+#include "ns3/units.h"
+
 namespace ns3
 {
 /**
@@ -33,11 +35,11 @@ class ThresholdPreambleDetectionModel : public PreambleDetectionModel
 
     ThresholdPreambleDetectionModel();
     ~ThresholdPreambleDetectionModel() override;
-    bool IsPreambleDetected(dBm_u rssi, double snr, MHz_u channelWidth) const override;
+    bool IsPreambleDetected(units::power::dBm_t rssi, double snr, MHz_u channelWidth) const override;
 
   private:
     dB_u m_threshold; ///< SNR threshold used to decide whether a preamble is successfully received
-    dBm_u m_rssiMin;  ///< Minimum RSSI that shall be received to start the decision
+    units::power::dBm_t m_rssiMin;  ///< Minimum RSSI that shall be received to start the decision
 };
 
 } // namespace ns3

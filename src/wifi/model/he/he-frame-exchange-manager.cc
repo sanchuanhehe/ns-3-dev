@@ -21,6 +21,7 @@
 #include "ns3/sta-wifi-mac.h"
 #include "ns3/wifi-mac-queue.h"
 #include "ns3/wifi-mac-trailer.h"
+#include "ns3/units.h"
 
 #include <algorithm>
 #include <functional>
@@ -1519,13 +1520,13 @@ HeFrameExchangeManager::GetHeTbTxVector(CtrlTriggerHeader trigger, Mac48Address 
         trigger.GetApTxPower() -
         static_cast<int8_t>(
             *optRssi); // cast RSSI to be on equal footing with AP Tx power information
-    auto reqTxPower = dBm_u{static_cast<double>(userInfoIt->GetUlTargetRssi() + pathLossDb)};
+    auto reqTxPower = units::power::dBm_t{static_cast<double>(userInfoIt->GetUlTargetRssi() + pathLossDb)};
 
     // Convert the transmit power to a power level
     uint8_t numPowerLevels = m_phy->GetNTxPower();
     if (numPowerLevels > 1)
     {
-        dBm_u step =
+        units::power::dBm_t step =
             (m_phy->GetTxPowerEnd() - m_phy->GetTxPowerStart()).to<double>() / (numPowerLevels - 1);
         powerLevel = static_cast<uint8_t>(
             ceil((reqTxPower - m_phy->GetTxPowerStart().to<double>()) /
@@ -1550,7 +1551,7 @@ HeFrameExchangeManager::GetHeTbTxVector(CtrlTriggerHeader trigger, Mac48Address 
     return v;
 }
 
-std::optional<dBm_u>
+std::optional<units::power::dBm_t>
 HeFrameExchangeManager::GetMostRecentRssi(const Mac48Address& address) const
 {
     return GetWifiRemoteStationManager()->GetMostRecentRssi(address);

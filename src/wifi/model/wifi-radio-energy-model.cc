@@ -14,6 +14,7 @@
 #include "ns3/log.h"
 #include "ns3/pointer.h"
 #include "ns3/simulator.h"
+#include "ns3/units.h"
 
 namespace ns3
 {
@@ -254,7 +255,7 @@ WifiRadioEnergyModel::SetTxCurrentModel(const Ptr<WifiTxCurrentModel> model)
 }
 
 void
-WifiRadioEnergyModel::SetTxCurrentFromModel(dBm_u txPower)
+WifiRadioEnergyModel::SetTxCurrentFromModel(units::power::dBm_t txPower)
 {
     if (m_txCurrentModel)
     {
@@ -525,7 +526,7 @@ WifiRadioEnergyModelPhyListener::NotifyRxEndError()
 }
 
 void
-WifiRadioEnergyModelPhyListener::NotifyTxStart(Time duration, dBm_u txPower)
+WifiRadioEnergyModelPhyListener::NotifyTxStart(Time duration, units::power::dBm_t txPower)
 {
     NS_LOG_FUNCTION(this << duration << txPower);
     if (m_updateTxCurrentCallback.IsNull())

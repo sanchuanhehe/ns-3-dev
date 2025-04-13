@@ -15,6 +15,7 @@
 #include "ns3/spectrum-wifi-helper.h"
 #include "ns3/ssid.h"
 #include "ns3/string.h"
+#include "ns3/units.h"
 #include "ns3/wifi-utils.h"
 
 using namespace ns3;
@@ -45,7 +46,7 @@ main(int argc, char** argv)
 {
     std::string standardStr = "11a";
     MHz_u bw{20};
-    dBm_u pow{23};
+    units::power::dBm_t pow{23};
     bool verbose = false;
     CommandLine cmd(__FILE__);
     cmd.AddValue("standard",

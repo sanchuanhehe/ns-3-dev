@@ -47,6 +47,7 @@
 #include "ns3/mobility-helper.h"
 #include "ns3/mobility-model.h"
 #include "ns3/string.h"
+#include "ns3/units.h"
 #include "ns3/yans-wifi-channel.h"
 #include "ns3/yans-wifi-helper.h"
 
@@ -99,7 +100,7 @@ int
 main(int argc, char* argv[])
 {
     std::string phyMode("DsssRate1Mbps");
-    dBm_u rss{-80};
+    units::power::dBm_t rss{-80};
     uint32_t packetSize{1000}; // bytes
     uint32_t numPackets{1};
     Time interPacketInterval{"1s"};

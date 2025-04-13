@@ -15,6 +15,7 @@
 #include "ns3/wifi-net-device.h"
 #include "ns3/wifi-phy-listener.h"
 #include "ns3/wifi-phy.h"
+#include "ns3/units.h"
 
 #include <algorithm>
 
@@ -67,7 +68,7 @@ class EmlsrPhyListener : public WifiPhyListener
     {
     }
 
-    void NotifyTxStart(Time /* duration */, dBm_u /* txPower */) override
+    void NotifyTxStart(Time /* duration */, units::power::dBm_t /* txPower */) override
     {
     }
 

@@ -86,6 +86,7 @@
 #include "ns3/packet-sink-helper.h"
 #include "ns3/ssid.h"
 #include "ns3/uinteger.h"
+#include "ns3/units.h"
 #include "ns3/wifi-mac-header.h"
 #include "ns3/wifi-mac.h"
 #include "ns3/wifi-net-device.h"
@@ -199,7 +200,7 @@ class NodeStatistics
      */
     Time GetCalcTxTime(DataRate rate);
 
-    std::map<Mac48Address, dBm_u> m_currentPower;   //!< Current Tx power for each sender.
+    std::map<Mac48Address, units::power::dBm_t> m_currentPower;   //!< Current Tx power for each sender.
     std::map<Mac48Address, DataRate> m_currentRate; //!< Current Tx rate for each sender.
     uint32_t m_bytesTotal;                          //!< Number of received bytes on a given state.
     double m_totalEnergy;                           //!< Energy used on a given state.
@@ -281,7 +282,7 @@ NodeStatistics::PhyCallback(std::string path, Ptr<const Packet> packet, double p
 void
 NodeStatistics::PowerCallback(std::string path, double oldPower, double newPower, Mac48Address dest)
 {
-    m_currentPower[dest] = dBm_u{newPower};
+    m_currentPower[dest] = units::power::dBm_t{newPower};
 }
 
 void
@@ -381,8 +382,8 @@ RateCallback(std::string path, DataRate oldRate, DataRate newRate, Mac48Address 
 int
 main(int argc, char* argv[])
 {
-    dBm_u maxPower{17};
-    dBm_u minPower{0};
+    units::power::dBm_t maxPower{17};
+    units::power::dBm_t minPower{0};
     uint32_t powerLevels{18};
 
     uint32_t rtsThreshold{2346};

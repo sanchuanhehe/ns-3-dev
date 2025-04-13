@@ -31,6 +31,7 @@
 #include "ns3/wifi-psdu.h"
 #include "ns3/wifi-spectrum-value-helper.h"
 #include "ns3/wifi-utils.h"
+#include "ns3/units.h"
 
 #include <memory>
 #include <vector>
@@ -121,29 +122,29 @@ class WifiPhyCcaThresholdsTest : public TestCase
     void VerifyCcaThreshold(const Ptr<PhyEntity> phy,
                             const Ptr<const WifiPpdu> ppdu,
                             WifiChannelListType channelType,
-                            dBm_u expectedCcaThreshold);
+                            units::power::dBm_t expectedCcaThreshold);
 
     Ptr<WifiNetDevice> m_device;              ///< The WifiNetDevice
     Ptr<SpectrumWifiPhy> m_phy;               ///< The spectrum PHY
     Ptr<ObssPdAlgorithm> m_obssPdAlgorithm;   ///< The OBSS-PD algorithm
     Ptr<VhtConfiguration> m_vhtConfiguration; ///< The VHT configuration
 
-    dBm_u m_CcaEdThreshold; ///< The current CCA-ED threshold for a 20 MHz subchannel
-    dBm_u m_CcaSensitivity; ///< The current CCA sensitivity threshold for signals that occupy the
+    units::power::dBm_t m_CcaEdThreshold; ///< The current CCA-ED threshold for a 20 MHz subchannel
+    units::power::dBm_t m_CcaSensitivity; ///< The current CCA sensitivity threshold for signals that occupy the
                             ///< primary 20 MHz channel
 
     VhtConfiguration::SecondaryCcaSensitivityThresholds
         m_secondaryCcaSensitivityThresholds; ///< The current CCA sensitivity thresholds for signals
                                              ///< that do not occupy the primary 20 MHz channel
 
-    dBm_u m_obssPdLevel; ///< The current OBSS-PD level
+    units::power::dBm_t m_obssPdLevel; ///< The current OBSS-PD level
 };
 
 WifiPhyCcaThresholdsTest::WifiPhyCcaThresholdsTest()
     : TestCase("Wi-Fi PHY CCA thresholds test"),
       m_CcaEdThreshold{-62.0},
       m_CcaSensitivity{-82.0},
-      m_secondaryCcaSensitivityThresholds{dBm_u{-72}, dBm_u{-72}, dBm_u{-69}},
+      m_secondaryCcaSensitivityThresholds{units::power::dBm_t{-72}, units::power::dBm_t{-72}, units::power::dBm_t{-69}},
       m_obssPdLevel{-82.0}
 {
 }
@@ -227,7 +228,7 @@ void
 WifiPhyCcaThresholdsTest::VerifyCcaThreshold(const Ptr<PhyEntity> phy,
                                              const Ptr<const WifiPpdu> ppdu,
                                              WifiChannelListType channelType,
-                                             dBm_u expectedCcaThreshold)
+                                             units::power::dBm_t expectedCcaThreshold)
 {
     NS_LOG_FUNCTION(this << phy << channelType << expectedCcaThreshold);
     const auto actualThreshold = phy->GetCcaThreshold(ppdu, channelType);
@@ -548,59 +549,59 @@ void
 WifiPhyCcaThresholdsTest::DoRun()
 {
     // default attributes
-    m_CcaEdThreshold = dBm_u{-62};
-    m_CcaSensitivity = dBm_u{-82};
-    m_secondaryCcaSensitivityThresholds = std::make_tuple(dBm_u{-72}, dBm_u{-72}, dBm_u{-69});
-    m_obssPdLevel = dBm_u{-82};
+    m_CcaEdThreshold = units::power::dBm_t{-62};
+    m_CcaSensitivity = units::power::dBm_t{-82};
+    m_secondaryCcaSensitivityThresholds = std::make_tuple(units::power::dBm_t{-72}, units::power::dBm_t{-72}, units::power::dBm_t{-69});
+    m_obssPdLevel = units::power::dBm_t{-82};
     RunOne();
 
     // default attributes with OBSS-PD level set to -80 dBm
-    m_CcaEdThreshold = dBm_u{-62};
-    m_CcaSensitivity = dBm_u{-82};
-    m_secondaryCcaSensitivityThresholds = std::make_tuple(dBm_u{-72}, dBm_u{-72}, dBm_u{-69});
-    m_obssPdLevel = dBm_u{-80};
+    m_CcaEdThreshold = units::power::dBm_t{-62};
+    m_CcaSensitivity = units::power::dBm_t{-82};
+    m_secondaryCcaSensitivityThresholds = std::make_tuple(units::power::dBm_t{-72}, units::power::dBm_t{-72}, units::power::dBm_t{-69});
+    m_obssPdLevel = units::power::dBm_t{-80};
     RunOne();
 
     // default attributes with OBSS-PD level set to -70 dBm
-    m_CcaEdThreshold = dBm_u{-62};
-    m_CcaSensitivity = dBm_u{-82};
-    m_secondaryCcaSensitivityThresholds = std::make_tuple(dBm_u{-72}, dBm_u{-72}, dBm_u{-69});
-    m_obssPdLevel = dBm_u{-70};
+    m_CcaEdThreshold = units::power::dBm_t{-62};
+    m_CcaSensitivity = units::power::dBm_t{-82};
+    m_secondaryCcaSensitivityThresholds = std::make_tuple(units::power::dBm_t{-72}, units::power::dBm_t{-72}, units::power::dBm_t{-69});
+    m_obssPdLevel = units::power::dBm_t{-70};
     RunOne();
 
     // CCA-ED set to -65 dBm
-    m_CcaEdThreshold = dBm_u{-65};
-    m_CcaSensitivity = dBm_u{-82};
-    m_secondaryCcaSensitivityThresholds = std::make_tuple(dBm_u{-72}, dBm_u{-72}, dBm_u{-69});
-    m_obssPdLevel = dBm_u{-82};
+    m_CcaEdThreshold = units::power::dBm_t{-65};
+    m_CcaSensitivity = units::power::dBm_t{-82};
+    m_secondaryCcaSensitivityThresholds = std::make_tuple(units::power::dBm_t{-72}, units::power::dBm_t{-72}, units::power::dBm_t{-69});
+    m_obssPdLevel = units::power::dBm_t{-82};
     RunOne();
 
     // CCA sensitivity for signals in primary set to -75 dBm
-    m_CcaEdThreshold = dBm_u{-62};
-    m_CcaSensitivity = dBm_u{-75};
-    m_secondaryCcaSensitivityThresholds = std::make_tuple(dBm_u{-72}, dBm_u{-72}, dBm_u{-69});
-    m_obssPdLevel = dBm_u{-82};
+    m_CcaEdThreshold = units::power::dBm_t{-62};
+    m_CcaSensitivity = units::power::dBm_t{-75};
+    m_secondaryCcaSensitivityThresholds = std::make_tuple(units::power::dBm_t{-72}, units::power::dBm_t{-72}, units::power::dBm_t{-69});
+    m_obssPdLevel = units::power::dBm_t{-82};
     RunOne();
 
     // custom CCA sensitivities for signals not in primary
-    m_CcaEdThreshold = dBm_u{-62};
-    m_CcaSensitivity = dBm_u{-72};
-    m_secondaryCcaSensitivityThresholds = std::make_tuple(dBm_u{-70}, dBm_u{-70}, dBm_u{-70});
-    m_obssPdLevel = dBm_u{-82};
+    m_CcaEdThreshold = units::power::dBm_t{-62};
+    m_CcaSensitivity = units::power::dBm_t{-72};
+    m_secondaryCcaSensitivityThresholds = std::make_tuple(units::power::dBm_t{-70}, units::power::dBm_t{-70}, units::power::dBm_t{-70});
+    m_obssPdLevel = units::power::dBm_t{-82};
     RunOne();
 
     // custom CCA sensitivities for signals not in primary with OBSS-PD level set to -80 dBm
-    m_CcaEdThreshold = dBm_u{-62};
-    m_CcaSensitivity = dBm_u{-72};
-    m_secondaryCcaSensitivityThresholds = std::make_tuple(dBm_u{-70}, dBm_u{-70}, dBm_u{-70});
-    m_obssPdLevel = dBm_u{-80};
+    m_CcaEdThreshold = units::power::dBm_t{-62};
+    m_CcaSensitivity = units::power::dBm_t{-72};
+    m_secondaryCcaSensitivityThresholds = std::make_tuple(units::power::dBm_t{-70}, units::power::dBm_t{-70}, units::power::dBm_t{-70});
+    m_obssPdLevel = units::power::dBm_t{-80};
     RunOne();
 
     // custom CCA sensitivities for signals not in primary with OBSS-PD level set to -70 dBm
-    m_CcaEdThreshold = dBm_u{-62};
-    m_CcaSensitivity = dBm_u{-72};
-    m_secondaryCcaSensitivityThresholds = std::make_tuple(dBm_u{-70}, dBm_u{-70}, dBm_u{-70});
-    m_obssPdLevel = dBm_u{-70};
+    m_CcaEdThreshold = units::power::dBm_t{-62};
+    m_CcaSensitivity = units::power::dBm_t{-72};
+    m_secondaryCcaSensitivityThresholds = std::make_tuple(units::power::dBm_t{-70}, units::power::dBm_t{-70}, units::power::dBm_t{-70});
+    m_obssPdLevel = units::power::dBm_t{-70};
     RunOne();
 
     Simulator::Destroy();
@@ -632,7 +633,7 @@ class CcaTestPhyListener : public ns3::WifiPhyListener
         NS_LOG_FUNCTION(this);
     }
 
-    void NotifyTxStart(Time duration, dBm_u txPower) override
+    void NotifyTxStart(Time duration, units::power::dBm_t txPower) override
     {
         NS_LOG_FUNCTION(this << duration << txPower);
     }
@@ -709,7 +710,7 @@ class WifiPhyCcaIndicationTest : public TestCase
      * @param frequency the center frequency the transmitter is operating on
      * @param bandwidth the bandwidth to use for the transmission
      */
-    void SendHeSuPpdu(dBm_u txPower, MHz_u frequency, MHz_u bandwidth);
+    void SendHeSuPpdu(units::power::dBm_t txPower, MHz_u frequency, MHz_u bandwidth);
 
     /**
      * Start to generate a signal
@@ -720,7 +721,7 @@ class WifiPhyCcaIndicationTest : public TestCase
      * @param duration the duration of the signal
      */
     void StartSignal(Ptr<WaveformGenerator> signalGenerator,
-                     dBm_u txPower,
+                     units::power::dBm_t txPower,
                      MHz_u frequency,
                      MHz_u bandwidth,
                      Time duration);
@@ -760,7 +761,7 @@ class WifiPhyCcaIndicationTest : public TestCase
      */
     struct TxSignalInfo
     {
-        dBm_u power{0.0};           //!< transmit power to use
+        units::power::dBm_t power{0.0};           //!< transmit power to use
         Time startTime{Seconds(0)}; //!< time at which transmission will be started
         Time duration{Seconds(0)};  //!< the duration of the transmission
         MHz_u centerFreq{0};        //!< center frequency to use
@@ -772,7 +773,7 @@ class WifiPhyCcaIndicationTest : public TestCase
      */
     struct TxPpduInfo
     {
-        dBm_u power{0.0};           //!< transmit power to use
+        units::power::dBm_t power{0.0};           //!< transmit power to use
         Time startTime{Seconds(0)}; //!< time at which transmission will be started
         MHz_u centerFreq{0};        //!< center frequency to use
         MHz_u bandwidth{0};         //!< bandwidth to use
@@ -847,7 +848,7 @@ WifiPhyCcaIndicationTest::WifiPhyCcaIndicationTest()
 
 void
 WifiPhyCcaIndicationTest::StartSignal(Ptr<WaveformGenerator> signalGenerator,
-                                      dBm_u txPower,
+                                      units::power::dBm_t txPower,
                                       MHz_u frequency,
                                       MHz_u bandwidth,
                                       Time duration)
@@ -879,7 +880,7 @@ WifiPhyCcaIndicationTest::StopSignal(Ptr<WaveformGenerator> signalGenerator)
 }
 
 void
-WifiPhyCcaIndicationTest::SendHeSuPpdu(dBm_u txPower, MHz_u frequency, MHz_u bandwidth)
+WifiPhyCcaIndicationTest::SendHeSuPpdu(units::power::dBm_t txPower, MHz_u frequency, MHz_u bandwidth)
 {
     NS_LOG_FUNCTION(this << txPower);
 
@@ -1121,7 +1122,7 @@ WifiPhyCcaIndicationTest::RunOne()
                         "Reception of a signal that occupies P20 below ED threshold");
     ScheduleTest(
         delay,
-        {{dBm_u{-65}, MicroSeconds(0), MicroSeconds(100), P20_CENTER_FREQUENCY, MHz_u{20}}},
+        {{units::power::dBm_t{-65}, MicroSeconds(0), MicroSeconds(100), P20_CENTER_FREQUENCY, MHz_u{20}}},
         {},
         {
             {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
@@ -1142,7 +1143,7 @@ WifiPhyCcaIndicationTest::RunOne()
                         "Reception of signal that occupies P20 above ED threshold");
     ScheduleTest(
         delay,
-        {{dBm_u{-60.0}, MicroSeconds(0), MicroSeconds(100), P20_CENTER_FREQUENCY, MHz_u{20}}},
+        {{units::power::dBm_t{-60.0}, MicroSeconds(0), MicroSeconds(100), P20_CENTER_FREQUENCY, MHz_u{20}}},
         {},
         {
             {aCcaTime, WifiPhyState::CCA_BUSY}, // CCA-BUSY after aCCATime
@@ -1182,8 +1183,8 @@ WifiPhyCcaIndicationTest::RunOne()
                         "sum above ED threshold");
     ScheduleTest(
         delay,
-        {{dBm_u{-64.0}, MicroSeconds(0), MicroSeconds(100), P20_CENTER_FREQUENCY, MHz_u{20}},
-         {dBm_u{-65.0}, MicroSeconds(50), MicroSeconds(200), P20_CENTER_FREQUENCY, MHz_u{20}}},
+        {{units::power::dBm_t{-64.0}, MicroSeconds(0), MicroSeconds(100), P20_CENTER_FREQUENCY, MHz_u{20}},
+         {units::power::dBm_t{-65.0}, MicroSeconds(50), MicroSeconds(200), P20_CENTER_FREQUENCY, MHz_u{20}}},
         {},
         {
             {MicroSeconds(50) + aCcaTime, WifiPhyState::CCA_BUSY}, // CCA-BUSY after aCCATime
@@ -1223,7 +1224,7 @@ WifiPhyCcaIndicationTest::RunOne()
         "Reception of a 20 MHz HE PPDU that occupies P20 below CCA sensitivity threshold");
     ScheduleTest(delay,
                  {},
-                 {{dBm_u{-85}, MicroSeconds(0), P20_CENTER_FREQUENCY, MHz_u{20}}},
+                 {{units::power::dBm_t{-85}, MicroSeconds(0), P20_CENTER_FREQUENCY, MHz_u{20}}},
                  {
                      {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
                      {PpduDurations.at(MHz_u{20}) - smallDelta,
@@ -1246,7 +1247,7 @@ WifiPhyCcaIndicationTest::RunOne()
     ScheduleTest(
         delay,
         {},
-        {{dBm_u{-80}, MicroSeconds(0), P20_CENTER_FREQUENCY, MHz_u{20}}},
+        {{units::power::dBm_t{-80}, MicroSeconds(0), P20_CENTER_FREQUENCY, MHz_u{20}}},
         {
             {aCcaTime, WifiPhyState::CCA_BUSY}, // CCA-BUSY after aCCATime
             {PpduDurations.at(MHz_u{20}) - smallDelta,
@@ -1283,7 +1284,7 @@ WifiPhyCcaIndicationTest::RunOne()
         "Reception of a 40 MHz HE PPDU that occupies P20 below CCA sensitivity threshold");
     ScheduleTest(delay,
                  {},
-                 {{dBm_u{-80}, MicroSeconds(0), P40_CENTER_FREQUENCY, MHz_u{40}}},
+                 {{units::power::dBm_t{-80}, MicroSeconds(0), P40_CENTER_FREQUENCY, MHz_u{40}}},
                  {
                      {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
                      {PpduDurations.at(MHz_u{40}) - smallDelta,
@@ -1306,7 +1307,7 @@ WifiPhyCcaIndicationTest::RunOne()
     ScheduleTest(
         delay,
         {},
-        {{dBm_u{-75}, MicroSeconds(0), P40_CENTER_FREQUENCY, MHz_u{40}}},
+        {{units::power::dBm_t{-75}, MicroSeconds(0), P40_CENTER_FREQUENCY, MHz_u{40}}},
         {
             {aCcaTime, WifiPhyState::CCA_BUSY}, // CCA-BUSY after aCCATime
             {PpduDurations.at(MHz_u{40}) - smallDelta,
@@ -1346,7 +1347,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 20 MHz signal that occupies S20 below ED threshold");
         ScheduleTest(
             delay,
-            {{dBm_u{-65}, MicroSeconds(0), MicroSeconds(100), S20_CENTER_FREQUENCY, MHz_u{20}}},
+            {{units::power::dBm_t{-65}, MicroSeconds(0), MicroSeconds(100), S20_CENTER_FREQUENCY, MHz_u{20}}},
             {},
             {
                 {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
@@ -1367,7 +1368,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 20 MHz signal that occupies S20 above ED threshold");
         ScheduleTest(
             delay,
-            {{dBm_u{-60}, MicroSeconds(0), MicroSeconds(100), S20_CENTER_FREQUENCY, MHz_u{20}}},
+            {{units::power::dBm_t{-60}, MicroSeconds(0), MicroSeconds(100), S20_CENTER_FREQUENCY, MHz_u{20}}},
             {},
             {
                 {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
@@ -1404,7 +1405,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 40 MHz signal that occupies P40 above ED threshold");
         ScheduleTest(
             delay,
-            {{dBm_u{-55}, MicroSeconds(0), MicroSeconds(100), P40_CENTER_FREQUENCY, MHz_u{40}}},
+            {{units::power::dBm_t{-55}, MicroSeconds(0), MicroSeconds(100), P40_CENTER_FREQUENCY, MHz_u{40}}},
             {},
             {
                 {aCcaTime, WifiPhyState::CCA_BUSY}, // CCA-BUSY after aCCATime
@@ -1441,8 +1442,8 @@ WifiPhyCcaIndicationTest::RunOne()
                             "another signal that occupies P20");
         ScheduleTest(
             delay,
-            {{dBm_u{-60}, MicroSeconds(0), MicroSeconds(100), S20_CENTER_FREQUENCY, MHz_u{20}},
-             {dBm_u{-60}, MicroSeconds(50), MicroSeconds(100), P20_CENTER_FREQUENCY, MHz_u{20}}},
+            {{units::power::dBm_t{-60}, MicroSeconds(0), MicroSeconds(100), S20_CENTER_FREQUENCY, MHz_u{20}},
+             {units::power::dBm_t{-60}, MicroSeconds(50), MicroSeconds(100), P20_CENTER_FREQUENCY, MHz_u{20}}},
             {},
             {
                 {aCcaTime, WifiPhyState::IDLE}, // state of primary stays idle after aCCATime
@@ -1498,8 +1499,8 @@ WifiPhyCcaIndicationTest::RunOne()
                             "another signal that occupies S20");
         ScheduleTest(
             delay,
-            {{dBm_u{-60}, MicroSeconds(0), MicroSeconds(100), P20_CENTER_FREQUENCY, MHz_u{20}},
-             {dBm_u{-60}, MicroSeconds(50), MicroSeconds(100), S20_CENTER_FREQUENCY, MHz_u{20}}},
+            {{units::power::dBm_t{-60}, MicroSeconds(0), MicroSeconds(100), P20_CENTER_FREQUENCY, MHz_u{20}},
+             {units::power::dBm_t{-60}, MicroSeconds(50), MicroSeconds(100), S20_CENTER_FREQUENCY, MHz_u{20}}},
             {},
             {
                 {aCcaTime, WifiPhyState::CCA_BUSY}, // CCA-BUSY after aCCATime
@@ -1555,7 +1556,7 @@ WifiPhyCcaIndicationTest::RunOne()
             "Reception of a 20 MHz HE PPDU that occupies S20 below CCA sensitivity threshold");
         ScheduleTest(delay,
                      {},
-                     {{dBm_u{-75}, MicroSeconds(0), S20_CENTER_FREQUENCY, MHz_u{20}}},
+                     {{units::power::dBm_t{-75}, MicroSeconds(0), S20_CENTER_FREQUENCY, MHz_u{20}}},
                      {
                          {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
                          {PpduDurations.at(MHz_u{20}) - smallDelta,
@@ -1577,7 +1578,7 @@ WifiPhyCcaIndicationTest::RunOne()
         ScheduleTest(
             delay,
             {},
-            {{dBm_u{-70}, MicroSeconds(0), S20_CENTER_FREQUENCY, MHz_u{20}}},
+            {{units::power::dBm_t{-70}, MicroSeconds(0), S20_CENTER_FREQUENCY, MHz_u{20}}},
             {
                 {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
                 {PpduDurations.at(MHz_u{20}) - smallDelta,
@@ -1616,12 +1617,12 @@ WifiPhyCcaIndicationTest::RunOne()
             "MHz HE PPDU that occupies P40 below CCA sensitivity threshold");
         ScheduleTest(
             delay,
-            {{dBm_u{-60},
+            {{units::power::dBm_t{-60},
               MicroSeconds(0),
               MicroSeconds(100),
               S20_CENTER_FREQUENCY,
               MHz_u{20}}}, // signal on S20 above threshold
-            {{dBm_u{-80},
+            {{units::power::dBm_t{-80},
               MicroSeconds(50),
               P40_CENTER_FREQUENCY,
               MHz_u{40}}}, // PPDU on P40 below threshold
@@ -1677,7 +1678,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 20 MHz signal that occupies the first subchannel of "
                             "S40 below ED threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-65},
+                     {{units::power::dBm_t{-65},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S40_CENTER_FREQUENCY - MHz_u{10},
@@ -1704,7 +1705,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 20 MHz signal that occupies the first subchannel of "
                             "S40 above ED threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-55},
+                     {{units::power::dBm_t{-55},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S40_CENTER_FREQUENCY - MHz_u{10},
@@ -1743,7 +1744,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 20 MHz signal that occupies the second subchannel of "
                             "S40 below ED threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-65},
+                     {{units::power::dBm_t{-65},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S40_CENTER_FREQUENCY + MHz_u{10},
@@ -1770,7 +1771,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 20 MHz signal that occupies the second subchannel of "
                             "S40 above ED threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-55},
+                     {{units::power::dBm_t{-55},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S40_CENTER_FREQUENCY + MHz_u{10},
@@ -1809,7 +1810,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 40 MHz signal that occupies S40 below ED threshold");
         ScheduleTest(
             delay,
-            {{dBm_u{-60}, MicroSeconds(0), MicroSeconds(100), S40_CENTER_FREQUENCY, MHz_u{40}}},
+            {{units::power::dBm_t{-60}, MicroSeconds(0), MicroSeconds(100), S40_CENTER_FREQUENCY, MHz_u{40}}},
             {},
             {
                 {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
@@ -1833,7 +1834,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "S40 above ED threshold");
         ScheduleTest(
             delay,
-            {{dBm_u{-55}, MicroSeconds(0), MicroSeconds(100), S40_CENTER_FREQUENCY, MHz_u{40}}},
+            {{units::power::dBm_t{-55}, MicroSeconds(0), MicroSeconds(100), S40_CENTER_FREQUENCY, MHz_u{40}}},
             {},
             {
                 {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
@@ -1868,7 +1869,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 80 MHz signal that occupies P80 above ED threshold");
         ScheduleTest(
             delay,
-            {{dBm_u{-55}, MicroSeconds(0), MicroSeconds(100), P80_CENTER_FREQUENCY, MHz_u{80}}},
+            {{units::power::dBm_t{-55}, MicroSeconds(0), MicroSeconds(100), P80_CENTER_FREQUENCY, MHz_u{80}}},
             {},
             {
                 {aCcaTime, WifiPhyState::CCA_BUSY}, // CCA-BUSY after aCCATime
@@ -1904,12 +1905,12 @@ WifiPhyCcaIndicationTest::RunOne()
                             "reception of another 20 MHz signal that occupies P20");
         ScheduleTest(
             delay,
-            {{dBm_u{-55},
+            {{units::power::dBm_t{-55},
               MicroSeconds(0),
               MicroSeconds(100),
               S40_CENTER_FREQUENCY - MHz_u{10},
               MHz_u{20}},
-             {dBm_u{-55}, MicroSeconds(50), MicroSeconds(100), P20_CENTER_FREQUENCY, MHz_u{20}}},
+             {units::power::dBm_t{-55}, MicroSeconds(50), MicroSeconds(100), P20_CENTER_FREQUENCY, MHz_u{20}}},
             {},
             {
                 {aCcaTime, WifiPhyState::IDLE}, // state of primary stays idle after aCCATime
@@ -1963,12 +1964,12 @@ WifiPhyCcaIndicationTest::RunOne()
                             "another signal that occupies S20");
         ScheduleTest(
             delay,
-            {{dBm_u{-55},
+            {{units::power::dBm_t{-55},
               MicroSeconds(0),
               MicroSeconds(100),
               S40_CENTER_FREQUENCY - MHz_u{10},
               MHz_u{20}},
-             {dBm_u{-55}, MicroSeconds(50), MicroSeconds(100), S20_CENTER_FREQUENCY, MHz_u{20}}},
+             {units::power::dBm_t{-55}, MicroSeconds(50), MicroSeconds(100), S20_CENTER_FREQUENCY, MHz_u{20}}},
             {},
             {
                 {aCcaTime, WifiPhyState::IDLE}, // state of primary stays idle after aCCATime
@@ -2020,7 +2021,7 @@ WifiPhyCcaIndicationTest::RunOne()
             "Reception of a 40 MHz HE PPDU that occupies S40 below CCA sensitivity threshold");
         ScheduleTest(delay,
                      {},
-                     {{dBm_u{-75}, MicroSeconds(0), S40_CENTER_FREQUENCY, MHz_u{40}}},
+                     {{units::power::dBm_t{-75}, MicroSeconds(0), S40_CENTER_FREQUENCY, MHz_u{40}}},
                      {
                          {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
                          {PpduDurations.at(MHz_u{20}) - smallDelta,
@@ -2042,7 +2043,7 @@ WifiPhyCcaIndicationTest::RunOne()
         ScheduleTest(
             delay,
             {},
-            {{dBm_u{-70.0}, MicroSeconds(0), S40_CENTER_FREQUENCY, MHz_u{40}}},
+            {{units::power::dBm_t{-70.0}, MicroSeconds(0), S40_CENTER_FREQUENCY, MHz_u{40}}},
             {
                 {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
                 {PpduDurations.at(MHz_u{40}) - smallDelta,
@@ -2078,12 +2079,12 @@ WifiPhyCcaIndicationTest::RunOne()
             "Reception of a 40 MHz signal that occupies S40 above ED threshold followed by a 80 "
             "MHz HE PPDU that occupies P80 below CCA sensitivity threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-55},
+                     {{units::power::dBm_t{-55},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S40_CENTER_FREQUENCY,
                        MHz_u{40}}}, // signal on S40 above threshold
-                     {{dBm_u{-80},
+                     {{units::power::dBm_t{-80},
                        MicroSeconds(50),
                        P80_CENTER_FREQUENCY,
                        MHz_u{80}}}, // PPDU on P80 below threshold
@@ -2135,7 +2136,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "sensitivity threshold");
         ScheduleTest(delay,
                      {},
-                     {{dBm_u{-70}, MicroSeconds(0), P80_CENTER_FREQUENCY, MHz_u{80}}},
+                     {{units::power::dBm_t{-70}, MicroSeconds(0), P80_CENTER_FREQUENCY, MHz_u{80}}},
                      {
                          {aCcaTime, WifiPhyState::CCA_BUSY}, // CCA_BUSY after aCCATime
                          {PpduDurations.at(MHz_u{80}) - smallDelta,
@@ -2195,7 +2196,7 @@ WifiPhyCcaIndicationTest::RunOne()
         ScheduleTest(
             delay,
             {},
-            {{dBm_u{-55}, MicroSeconds(0), P80_CENTER_FREQUENCY, MHz_u{80}}},
+            {{units::power::dBm_t{-55}, MicroSeconds(0), P80_CENTER_FREQUENCY, MHz_u{80}}},
             {
                 {aCcaTime, WifiPhyState::CCA_BUSY}, // CCA_BUSY after aCCATime
                 {PpduDurations.at(MHz_u{80}) - smallDelta,
@@ -2253,7 +2254,7 @@ WifiPhyCcaIndicationTest::RunOne()
             "Reception of a 40 MHz HE PPDU that does not occupy the operational channel");
         ScheduleTest(delay,
                      {},
-                     {{dBm_u{-50}, MicroSeconds(0), S40_CENTER_FREQUENCY, MHz_u{40}}},
+                     {{units::power::dBm_t{-50}, MicroSeconds(0), S40_CENTER_FREQUENCY, MHz_u{40}}},
                      {
                          {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
                          {PpduDurations.at(MHz_u{20}) - smallDelta,
@@ -2276,7 +2277,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 20 MHz signal that occupies the first subchannel of "
                             "S80 below ED threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-65},
+                     {{units::power::dBm_t{-65},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S80_CENTER_FREQUENCY - MHz_u{30},
@@ -2302,7 +2303,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 20 MHz signal that occupies the first subchannel of "
                             "S80 above ED threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-55},
+                     {{units::power::dBm_t{-55},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S80_CENTER_FREQUENCY - MHz_u{30},
@@ -2337,7 +2338,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 20 MHz signal that occupies the second subchannel of "
                             "S80 below ED threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-65},
+                     {{units::power::dBm_t{-65},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S80_CENTER_FREQUENCY - MHz_u{10},
@@ -2363,7 +2364,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 20 MHz signal that occupies the second subchannel of "
                             "S80 above ED threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-55},
+                     {{units::power::dBm_t{-55},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S80_CENTER_FREQUENCY - MHz_u{10},
@@ -2398,7 +2399,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 20 MHz signal that occupies the third subchannel of "
                             "S80 below ED threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-65},
+                     {{units::power::dBm_t{-65},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S80_CENTER_FREQUENCY + MHz_u{10},
@@ -2424,7 +2425,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 20 MHz signal that occupies the third subchannel of "
                             "S80 above ED threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-55},
+                     {{units::power::dBm_t{-55},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S80_CENTER_FREQUENCY + MHz_u{10},
@@ -2459,7 +2460,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 20 MHz signal that occupies the fourth subchannel of "
                             "S80 below ED threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-65},
+                     {{units::power::dBm_t{-65},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S80_CENTER_FREQUENCY + MHz_u{30},
@@ -2485,7 +2486,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 20 MHz signal that occupies the fourth subchannel of "
                             "S80 above ED threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-55},
+                     {{units::power::dBm_t{-55},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S80_CENTER_FREQUENCY + MHz_u{30},
@@ -2520,7 +2521,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 40 MHz signal that occupies the first and second "
                             "subchannels of S80 below ED threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-65},
+                     {{units::power::dBm_t{-65},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S80_CENTER_FREQUENCY - MHz_u{20},
@@ -2546,7 +2547,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 40 MHz signal that occupies the first and second "
                             "subchannels of S80 above ED threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-55},
+                     {{units::power::dBm_t{-55},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S80_CENTER_FREQUENCY - MHz_u{20},
@@ -2581,7 +2582,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 40 MHz signal that occupies the third and fourth "
                             "subchannels of S80 below ED threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-65},
+                     {{units::power::dBm_t{-65},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S80_CENTER_FREQUENCY + MHz_u{20},
@@ -2607,7 +2608,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 40 MHz signal that occupies the third and fourth "
                             "subchannels of S80 above ED threshold");
         ScheduleTest(delay,
-                     {{dBm_u{-55},
+                     {{units::power::dBm_t{-55},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S80_CENTER_FREQUENCY + MHz_u{20},
@@ -2642,7 +2643,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 80 MHz signal that occupies S80 below ED threshold");
         ScheduleTest(
             delay,
-            {{dBm_u{-65}, MicroSeconds(0), MicroSeconds(100), S80_CENTER_FREQUENCY, MHz_u{80}}},
+            {{units::power::dBm_t{-65}, MicroSeconds(0), MicroSeconds(100), S80_CENTER_FREQUENCY, MHz_u{80}}},
             {},
             {
                 {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
@@ -2664,7 +2665,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 80 MHz signal that occupies S80 above ED threshold");
         ScheduleTest(
             delay,
-            {{dBm_u{-55}, MicroSeconds(0), MicroSeconds(100), S80_CENTER_FREQUENCY, MHz_u{80}}},
+            {{units::power::dBm_t{-55}, MicroSeconds(0), MicroSeconds(100), S80_CENTER_FREQUENCY, MHz_u{80}}},
             {},
             {
                 {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
@@ -2696,7 +2697,7 @@ WifiPhyCcaIndicationTest::RunOne()
             "Reception of a 160 MHz signal that occupies the whole band below ED threshold");
         ScheduleTest(
             delay,
-            {{dBm_u{-55}, MicroSeconds(0), MicroSeconds(100), P160_CENTER_FREQUENCY, MHz_u{160}}},
+            {{units::power::dBm_t{-55}, MicroSeconds(0), MicroSeconds(100), P160_CENTER_FREQUENCY, MHz_u{160}}},
             {},
             {
                 {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
@@ -2719,7 +2720,7 @@ WifiPhyCcaIndicationTest::RunOne()
             "Reception of a 160 MHz signal that occupies the whole band above ED threshold");
         ScheduleTest(
             delay,
-            {{dBm_u{-50}, MicroSeconds(0), MicroSeconds(100), P160_CENTER_FREQUENCY, MHz_u{160}}},
+            {{units::power::dBm_t{-50}, MicroSeconds(0), MicroSeconds(100), P160_CENTER_FREQUENCY, MHz_u{160}}},
             {},
             {
                 {aCcaTime, WifiPhyState::CCA_BUSY}, // CCA-BUSY after aCCATime
@@ -2751,12 +2752,12 @@ WifiPhyCcaIndicationTest::RunOne()
                             "reception of another 20 MHz signal that occupies P20");
         ScheduleTest(
             delay,
-            {{dBm_u{-55},
+            {{units::power::dBm_t{-55},
               MicroSeconds(0),
               MicroSeconds(100),
               S80_CENTER_FREQUENCY + MHz_u{10},
               MHz_u{20}},
-             {dBm_u{-55}, MicroSeconds(50), MicroSeconds(100), P20_CENTER_FREQUENCY, MHz_u{20}}},
+             {units::power::dBm_t{-55}, MicroSeconds(50), MicroSeconds(100), P20_CENTER_FREQUENCY, MHz_u{20}}},
             {},
             {
                 {aCcaTime, WifiPhyState::IDLE}, // state of primary stays idle after aCCATime
@@ -2802,12 +2803,12 @@ WifiPhyCcaIndicationTest::RunOne()
                             "another signal that occupies S40");
         ScheduleTest(
             delay,
-            {{dBm_u{-55},
+            {{units::power::dBm_t{-55},
               MicroSeconds(0),
               MicroSeconds(100),
               S80_CENTER_FREQUENCY + MHz_u{30},
               MHz_u{20}},
-             {dBm_u{-55},
+             {units::power::dBm_t{-55},
               MicroSeconds(50),
               MicroSeconds(100),
               S40_CENTER_FREQUENCY - MHz_u{10},
@@ -2855,12 +2856,12 @@ WifiPhyCcaIndicationTest::RunOne()
                             "another signal that occupies S20");
         ScheduleTest(
             delay,
-            {{dBm_u{-55},
+            {{units::power::dBm_t{-55},
               MicroSeconds(0),
               MicroSeconds(100),
               S80_CENTER_FREQUENCY - MHz_u{30},
               MHz_u{20}},
-             {dBm_u{-55}, MicroSeconds(50), MicroSeconds(100), S20_CENTER_FREQUENCY, MHz_u{20}}},
+             {units::power::dBm_t{-55}, MicroSeconds(50), MicroSeconds(100), S20_CENTER_FREQUENCY, MHz_u{20}}},
             {},
             {
                 {aCcaTime, WifiPhyState::IDLE}, // state of primary stays idle after aCCATime
@@ -2904,7 +2905,7 @@ WifiPhyCcaIndicationTest::RunOne()
             "Reception of a 40 MHz HE PPDU that occupies S40 below CCA sensitivity threshold");
         ScheduleTest(delay,
                      {},
-                     {{dBm_u{-70}, MicroSeconds(0), S80_CENTER_FREQUENCY, MHz_u{80}}},
+                     {{units::power::dBm_t{-70}, MicroSeconds(0), S80_CENTER_FREQUENCY, MHz_u{80}}},
                      {
                          {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
                          {PpduDurations.at(MHz_u{20}) - smallDelta,
@@ -2925,7 +2926,7 @@ WifiPhyCcaIndicationTest::RunOne()
             "Reception of a 80 MHz HE PPDU that occupies S80 above CCA sensitivity threshold");
         ScheduleTest(delay,
                      {},
-                     {{dBm_u{-65}, MicroSeconds(0), S80_CENTER_FREQUENCY, MHz_u{80}}},
+                     {{units::power::dBm_t{-65}, MicroSeconds(0), S80_CENTER_FREQUENCY, MHz_u{80}}},
                      {
                          {aCcaTime, WifiPhyState::IDLE}, // IDLE after aCCATime
                          {PpduDurations.at(MHz_u{80}) - smallDelta,
@@ -2955,7 +2956,7 @@ WifiPhyCcaIndicationTest::RunOne()
                             "Reception of a 20 MHz signal that generates a per20bitmap parameter "
                             "change when previous CCA indication reports IDLE");
         ScheduleTest(delay,
-                     {{dBm_u{-60},
+                     {{units::power::dBm_t{-60},
                        MicroSeconds(0),
                        MicroSeconds(100),
                        S80_CENTER_FREQUENCY + MHz_u{30},
@@ -2992,8 +2993,8 @@ WifiPhyCcaIndicationTest::RunOne()
             "previous CCA indication reports BUSY for the primary channel");
         ScheduleTest(
             delay,
-            {{dBm_u{-50.0}, MicroSeconds(0), MicroSeconds(100), P80_CENTER_FREQUENCY, MHz_u{80}},
-             {dBm_u{-60.0},
+            {{units::power::dBm_t{-50.0}, MicroSeconds(0), MicroSeconds(100), P80_CENTER_FREQUENCY, MHz_u{80}},
+             {units::power::dBm_t{-60.0},
               MicroSeconds(50),
               MicroSeconds(200),
               S80_CENTER_FREQUENCY + MHz_u{30},

@@ -34,6 +34,7 @@
 #include "ns3/wifi-spectrum-signal-parameters.h"
 #include "ns3/wifi-spectrum-value-helper.h"
 #include "ns3/wifi-utils.h"
+#include "ns3/units.h"
 
 #include <vector>
 
@@ -690,7 +691,7 @@ class TestMultipleCtsResponsesFromMuRts : public TestCase
     std::size_t m_countStaRxCtsFailure; ///< count the number of unsuccessfully received CTS frames
                                         ///< by the non-participating STA
 
-    dBm_u m_stasTxPower; ///< TX power configured for the STAs
+    units::power::dBm_t m_stasTxPower; ///< TX power configured for the STAs
 };
 
 TestMultipleCtsResponsesFromMuRts::TestMultipleCtsResponsesFromMuRts(
@@ -701,7 +702,7 @@ TestMultipleCtsResponsesFromMuRts::TestMultipleCtsResponsesFromMuRts(
       m_countApRxCtsFailure{0},
       m_countStaRxCtsSuccess{0},
       m_countStaRxCtsFailure{0},
-      m_stasTxPower(dBm_u{10})
+      m_stasTxPower(units::power::dBm_t{10})
 {
 }
 

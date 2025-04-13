@@ -101,7 +101,7 @@ class EhtFrameExchangeManager : public HeFrameExchangeManager
      * @param address of the remote station
      * @return the RSSI of the most recent packet received from the remote station
      */
-    std::optional<dBm_u> GetMostRecentRssi(const Mac48Address& address) const override;
+    std::optional<units::power::dBm_t> GetMostRecentRssi(const Mac48Address& address) const override;
 
     /**
      * @param psdu the given PSDU

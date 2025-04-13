@@ -44,6 +44,7 @@
 #include "ns3/on-off-helper.h"
 #include "ns3/packet-sink-helper.h"
 #include "ns3/string.h"
+#include "ns3/units.h"
 #include "ns3/wifi-net-device.h"
 #include "ns3/wifi-radio-energy-model-helper.h"
 #include "ns3/wifi-utils.h"
@@ -104,8 +105,8 @@ main(int argc, char* argv[])
     Time duration{"10s"};
     joule_u initialEnergy{7.5};
     volt_u voltage{3.0};
-    dBm_u txPowerStart{0.0};
-    dBm_u txPowerEnd{15.0};
+    units::power::dBm_t txPowerStart{0.0};
+    units::power::dBm_t txPowerEnd{15.0};
     uint32_t nTxPowerLevels{16};
     uint32_t txPowerLevel{0};
     ampere_u idleCurrent{0.273};

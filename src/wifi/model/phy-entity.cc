@@ -24,6 +24,7 @@
 #include "ns3/log.h"
 #include "ns3/packet.h"
 #include "ns3/simulator.h"
+#include "ns3/units.h"
 
 #include <algorithm>
 
@@ -1292,7 +1293,7 @@ PhyEntity::GetRxChannelWidth(const WifiTxVector& txVector) const
     return std::min(m_wifiPhy->GetChannelWidth(), txVector.GetChannelWidth());
 }
 
-dBm_u
+units::power::dBm_t
 PhyEntity::GetCcaThreshold(const Ptr<const WifiPpdu> ppdu,
                            WifiChannelListType /*channelType*/) const
 {
@@ -1300,7 +1301,7 @@ PhyEntity::GetCcaThreshold(const Ptr<const WifiPpdu> ppdu,
 }
 
 Time
-PhyEntity::GetDelayUntilCcaEnd(dBm_u threshold, const WifiSpectrumBandInfo& band)
+PhyEntity::GetDelayUntilCcaEnd(units::power::dBm_t threshold, const WifiSpectrumBandInfo& band)
 {
     return m_wifiPhy->m_interference->GetEnergyDuration(DbmToW(threshold), band);
 }
@@ -1384,7 +1385,7 @@ PhyEntity::StartTx(Ptr<const WifiPpdu> ppdu)
 void
 PhyEntity::Transmit(Time txDuration,
                     Ptr<const WifiPpdu> ppdu,
-                    dBm_u txPower,
+                    units::power::dBm_t txPower,
                     Ptr<SpectrumValue> txPowerSpectrum,
                     const std::string& type)
 {

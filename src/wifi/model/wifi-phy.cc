@@ -35,6 +35,7 @@
 #include "ns3/string.h"
 #include "ns3/tuple.h"
 #include "ns3/vht-configuration.h"
+#include "ns3/units.h"
 
 #include <algorithm>
 #include <numeric>
@@ -148,25 +149,25 @@ WifiPhy::GetTypeId()
                 "this threshold (dBm) for the PHY to detect the signal. "
                 "This threshold refers to a width of 20 MHz and will be "
                 "scaled to match the width of the received signal.",
-                DoubleValue(-101.0),
-                MakeDoubleAccessor(&WifiPhy::SetRxSensitivity, &WifiPhy::GetRxSensitivity),
-                MakeDoubleChecker<dBm_u>())
+                DecibelMwValue(-101.0),
+                MakeDecibelMwAccessor(&WifiPhy::SetRxSensitivity, &WifiPhy::GetRxSensitivity),
+                MakeDecibelMwChecker())
             .AddAttribute(
                 "CcaEdThreshold",
                 "The energy of all received signals should be higher than "
                 "this threshold (dBm) in the primary channel to allow the PHY layer "
                 "to declare CCA BUSY state.",
-                DoubleValue(-62.0),
-                MakeDoubleAccessor(&WifiPhy::SetCcaEdThreshold, &WifiPhy::GetCcaEdThreshold),
-                MakeDoubleChecker<dBm_u>())
+                DecibelMwValue(-62.0),
+                MakeDecibelMwAccessor(&WifiPhy::SetCcaEdThreshold, &WifiPhy::GetCcaEdThreshold),
+                MakeDecibelMwChecker())
             .AddAttribute("CcaSensitivity",
                           "The energy of a received wifi signal should be higher than "
                           "this threshold (dBm) in the primary channel to allow the PHY layer "
                           "to declare CCA BUSY state.",
-                          DoubleValue(-82.0),
-                          MakeDoubleAccessor(&WifiPhy::SetCcaSensitivityThreshold,
+                          DecibelMwValue(-82.0),
+                          MakeDecibelMwAccessor(&WifiPhy::SetCcaSensitivityThreshold,
                                              &WifiPhy::GetCcaSensitivityThreshold),
-                          MakeDoubleChecker<dBm_u>())
+                          MakeDecibelMwChecker())
             .AddAttribute("TxGain",
                           "Transmission gain.",
                           DecibelValue(0.0),
@@ -514,39 +515,39 @@ WifiPhy::SetCapabilitiesChangedCallback(Callback<void> callback)
 }
 
 void
-WifiPhy::SetRxSensitivity(dBm_u threshold)
+WifiPhy::SetRxSensitivity(units::power::dBm_t threshold)
 {
     NS_LOG_FUNCTION(this << threshold);
     m_rxSensitivity = threshold;
 }
 
-dBm_u
+units::power::dBm_t
 WifiPhy::GetRxSensitivity() const
 {
     return m_rxSensitivity;
 }
 
 void
-WifiPhy::SetCcaEdThreshold(dBm_u threshold)
+WifiPhy::SetCcaEdThreshold(units::power::dBm_t threshold)
 {
     NS_LOG_FUNCTION(this << threshold);
     m_ccaEdThreshold = threshold;
 }
 
-dBm_u
+units::power::dBm_t
 WifiPhy::GetCcaEdThreshold() const
 {
     return m_ccaEdThreshold;
 }
 
 void
-WifiPhy::SetCcaSensitivityThreshold(dBm_u threshold)
+WifiPhy::SetCcaSensitivityThreshold(units::power::dBm_t threshold)
 {
     NS_LOG_FUNCTION(this << threshold);
     m_ccaSensitivityThreshold = threshold;
 }
 
-dBm_u
+units::power::dBm_t
 WifiPhy::GetCcaSensitivityThreshold() const
 {
     return m_ccaSensitivityThreshold;
@@ -2303,7 +2304,7 @@ WifiPhy::AbortCurrentReception(WifiPhyRxfailureReason reason)
 }
 
 void
-WifiPhy::ResetCca(bool powerRestricted, dBm_u txPowerMaxSiso, dBm_u txPowerMaxMimo)
+WifiPhy::ResetCca(bool powerRestricted, units::power::dBm_t txPowerMaxSiso, units::power::dBm_t txPowerMaxMimo)
 {
     NS_LOG_FUNCTION(this << powerRestricted << txPowerMaxSiso << txPowerMaxMimo);
     // This method might be called multiple times when receiving TB PPDUs with a BSS color
@@ -2325,7 +2326,7 @@ WifiPhy::ResetCca(bool powerRestricted, dBm_u txPowerMaxSiso, dBm_u txPowerMaxMi
     }
 }
 
-dBm_u
+units::power::dBm_t
 WifiPhy::GetTxPowerForTransmission(Ptr<const WifiPpdu> ppdu) const
 {
     NS_LOG_FUNCTION(this << m_powerRestricted << ppdu);

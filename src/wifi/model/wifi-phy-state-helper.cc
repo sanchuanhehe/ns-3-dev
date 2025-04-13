@@ -17,6 +17,7 @@
 #include "ns3/log.h"
 #include "ns3/packet.h"
 #include "ns3/simulator.h"
+#include "ns3/units.h"
 
 #include <algorithm>
 #include <functional>
@@ -311,7 +312,7 @@ WifiPhyStateHelper::LogPreviousIdleAndCcaBusyStates()
 void
 WifiPhyStateHelper::SwitchToTx(Time txDuration,
                                const WifiConstPsduMap& psdus,
-                               dBm_u txPower,
+                               units::power::dBm_t txPower,
                                const WifiTxVector& txVector)
 {
     NS_LOG_FUNCTION(this << txDuration << psdus << txPower << txVector);

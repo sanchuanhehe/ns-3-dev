@@ -12,6 +12,7 @@
 
 #include "ns3/double.h"
 #include "ns3/log.h"
+#include "ns3/units.h"
 
 namespace ns3
 {
@@ -38,7 +39,7 @@ ThresholdPreambleDetectionModel::GetTypeId()
                           "Preamble is dropped if the RSSI is below this value (expressed in dBm).",
                           DoubleValue(-82),
                           MakeDoubleAccessor(&ThresholdPreambleDetectionModel::m_rssiMin),
-                          MakeDoubleChecker<dBm_u>());
+                          MakeDoubleChecker<units::power::dBm_t>());
     return tid;
 }
 
@@ -53,7 +54,7 @@ ThresholdPreambleDetectionModel::~ThresholdPreambleDetectionModel()
 }
 
 bool
-ThresholdPreambleDetectionModel::IsPreambleDetected(dBm_u rssi,
+ThresholdPreambleDetectionModel::IsPreambleDetected(units::power::dBm_t rssi,
                                                     double snr,
                                                     MHz_u channelWidth) const
 {

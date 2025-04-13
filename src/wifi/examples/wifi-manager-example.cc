@@ -57,6 +57,7 @@
 #include "ns3/uinteger.h"
 #include "ns3/wifi-mac.h"
 #include "ns3/wifi-net-device.h"
+#include "ns3/units.h"
 #include "ns3/yans-wifi-helper.h"
 
 using namespace ns3;
@@ -94,7 +95,7 @@ RateChange(uint64_t oldVal, uint64_t newVal)
 /// Step structure
 struct Step
 {
-    dBm_u stepSize;  ///< step size
+    units::power::dBm_t stepSize;  ///< step size
     double stepTime; ///< step size in seconds
 };
 
@@ -164,8 +165,8 @@ struct StandardInfo
 void
 ChangeSignalAndReportRate(Ptr<FixedRssLossModel> rssModel,
                           Step step,
-                          dBm_u rss,
-                          dBm_u noise,
+                          units::power::dBm_t rss,
+                          units::power::dBm_t noise,
                           Gnuplot2dDataset& rateDataset,
                           Gnuplot2dDataset& actualDataset)
 {
@@ -198,7 +199,7 @@ main(int argc, char* argv[])
     uint32_t steps;
     uint32_t rtsThreshold = 999999; // disabled even for large A-MPDU
     uint32_t maxAmpduSize = 65535;
-    dBm_u stepSize{1};
+    units::power::dBm_t stepSize{1};
     double stepTime = 1;        // seconds
     uint32_t packetSize = 1024; // bytes
     bool broadcast = false;
@@ -789,12 +790,12 @@ main(int argc, char* argv[])
     // Configure signal and noise, and schedule first iteration
     const auto BOLTZMANN = 1.3803e-23;
     const dBm_per_Hz_u noiseDensity = WToDbm(BOLTZMANN * 290); // 290K @ 20 MHz
-    const dBm_u noise = noiseDensity + (10 * log10(clientSelectedStandard.m_width * 1000000));
+    const units::power::dBm_t noise = noiseDensity + (10 * log10(clientSelectedStandard.m_width * 1000000));
 
     NS_LOG_DEBUG("Channel width " << wifiPhyPtrClient->GetChannelWidth() << " noise " << noise);
     NS_LOG_DEBUG("NSS " << wifiPhyPtrClient->GetMaxSupportedTxSpatialStreams());
 
-    const dBm_u rssCurrent = (clientSelectedStandard.m_snrHigh + noise);
+    const units::power::dBm_t rssCurrent = (clientSelectedStandard.m_snrHigh + noise);
     rssLossModel->SetRss(rssCurrent);
     NS_LOG_INFO("Setting initial Rss to " << rssCurrent);
     // Move the STA by stepsSize meters every stepTime seconds

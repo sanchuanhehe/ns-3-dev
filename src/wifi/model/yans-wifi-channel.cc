@@ -21,6 +21,7 @@
 #include "ns3/propagation-delay-model.h"
 #include "ns3/propagation-loss-model.h"
 #include "ns3/simulator.h"
+#include "ns3/units.h"
 
 namespace ns3
 {
@@ -76,7 +77,7 @@ YansWifiChannel::SetPropagationDelayModel(const Ptr<PropagationDelayModel> delay
 }
 
 void
-YansWifiChannel::Send(Ptr<YansWifiPhy> sender, Ptr<const WifiPpdu> ppdu, dBm_u txPower) const
+YansWifiChannel::Send(Ptr<YansWifiPhy> sender, Ptr<const WifiPpdu> ppdu, units::power::dBm_t txPower) const
 {
     NS_LOG_FUNCTION(this << sender << ppdu << txPower);
     Ptr<MobilityModel> senderMobility = sender->GetMobility();
@@ -93,7 +94,7 @@ YansWifiChannel::Send(Ptr<YansWifiPhy> sender, Ptr<const WifiPpdu> ppdu, dBm_u t
 
             auto receiverMobility = (*i)->GetMobility()->GetObject<MobilityModel>();
             const auto delay = m_delay->GetDelay(senderMobility, receiverMobility);
-            const dBm_u rxPower{m_loss->CalcRxPower(txPower, senderMobility, receiverMobility)};
+            const units::power::dBm_t rxPower{m_loss->CalcRxPower(txPower, senderMobility, receiverMobility)};
             NS_LOG_DEBUG("propagation: txPower="
                          << txPower << "dBm, rxPower=" << rxPower << "dBm, "
                          << "distance=" << senderMobility->GetDistanceFrom(receiverMobility)
@@ -120,7 +121,7 @@ YansWifiChannel::Send(Ptr<YansWifiPhy> sender, Ptr<const WifiPpdu> ppdu, dBm_u t
 }
 
 void
-YansWifiChannel::Receive(Ptr<YansWifiPhy> phy, Ptr<const WifiPpdu> ppdu, dBm_u rxPower)
+YansWifiChannel::Receive(Ptr<YansWifiPhy> phy, Ptr<const WifiPpdu> ppdu, units::power::dBm_t rxPower)
 {
     NS_LOG_FUNCTION(phy << ppdu << rxPower);
     const auto totalRxPower = rxPower + phy->GetRxGain().to<double>();

@@ -11,6 +11,8 @@
 
 #include "wifi-units.h"
 
+#include "ns3/units.h"
+
 namespace ns3
 {
 
@@ -56,8 +58,8 @@ enum MpduType
 /// SignalNoiseDbm structure
 struct SignalNoiseDbm
 {
-    dBm_u signal; ///< signal strength
-    dBm_u noise;  ///< noise power
+    units::power::dBm_t signal; ///< signal strength
+    units::power::dBm_t noise;  ///< noise power
 };
 
 /// MpduInfo structure
@@ -71,7 +73,7 @@ struct MpduInfo
 struct RxSignalInfo
 {
     double snr; ///< SNR in linear scale
-    dBm_u rssi; ///< RSSI
+    units::power::dBm_t rssi; ///< RSSI
 };
 
 /**

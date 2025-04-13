@@ -20,6 +20,7 @@
 #include "ns3/event-id.h"
 #include "ns3/nstime.h"
 #include "ns3/simple-ref-count.h"
+#include "ns3/units.h"
 
 #include <list>
 #include <map>
@@ -476,7 +477,7 @@ class PhyEntity : public SimpleRefCount<PhyEntity>
      */
     void Transmit(Time txDuration,
                   Ptr<const WifiPpdu> ppdu,
-                  dBm_u txPower,
+                  units::power::dBm_t txPower,
                   Ptr<SpectrumValue> txPowerSpectrum,
                   const std::string& type);
 
@@ -498,7 +499,7 @@ class PhyEntity : public SimpleRefCount<PhyEntity>
      * @param channelType the channel type
      * @return the CCA threshold
      */
-    virtual dBm_u GetCcaThreshold(const Ptr<const WifiPpdu> ppdu,
+    virtual units::power::dBm_t GetCcaThreshold(const Ptr<const WifiPpdu> ppdu,
                                   WifiChannelListType channelType) const;
 
     /**
@@ -910,7 +911,7 @@ class PhyEntity : public SimpleRefCount<PhyEntity>
      * @param band identify the requested band
      * @return the delay until CCA busy is ended
      */
-    Time GetDelayUntilCcaEnd(dBm_u threshold, const WifiSpectrumBandInfo& band);
+    Time GetDelayUntilCcaEnd(units::power::dBm_t threshold, const WifiSpectrumBandInfo& band);
 
     /**
      * @param currentChannelWidth channel width of the current transmission

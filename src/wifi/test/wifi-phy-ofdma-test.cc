@@ -41,6 +41,7 @@
 #include "ns3/wifi-spectrum-signal-parameters.h"
 #include "ns3/wifi-spectrum-value-helper.h"
 #include "ns3/wifi-utils.h"
+#include "ns3/units.h"
 
 #include <algorithm>
 #include <iterator>
@@ -2900,7 +2901,7 @@ class OfdmaTestPhyListener : public ns3::WifiPhyListener
         m_lastRxSuccess = false;
     }
 
-    void NotifyTxStart(Time duration, dBm_u txPower) override
+    void NotifyTxStart(Time duration, units::power::dBm_t txPower) override
     {
         NS_LOG_FUNCTION(this << duration << txPower);
     }
@@ -4627,7 +4628,7 @@ TestUlOfdmaPhyTransmission::RunOne()
                         this,
                         "Measure power for reception of HE TB PPDU only on RU 2");
     auto rxPower = DbmToW(
-        dBm_u{19}); // 16+1 dBm at STAs and +2 at AP (no loss since all devices are colocated)
+        units::power::dBm_t{19}); // 16+1 dBm at STAs and +2 at AP (no loss since all devices are colocated)
     SchedulePowerMeasurementChecks(delay,
                                    (m_channelWidth >= MHz_u{40}) ? Watt_u{0.0} : rxPower,
                                    rxPower, // power detected on RU1 only if same 20 MHz as RU 2
@@ -4664,16 +4665,16 @@ TestUlOfdmaPhyTransmission::RunOne()
                         dBm_per_MHz_u{3});
 
     rxPower = (m_channelWidth > MHz_u{40})
-                  ? DbmToW(dBm_u{19})
-                  : DbmToW(dBm_u{18.0103}); // 15.0103+1 dBm at STA 2 and +2 at AP for non-OFDMA
+                  ? DbmToW(units::power::dBm_t{19})
+                  : DbmToW(units::power::dBm_t{18.0103}); // 15.0103+1 dBm at STA 2 and +2 at AP for non-OFDMA
                                             // transmitted only on one 20 MHz channel
     auto rxPowerOfdma = rxPower;
     if (m_channelWidth <= MHz_u{40})
     {
         rxPowerOfdma =
             (m_channelWidth == MHz_u{20})
-                ? DbmToW(dBm_u{14.0309})  // 11.0309+1 dBm at STA and +2 at AP if 106-tone RU
-                : DbmToW(dBm_u{18.0103}); // 15.0103+1 dBm at STA 2 and +2 at AP if 242-tone RU
+                ? DbmToW(units::power::dBm_t{14.0309})  // 11.0309+1 dBm at STA and +2 at AP if 106-tone RU
+                : DbmToW(units::power::dBm_t{18.0103}); // 15.0103+1 dBm at STA 2 and +2 at AP if 242-tone RU
     }
     SchedulePowerMeasurementChecks(delay,
                                    (m_channelWidth >= MHz_u{40}) ? Watt_u{0.0} : rxPower,
@@ -4708,7 +4709,7 @@ TestUlOfdmaPhyTransmission::RunOne()
                         this,
                         "Measure power for reception of HE TB PPDU on both RUs");
     rxPower = DbmToW(
-        dBm_u{19}); // 16+1 dBm at STAs and +2 at AP (no loss since all devices are colocated)
+        units::power::dBm_t{19}); // 16+1 dBm at STAs and +2 at AP (no loss since all devices are colocated)
     const auto rxPowerNonOfdma =
         (m_channelWidth >= MHz_u{40})
             ? rxPower
@@ -5471,16 +5472,16 @@ class TestUlOfdmaPowerControl : public TestCase
 
     Ptr<SpectrumWifiPhy> m_phyAp; ///< PHY of AP
 
-    dBm_u m_txPowerAp;       ///< transmit power of AP
-    dBm_u m_txPowerStart;    ///< minimum transmission power for STAs
-    dBm_u m_txPowerEnd;      ///< maximum transmission power for STAs
+    units::power::dBm_t m_txPowerAp;       ///< transmit power of AP
+    units::power::dBm_t m_txPowerStart;    ///< minimum transmission power for STAs
+    units::power::dBm_t m_txPowerEnd;      ///< maximum transmission power for STAs
     uint8_t m_txPowerLevels; ///< number of transmission power levels for STAs
 
-    dBm_u m_requestedRssiSta1; ///< requested RSSI from STA 1 at AP for HE TB PPDUs
-    dBm_u m_requestedRssiSta2; ///< requested RSSI from STA 2 at AP for HE TB PPDUs
+    units::power::dBm_t m_requestedRssiSta1; ///< requested RSSI from STA 1 at AP for HE TB PPDUs
+    units::power::dBm_t m_requestedRssiSta2; ///< requested RSSI from STA 2 at AP for HE TB PPDUs
 
-    dBm_u m_rssiSta1; ///< expected RSSI from STA 1 at AP for HE TB PPDUs
-    dBm_u m_rssiSta2; ///< expected RSSI from STA 2 at AP for HE TB PPDUs
+    units::power::dBm_t m_rssiSta1; ///< expected RSSI from STA 1 at AP for HE TB PPDUs
+    units::power::dBm_t m_rssiSta2; ///< expected RSSI from STA 2 at AP for HE TB PPDUs
 
     dB_u m_tol; ///< tolerance between received and expected RSSIs
 };
@@ -5488,14 +5489,14 @@ class TestUlOfdmaPowerControl : public TestCase
 TestUlOfdmaPowerControl::TestUlOfdmaPowerControl()
     : TestCase("UL-OFDMA power control test"),
       m_bssColor(1),
-      m_txPowerAp(dBm_u{0}),
-      m_txPowerStart(dBm_u{0}),
-      m_txPowerEnd(dBm_u{0}),
+      m_txPowerAp(units::power::dBm_t{0}),
+      m_txPowerStart(units::power::dBm_t{0}),
+      m_txPowerEnd(units::power::dBm_t{0}),
       m_txPowerLevels(0),
-      m_requestedRssiSta1(dBm_u{0}),
-      m_requestedRssiSta2(dBm_u{0}),
-      m_rssiSta1(dBm_u{0}),
-      m_rssiSta2(dBm_u{0}),
+      m_requestedRssiSta1(units::power::dBm_t{0}),
+      m_requestedRssiSta2(units::power::dBm_t{0}),
+      m_rssiSta1(units::power::dBm_t{0}),
+      m_rssiSta2(units::power::dBm_t{0}),
       m_tol(dB_u{0.1})
 {
 }
@@ -5838,24 +5839,24 @@ void
 TestUlOfdmaPowerControl::DoRun()
 {
     // Power configurations
-    m_txPowerAp = dBm_u{20}; // so as to have -30 and -36 dBm at STA 1 and STA 2 resp., since path
+    m_txPowerAp = units::power::dBm_t{20}; // so as to have -30 and -36 dBm at STA 1 and STA 2 resp., since path
                              // loss = 50 dB for AP <-> STA 1 and 56 dB for AP <-> STA 2
-    m_txPowerStart = dBm_u{15};
+    m_txPowerStart = units::power::dBm_t{15};
 
     // Requested UL RSSIs: should correspond to 20 dBm transmit power at STAs
-    m_requestedRssiSta1 = dBm_u{-30};
-    m_requestedRssiSta2 = dBm_u{-36};
+    m_requestedRssiSta1 = units::power::dBm_t{-30};
+    m_requestedRssiSta2 = units::power::dBm_t{-36};
 
     // Test single power level
     {
         // STA power configurations: 15 dBm only
-        m_txPowerEnd = dBm_u{15};
+        m_txPowerEnd = units::power::dBm_t{15};
         m_txPowerLevels = 1;
 
         // Expected UL RSSIs, considering that the provided power is 5 dB less than requested,
         // regardless of the estimated path loss.
-        m_rssiSta1 = dBm_u{-35}; // 15 dBm - 50 dB
-        m_rssiSta2 = dBm_u{-41}; // 15 dBm - 56 dB
+        m_rssiSta1 = units::power::dBm_t{-35}; // 15 dBm - 50 dB
+        m_rssiSta2 = units::power::dBm_t{-41}; // 15 dBm - 56 dB
 
         RunOne(true);
     }
@@ -5863,13 +5864,13 @@ TestUlOfdmaPowerControl::DoRun()
     // Test 2 dBm granularity
     {
         // STA power configurations: [15:2:25] dBm
-        m_txPowerEnd = dBm_u{25};
+        m_txPowerEnd = units::power::dBm_t{25};
         m_txPowerLevels = 6;
 
         // Expected UL RSSIs, considering that the provided power (21 dBm) is 1 dB more than
         // requested
-        m_rssiSta1 = dBm_u{-29}; // 21 dBm - 50 dB
-        m_rssiSta2 = dBm_u{-35}; // 21 dBm - 50 dB
+        m_rssiSta1 = units::power::dBm_t{-29}; // 21 dBm - 50 dB
+        m_rssiSta2 = units::power::dBm_t{-35}; // 21 dBm - 50 dB
 
         RunOne(false);
     }
@@ -5877,12 +5878,12 @@ TestUlOfdmaPowerControl::DoRun()
     // Test 1 dBm granularity
     {
         // STA power configurations: [15:1:25] dBm
-        m_txPowerEnd = dBm_u{25};
+        m_txPowerEnd = units::power::dBm_t{25};
         m_txPowerLevels = 11;
 
         // Expected UL RSSIs, considering that we can correctly tune the transmit power
-        m_rssiSta1 = dBm_u{-30}; // 20 dBm - 50 dB
-        m_rssiSta2 = dBm_u{-36}; // 20 dBm - 56 dB
+        m_rssiSta1 = units::power::dBm_t{-30}; // 20 dBm - 50 dB
+        m_rssiSta2 = units::power::dBm_t{-36}; // 20 dBm - 56 dB
 
         RunOne(false);
     }
@@ -5890,17 +5891,17 @@ TestUlOfdmaPowerControl::DoRun()
     // Ask for different power levels (3 dB difference between HE_TB_PPDUs)
     {
         // STA power configurations: [15:1:25] dBm
-        m_txPowerEnd = dBm_u{25};
+        m_txPowerEnd = units::power::dBm_t{25};
         m_txPowerLevels = 11;
 
         // Requested UL RSSIs
         m_requestedRssiSta1 =
-            dBm_u{-28}; // 2 dB higher than previously -> Tx power = 22 dBm at STA 1
-        m_requestedRssiSta2 = dBm_u{-37}; // 1 dB less than previously -> Tx power = 19 dBm at STA 2
+            units::power::dBm_t{-28}; // 2 dB higher than previously -> Tx power = 22 dBm at STA 1
+        m_requestedRssiSta2 = units::power::dBm_t{-37}; // 1 dB less than previously -> Tx power = 19 dBm at STA 2
 
         // Expected UL RSSIs, considering that we can correctly tune the transmit power
-        m_rssiSta1 = dBm_u{-28}; // 22 dBm - 50 dB
-        m_rssiSta2 = dBm_u{-37}; // 19 dBm - 56 dB
+        m_rssiSta1 = units::power::dBm_t{-28}; // 22 dBm - 50 dB
+        m_rssiSta2 = units::power::dBm_t{-37}; // 19 dBm - 56 dB
 
         RunOne(false);
     }

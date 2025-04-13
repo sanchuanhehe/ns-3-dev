@@ -23,6 +23,7 @@
 #include "ns3/uinteger.h"
 #include "ns3/wifi-net-device.h"
 #include "ns3/wifi-utils.h"
+#include "ns3/units.h"
 
 using namespace ns3;
 
@@ -104,7 +105,7 @@ class TestInterBssConstantObssPdAlgo : public TestCase
      * Set the expected transmit power
      * @param txPower the transmit power
      */
-    void SetExpectedTxPower(dBm_u txPower);
+    void SetExpectedTxPower(units::power::dBm_t txPower);
 
     /**
      * Setup the simulation
@@ -191,10 +192,10 @@ class TestInterBssConstantObssPdAlgo : public TestCase
     NetDeviceContainer m_staDevices; ///< STA devices
     NetDeviceContainer m_apDevices;  ///< AP devices
 
-    dBm_u m_txPower;         ///< configured transmit power
-    dBm_u m_obssPdLevel;     ///< OBSS-PD level
-    dBm_u m_obssRxPower;     ///< forced RX power for OBSS
-    dBm_u m_expectedTxPower; ///< expected transmit power
+    units::power::dBm_t m_txPower;         ///< configured transmit power
+    units::power::dBm_t m_obssPdLevel;     ///< OBSS-PD level
+    units::power::dBm_t m_obssRxPower;     ///< forced RX power for OBSS
+    units::power::dBm_t m_expectedTxPower; ///< expected transmit power
 
     uint8_t m_bssColor1; ///< color for BSS 1
     uint8_t m_bssColor2; ///< color for BSS 2
@@ -216,10 +217,10 @@ TestInterBssConstantObssPdAlgo::TestInterBssConstantObssPdAlgo(WifiStandard stan
       m_payloadSize1(1000),
       m_payloadSize2(1500),
       m_payloadSize3(2000),
-      m_txPower(dBm_u{15}),
-      m_obssPdLevel(dBm_u{-72}),
-      m_obssRxPower(dBm_u{-82}),
-      m_expectedTxPower(dBm_u{15}),
+      m_txPower(units::power::dBm_t{15}),
+      m_obssPdLevel(units::power::dBm_t{-72}),
+      m_obssRxPower(units::power::dBm_t{-82}),
+      m_expectedTxPower(units::power::dBm_t{15}),
       m_bssColor1(1),
       m_bssColor2(2),
       m_bssColor3(3),
@@ -754,7 +755,7 @@ TestInterBssConstantObssPdAlgo::SendOnePacket(Ptr<WifiNetDevice> tx_dev,
 }
 
 void
-TestInterBssConstantObssPdAlgo::SetExpectedTxPower(dBm_u txPower)
+TestInterBssConstantObssPdAlgo::SetExpectedTxPower(units::power::dBm_t txPower)
 {
     m_expectedTxPower = txPower;
 }
@@ -932,24 +933,24 @@ void
 TestInterBssConstantObssPdAlgo::DoRun()
 {
     // Test case 1: CCA CS Threshold = m_obssRxPower < m_obssPdLevel
-    m_obssPdLevel = dBm_u{-72};
-    m_obssRxPower = dBm_u{-82};
+    m_obssPdLevel = units::power::dBm_t{-72};
+    m_obssRxPower = units::power::dBm_t{-82};
     m_bssColor1 = 1;
     m_bssColor2 = 2;
     m_bssColor3 = 3;
     RunOne();
 
     // Test case 2: CCA CS Threshold < m_obssPdLevel < m_obssRxPower
-    m_obssPdLevel = dBm_u{-72};
-    m_obssRxPower = dBm_u{-62};
+    m_obssPdLevel = units::power::dBm_t{-72};
+    m_obssRxPower = units::power::dBm_t{-62};
     m_bssColor1 = 1;
     m_bssColor2 = 2;
     m_bssColor3 = 3;
     RunOne();
 
     // Test case 3: CCA CS Threshold < m_obssPdLevel = m_obssRxPower
-    m_obssPdLevel = dBm_u{-72};
-    m_obssRxPower = dBm_u{-72};
+    m_obssPdLevel = units::power::dBm_t{-72};
+    m_obssRxPower = units::power::dBm_t{-72};
     m_bssColor1 = 1;
     m_bssColor2 = 2;
     m_bssColor3 = 3;
@@ -957,16 +958,16 @@ TestInterBssConstantObssPdAlgo::DoRun()
 
     // Test case 4: CCA CS Threshold = m_obssRxPower < m_obssPdLevel with BSS color 2 and 3
     // set to 0
-    m_obssPdLevel = dBm_u{-72};
-    m_obssRxPower = dBm_u{-82};
+    m_obssPdLevel = units::power::dBm_t{-72};
+    m_obssRxPower = units::power::dBm_t{-82};
     m_bssColor1 = 1;
     m_bssColor2 = 0;
     m_bssColor3 = 0;
     RunOne();
 
     // Test case 5: CCA CS Threshold = m_obssRxPower < m_obssPdLevel with BSS color 1 set to 0
-    m_obssPdLevel = dBm_u{-72};
-    m_obssRxPower = dBm_u{-82};
+    m_obssPdLevel = units::power::dBm_t{-72};
+    m_obssRxPower = units::power::dBm_t{-82};
     m_bssColor1 = 0;
     m_bssColor2 = 2;
     m_bssColor3 = 3;

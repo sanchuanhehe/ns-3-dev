@@ -44,6 +44,7 @@
 #include "ns3/wifi-utils.h"
 #include "ns3/yans-wifi-channel.h"
 #include "ns3/yans-wifi-phy.h"
+#include "ns3/units.h"
 
 #include <optional>
 
@@ -89,7 +90,7 @@ class TestWifiPhyRxTraceHelper : public TestCase
      * @param add2 The MAC address of the second receiver.
      * @param tx_phy The transmitting PHY object.
      */
-    void SendPpduWithTwoMpdus(dBm_u rxPower,
+    void SendPpduWithTwoMpdus(units::power::dBm_t rxPower,
                               Mac48Address add1,
                               Mac48Address add2,
                               Ptr<ns3::SpectrumWifiPhy> tx_phy);
@@ -100,7 +101,7 @@ class TestWifiPhyRxTraceHelper : public TestCase
      * @param add1 The MAC address of the receiver.
      * @param tx_phy The transmitting PHY object.
      */
-    void SendPpduWithOneMpdu(dBm_u rxPower, Mac48Address add1, Ptr<ns3::SpectrumWifiPhy> tx_phy);
+    void SendPpduWithOneMpdu(units::power::dBm_t rxPower, Mac48Address add1, Ptr<ns3::SpectrumWifiPhy> tx_phy);
 
     /**
      * Checks the statistics of PPDU and MPDU reception success and failure.
@@ -168,7 +169,7 @@ TestWifiPhyRxTraceHelper::TestWifiPhyRxTraceHelper(std::string test_name)
 void
 TestWifiPhyRxTraceHelper::DoSetup()
 {
-    dBm_u txPower{20};
+    units::power::dBm_t txPower{20};
 
     auto spectrumChannel = CreateObject<SingleModelSpectrumChannel>();
 
@@ -247,7 +248,7 @@ TestWifiPhyRxTraceHelper::DoTeardown()
 }
 
 void
-TestWifiPhyRxTraceHelper::SendPpduWithTwoMpdus(dBm_u rxPower,
+TestWifiPhyRxTraceHelper::SendPpduWithTwoMpdus(units::power::dBm_t rxPower,
                                                Mac48Address receiver1,
                                                Mac48Address receiver2,
                                                Ptr<ns3::SpectrumWifiPhy> tx_phy)
@@ -288,7 +289,7 @@ TestWifiPhyRxTraceHelper::SendPpduWithTwoMpdus(dBm_u rxPower,
 }
 
 void
-TestWifiPhyRxTraceHelper::SendPpduWithOneMpdu(dBm_u rxPower,
+TestWifiPhyRxTraceHelper::SendPpduWithOneMpdu(units::power::dBm_t rxPower,
                                               Mac48Address receiver1,
                                               Ptr<ns3::SpectrumWifiPhy> tx_phy)
 {
@@ -393,7 +394,7 @@ TestWifiPhyRxTraceHelper::DoRun()
     RngSeedManager::SetSeed(1);
     RngSeedManager::SetRun(2);
     int64_t streamNumber = 1;
-    dBm_u rxPower{-80};
+    units::power::dBm_t rxPower{-80};
     streamNumber += m_txA->AssignStreams(streamNumber);
     streamNumber += m_txB->AssignStreams(streamNumber);
     streamNumber += m_rx->AssignStreams(streamNumber);
@@ -448,7 +449,7 @@ TestWifiPhyRxTraceHelper::DoRun()
     expectedStats.m_failedMpdus = 1;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 1;
-    rxPower = dBm_u{-83};
+    rxPower = units::power::dBm_t{-83};
     // A-MPDU 1
     Simulator::Schedule(Seconds(0.3),
                         &TestWifiPhyRxTraceHelper::SendPpduWithTwoMpdus,
@@ -488,7 +489,7 @@ TestWifiPhyRxTraceHelper::DoRun()
     expectedStats.m_failedMpdus = 0;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 0;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
     // A-MPDU 1
     Simulator::Schedule(Seconds(0.5),
                         &TestWifiPhyRxTraceHelper::SendPpduWithTwoMpdus,
@@ -528,7 +529,7 @@ TestWifiPhyRxTraceHelper::DoRun()
     expectedStats.m_failedMpdus = 0;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 0;
-    rxPower = dBm_u{-83};
+    rxPower = units::power::dBm_t{-83};
     // A-MPDU 1
     Simulator::Schedule(Seconds(0.7),
                         &TestWifiPhyRxTraceHelper::SendPpduWithTwoMpdus,
@@ -569,7 +570,7 @@ TestWifiPhyRxTraceHelper::DoRun()
     expectedStats.m_failedMpdus = 2;
     expectedStats.m_overlappingPpdus = 2;
     expectedStats.m_nonOverlappingPpdus = 0;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
     // A-MPDU 1
     Simulator::Schedule(Seconds(0.9),
                         &TestWifiPhyRxTraceHelper::SendPpduWithOneMpdu,
@@ -616,7 +617,7 @@ TestWifiPhyRxTraceHelper::DoRun()
     expectedStats.m_failedMpdus = 1;
     expectedStats.m_overlappingPpdus = 1;
     expectedStats.m_nonOverlappingPpdus = 0;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
     // A-MPDU 1
     Simulator::Schedule(Seconds(1.1),
                         &TestWifiPhyRxTraceHelper::SendPpduWithOneMpdu,
@@ -666,7 +667,7 @@ TestWifiPhyRxTraceHelper::DoRun()
     expectedStats.m_failedMpdus = 0;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 1;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
     m_rxTraceHelper.Start(Seconds(1.29));
 
     // A-MPDU 1
@@ -709,7 +710,7 @@ TestWifiPhyRxTraceHelper::DoRun()
     expectedStats.m_failedMpdus = 0;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 0;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
 
     m_rxTraceHelper.Start(Seconds(1.41));
 
@@ -753,7 +754,7 @@ TestWifiPhyRxTraceHelper::DoRun()
     expectedStats.m_failedMpdus = 0;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 1;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
 
     // A-MPDU 1
     Simulator::Schedule(Seconds(1.6),
@@ -797,7 +798,7 @@ TestWifiPhyRxTraceHelper::DoRun()
     expectedStats.m_failedMpdus = 0;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 0;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
 
     m_rxTraceHelper.Start(Seconds(1.79));
 
@@ -874,7 +875,7 @@ class TestWifiPhyRxTraceHelperMloStr : public TestCase
      * @param add2 The MAC address of the second receiver.
      * @param tx_phy The transmitting PHY object for MLO.
      */
-    void SendPpduWithTwoMpdus(dBm_u rxPower,
+    void SendPpduWithTwoMpdus(units::power::dBm_t rxPower,
                               Mac48Address add1,
                               Mac48Address add2,
                               Ptr<ns3::SpectrumWifiPhy> tx_phy);
@@ -885,7 +886,7 @@ class TestWifiPhyRxTraceHelperMloStr : public TestCase
      * @param add1 The MAC address of the receiver.
      * @param tx_phy The transmitting PHY object for MLO.
      */
-    void SendPpduWithOneMpdu(dBm_u rxPower, Mac48Address add1, Ptr<ns3::SpectrumWifiPhy> tx_phy);
+    void SendPpduWithOneMpdu(units::power::dBm_t rxPower, Mac48Address add1, Ptr<ns3::SpectrumWifiPhy> tx_phy);
 
     /**
      * Checks the statistics of PPDU and MPDU reception success and failure.
@@ -971,7 +972,7 @@ TestWifiPhyRxTraceHelperMloStr::TestWifiPhyRxTraceHelperMloStr()
 void
 TestWifiPhyRxTraceHelperMloStr::DoSetup()
 {
-    dBm_u txPower{20};
+    units::power::dBm_t txPower{20};
     auto ehtConfiguration = CreateObject<EhtConfiguration>();
 
     auto nodeA = CreateObject<Node>();
@@ -1119,7 +1120,7 @@ TestWifiPhyRxTraceHelperMloStr::DoTeardown()
 }
 
 void
-TestWifiPhyRxTraceHelperMloStr::SendPpduWithTwoMpdus(dBm_u rxPower,
+TestWifiPhyRxTraceHelperMloStr::SendPpduWithTwoMpdus(units::power::dBm_t rxPower,
                                                      Mac48Address receiver1,
                                                      Mac48Address receiver2,
                                                      Ptr<ns3::SpectrumWifiPhy> tx_phy)
@@ -1160,7 +1161,7 @@ TestWifiPhyRxTraceHelperMloStr::SendPpduWithTwoMpdus(dBm_u rxPower,
 }
 
 void
-TestWifiPhyRxTraceHelperMloStr::SendPpduWithOneMpdu(dBm_u rxPower,
+TestWifiPhyRxTraceHelperMloStr::SendPpduWithOneMpdu(units::power::dBm_t rxPower,
                                                     Mac48Address receiver1,
                                                     Ptr<ns3::SpectrumWifiPhy> tx_phy)
 {
@@ -1335,7 +1336,7 @@ TestWifiPhyRxTraceHelperMloStr::DoRun()
     RngSeedManager::SetSeed(1);
     RngSeedManager::SetRun(2);
     int64_t streamNumber = 1;
-    dBm_u rxPower{-80};
+    units::power::dBm_t rxPower{-80};
     streamNumber += m_tx0A->AssignStreams(streamNumber);
     streamNumber += m_tx0B->AssignStreams(streamNumber);
     streamNumber += m_tx1A->AssignStreams(streamNumber);
@@ -1401,7 +1402,7 @@ TestWifiPhyRxTraceHelperMloStr::DoRun()
     expectedStats.m_failedMpdus = 2;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 2;
-    rxPower = dBm_u{-83};
+    rxPower = units::power::dBm_t{-83};
     // A-MPDU 1
     Simulator::Schedule(Seconds(0.3),
                         &TestWifiPhyRxTraceHelperMloStr::SendPpduWithTwoMpdus,
@@ -1449,7 +1450,7 @@ TestWifiPhyRxTraceHelperMloStr::DoRun()
     expectedStats.m_failedMpdus = 0;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 0;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
     // A-MPDU 1
     Simulator::Schedule(Seconds(0.5),
                         &TestWifiPhyRxTraceHelperMloStr::SendPpduWithTwoMpdus,
@@ -1498,7 +1499,7 @@ TestWifiPhyRxTraceHelperMloStr::DoRun()
     expectedStats.m_failedMpdus = 0;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 0;
-    rxPower = dBm_u{-83};
+    rxPower = units::power::dBm_t{-83};
     // A-MPDU 1
     Simulator::Schedule(Seconds(0.7),
                         &TestWifiPhyRxTraceHelperMloStr::SendPpduWithTwoMpdus,
@@ -1548,7 +1549,7 @@ TestWifiPhyRxTraceHelperMloStr::DoRun()
     expectedStats.m_failedMpdus = 4;
     expectedStats.m_overlappingPpdus = 4;
     expectedStats.m_nonOverlappingPpdus = 0;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
     // A-MPDU 1
     Simulator::Schedule(Seconds(0.9),
                         &TestWifiPhyRxTraceHelperMloStr::SendPpduWithOneMpdu,
@@ -1610,7 +1611,7 @@ TestWifiPhyRxTraceHelperMloStr::DoRun()
     expectedStats.m_failedMpdus = 2;
     expectedStats.m_overlappingPpdus = 2;
     expectedStats.m_nonOverlappingPpdus = 0;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
     // A-MPDU 1
     Simulator::Schedule(Seconds(1.1),
                         &TestWifiPhyRxTraceHelperMloStr::SendPpduWithOneMpdu,
@@ -1704,7 +1705,7 @@ class TestWifiPhyRxTraceHelperYans : public TestCase
      * @param add2 The MAC address of the second receiver.
      * @param tx_phy The transmitting PHY object.
      */
-    void SendPpduWithTwoMpdus(dBm_u rxPower,
+    void SendPpduWithTwoMpdus(units::power::dBm_t rxPower,
                               Mac48Address add1,
                               Mac48Address add2,
                               Ptr<ns3::YansWifiPhy> tx_phy);
@@ -1715,7 +1716,7 @@ class TestWifiPhyRxTraceHelperYans : public TestCase
      * @param add1 The MAC address of the receiver.
      * @param tx_phy The transmitting PHY object.
      */
-    void SendPpduWithOneMpdu(dBm_u rxPower, Mac48Address add1, Ptr<ns3::YansWifiPhy> tx_phy);
+    void SendPpduWithOneMpdu(units::power::dBm_t rxPower, Mac48Address add1, Ptr<ns3::YansWifiPhy> tx_phy);
 
     /**
      * Checks the statistics of PPDU and MPDU reception success and failure.
@@ -1787,7 +1788,7 @@ TestWifiPhyRxTraceHelperYans::TestWifiPhyRxTraceHelperYans()
 void
 TestWifiPhyRxTraceHelperYans::DoSetup()
 {
-    dBm_u txPower{20};
+    units::power::dBm_t txPower{20};
 
     auto yansChannel = CreateObject<YansWifiChannel>();
     auto propDelay = CreateObject<ConstantSpeedPropagationDelayModel>();
@@ -1882,7 +1883,7 @@ TestWifiPhyRxTraceHelperYans::DoTeardown()
 }
 
 void
-TestWifiPhyRxTraceHelperYans::SendPpduWithTwoMpdus(dBm_u rxPower,
+TestWifiPhyRxTraceHelperYans::SendPpduWithTwoMpdus(units::power::dBm_t rxPower,
                                                    Mac48Address receiver1,
                                                    Mac48Address receiver2,
                                                    Ptr<ns3::YansWifiPhy> tx_phy)
@@ -1929,7 +1930,7 @@ TestWifiPhyRxTraceHelperYans::SendPpduWithTwoMpdus(dBm_u rxPower,
 }
 
 void
-TestWifiPhyRxTraceHelperYans::SendPpduWithOneMpdu(dBm_u rxPower,
+TestWifiPhyRxTraceHelperYans::SendPpduWithOneMpdu(units::power::dBm_t rxPower,
                                                   Mac48Address receiver1,
                                                   Ptr<ns3::YansWifiPhy> tx_phy)
 {
@@ -2042,7 +2043,7 @@ TestWifiPhyRxTraceHelperYans::DoRun()
     RngSeedManager::SetSeed(1);
     RngSeedManager::SetRun(2);
     int64_t streamNumber = 1;
-    dBm_u rxPower{-80};
+    units::power::dBm_t rxPower{-80};
     streamNumber += m_txA->AssignStreams(streamNumber);
     streamNumber += m_txB->AssignStreams(streamNumber);
     streamNumber += m_rx->AssignStreams(streamNumber);
@@ -2096,7 +2097,7 @@ TestWifiPhyRxTraceHelperYans::DoRun()
     expectedStats.m_failedMpdus = 1;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 1;
-    rxPower = dBm_u{-83};
+    rxPower = units::power::dBm_t{-83};
     // A-MPDU 1
     Simulator::Schedule(Seconds(0.3),
                         &TestWifiPhyRxTraceHelperYans::SendPpduWithTwoMpdus,
@@ -2136,7 +2137,7 @@ TestWifiPhyRxTraceHelperYans::DoRun()
     expectedStats.m_failedMpdus = 0;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 0;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
     // A-MPDU 1
     Simulator::Schedule(Seconds(0.5),
                         &TestWifiPhyRxTraceHelperYans::SendPpduWithTwoMpdus,
@@ -2176,7 +2177,7 @@ TestWifiPhyRxTraceHelperYans::DoRun()
     expectedStats.m_failedMpdus = 0;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 0;
-    rxPower = dBm_u{-83};
+    rxPower = units::power::dBm_t{-83};
     // A-MPDU 1
     Simulator::Schedule(Seconds(0.7),
                         &TestWifiPhyRxTraceHelperYans::SendPpduWithTwoMpdus,
@@ -2217,7 +2218,7 @@ TestWifiPhyRxTraceHelperYans::DoRun()
     expectedStats.m_failedMpdus = 2;
     expectedStats.m_overlappingPpdus = 2;
     expectedStats.m_nonOverlappingPpdus = 0;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
     // A-MPDU 1
     Simulator::Schedule(Seconds(0.9),
                         &TestWifiPhyRxTraceHelperYans::SendPpduWithOneMpdu,
@@ -2264,7 +2265,7 @@ TestWifiPhyRxTraceHelperYans::DoRun()
     expectedStats.m_failedMpdus = 1;
     expectedStats.m_overlappingPpdus = 1;
     expectedStats.m_nonOverlappingPpdus = 0;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
     // A-MPDU 1
     Simulator::Schedule(Seconds(1.1),
                         &TestWifiPhyRxTraceHelperYans::SendPpduWithOneMpdu,
@@ -2314,7 +2315,7 @@ TestWifiPhyRxTraceHelperYans::DoRun()
     expectedStats.m_failedMpdus = 0;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 1;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
     m_rxTraceHelper.Start(Seconds(1.29));
 
     // A-MPDU 1
@@ -2357,7 +2358,7 @@ TestWifiPhyRxTraceHelperYans::DoRun()
     expectedStats.m_failedMpdus = 0;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 0;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
 
     m_rxTraceHelper.Start(Seconds(1.41));
 
@@ -2401,7 +2402,7 @@ TestWifiPhyRxTraceHelperYans::DoRun()
     expectedStats.m_failedMpdus = 0;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 1;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
 
     // A-MPDU 1
     Simulator::Schedule(Seconds(1.6),
@@ -2445,7 +2446,7 @@ TestWifiPhyRxTraceHelperYans::DoRun()
     expectedStats.m_failedMpdus = 0;
     expectedStats.m_overlappingPpdus = 0;
     expectedStats.m_nonOverlappingPpdus = 0;
-    rxPower = dBm_u{-80};
+    rxPower = units::power::dBm_t{-80};
 
     m_rxTraceHelper.Start(Seconds(1.79));
 

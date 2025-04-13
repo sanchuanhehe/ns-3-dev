@@ -18,6 +18,7 @@
 #include "ns3/wifi-phy.h"
 #include "ns3/wifi-psdu.h"
 #include "ns3/wifi-utils.h"
+#include "ns3/units.h"
 
 #include <array>
 
@@ -664,7 +665,7 @@ OfdmPhy::GetMeasurementChannelWidth(const Ptr<const WifiPpdu> ppdu) const
     return GetRxChannelWidth(ppdu->GetTxVector());
 }
 
-dBm_u
+units::power::dBm_t
 OfdmPhy::GetCcaThreshold(const Ptr<const WifiPpdu> ppdu, WifiChannelListType channelType) const
 {
     if (ppdu && ppdu->GetTxVector().GetChannelWidth() < MHz_u{20})

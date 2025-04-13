@@ -12,6 +12,7 @@
 
 #include "ns3/double.h"
 #include "ns3/log.h"
+#include "ns3/units.h"
 
 namespace ns3
 {
@@ -74,7 +75,7 @@ LinearWifiTxCurrentModel::~LinearWifiTxCurrentModel()
 }
 
 ampere_u
-LinearWifiTxCurrentModel::CalcTxCurrent(dBm_u txPower) const
+LinearWifiTxCurrentModel::CalcTxCurrent(units::power::dBm_t txPower) const
 {
     NS_LOG_FUNCTION(this << txPower);
     return DbmToW(txPower) / (m_voltage * m_eta) + m_idleCurrent;

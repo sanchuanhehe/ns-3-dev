@@ -10,6 +10,9 @@
 #ifndef WIFI_UNITS_H
 #define WIFI_UNITS_H
 
+// XXX TODO: remove include wifi-units.h in favor of units.h in all applicable .cc,.h files
+#include "ns3/units.h"
+
 #include <cstdint>
 
 /**

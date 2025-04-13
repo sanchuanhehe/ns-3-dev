@@ -30,6 +30,7 @@
 #include "ns3/simulator.h"
 #include "ns3/uinteger.h"
 #include "ns3/vht-configuration.h"
+#include "ns3/units.h"
 
 namespace ns3
 {
@@ -1454,7 +1455,7 @@ WifiRemoteStationManager::GetInfo(Mac48Address address)
     return LookupState(address)->m_info;
 }
 
-std::optional<dBm_u>
+std::optional<units::power::dBm_t>
 WifiRemoteStationManager::GetMostRecentRssi(Mac48Address address) const
 {
     auto station = Lookup(address);
@@ -1520,7 +1521,7 @@ WifiRemoteStationManager::Lookup(Mac48Address address) const
 
     WifiRemoteStation* station = DoCreateStation();
     station->m_state = LookupState(address).get();
-    station->m_rssiAndUpdateTimePair = std::make_pair(dBm_u{0}, Seconds(0));
+    station->m_rssiAndUpdateTimePair = std::make_pair(units::power::dBm_t{0}, Seconds(0));
     const_cast<WifiRemoteStationManager*>(this)->m_stations.insert({address, station});
     return station;
 }

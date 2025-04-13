@@ -15,6 +15,7 @@
 #include "ns3/fatal-error.h"
 #include "ns3/nstime.h"
 #include "ns3/ptr.h"
+#include "ns3/units.h"
 
 #include <list>
 #include <map>
@@ -73,7 +74,7 @@ using WifiTidLinkMapping = std::map<uint8_t, std::set<uint8_t>>;
  *
  * @return the equivalent Watts for the given dBm
  */
-Watt_u DbmToW(dBm_u val);
+Watt_u DbmToW(units::power::dBm_t val);
 /**
  * Convert from dB to ratio.
  *
@@ -89,7 +90,7 @@ double DbToRatio(dB_u val);
  *
  * @return the equivalent dBm for the given Watts
  */
-dBm_u WToDbm(Watt_u val);
+units::power::dBm_t WToDbm(Watt_u val);
 /**
  * Convert from ratio to dB.
  *

@@ -24,6 +24,7 @@
 #include "ns3/wifi-net-device.h"
 #include "ns3/wifi-psdu.h"
 #include "ns3/wifi-utils.h"
+#include "ns3/units.h"
 
 #include <algorithm>
 
@@ -1075,7 +1076,7 @@ HePhy::GetMeasurementChannelWidth(const Ptr<const WifiPpdu> ppdu) const
     return channelWidth;
 }
 
-dBm_u
+units::power::dBm_t
 HePhy::GetCcaThreshold(const Ptr<const WifiPpdu> ppdu, WifiChannelListType channelType) const
 {
     if (!ppdu)
@@ -1181,7 +1182,7 @@ HePhy::GetPer20MHzDurations(const Ptr<const WifiPpdu> ppdu)
          * aCCATime after the signal starts and shall continue to indicate the 20 MHz subchannel is
          * busy while the threshold continues to be exceeded.
          */
-        dBm_u ccaThreshold = -62;
+        units::power::dBm_t ccaThreshold = -62;
         auto delayUntilCcaEnd = GetDelayUntilCcaEnd(ccaThreshold, band);
 
         if (ppdu)
@@ -1194,7 +1195,7 @@ HePhy::GetPer20MHzDurations(const Ptr<const WifiPpdu> ppdu)
             if (ppduBw <= m_wifiPhy->GetChannelWidth() &&
                 ppdu->DoesOverlapChannel(subchannelMinFreq, subchannelMaxFreq))
             {
-                std::optional<dBm_u> obssPdLevel{std::nullopt};
+                std::optional<units::power::dBm_t> obssPdLevel{std::nullopt};
                 if (m_obssPdAlgorithm)
                 {
                     obssPdLevel = m_obssPdAlgorithm->GetObssPdLevel();
@@ -1210,8 +1211,8 @@ HePhy::GetPer20MHzDurations(const Ptr<const WifiPpdu> ppdu)
                      * probability within a period aCCAMidTime.
                      */
                     ccaThreshold = obssPdLevel.has_value()
-                                       ? std::max(dBm_u{-72.0}, obssPdLevel.value())
-                                       : dBm_u{-72.0};
+                                       ? std::max(units::power::dBm_t{-72.0}, obssPdLevel.value())
+                                       : units::power::dBm_t{-72.0};
                     band = m_wifiPhy->GetBand(MHz_u{20}, index);
                     break;
                 case 40:
@@ -1222,8 +1223,8 @@ HePhy::GetPer20MHzDurations(const Ptr<const WifiPpdu> ppdu)
                      * subchannel is busy with > 90% probability within a period aCCAMidTime.
                      */
                     ccaThreshold = obssPdLevel.has_value()
-                                       ? std::max(dBm_u{-72.0}, obssPdLevel.value() + dB_u{3})
-                                       : dBm_u{-72.0};
+                                       ? std::max(units::power::dBm_t{-72.0}, obssPdLevel.value() + dB_u{3})
+                                       : units::power::dBm_t{-72.0};
                     band = m_wifiPhy->GetBand(MHz_u{40}, std::floor(index / 2));
                     break;
                 case 80:
@@ -1234,8 +1235,8 @@ HePhy::GetPer20MHzDurations(const Ptr<const WifiPpdu> ppdu)
                      * subchannel is busy with > 90% probability within a period aCCAMidTime.
                      */
                     ccaThreshold = obssPdLevel.has_value()
-                                       ? std::max(dBm_u{-69.0}, obssPdLevel.value() + dB_u{6})
-                                       : dBm_u{-69.0};
+                                       ? std::max(units::power::dBm_t{-69.0}, obssPdLevel.value() + dB_u{6})
+                                       : units::power::dBm_t{-69.0};
                     band = m_wifiPhy->GetBand(MHz_u{80}, std::floor(index / 4));
                     break;
                 case 160:
@@ -1487,7 +1488,7 @@ HePhy::StartTx(Ptr<const WifiPpdu> ppdu)
 
 void
 HePhy::StartTxHePortion(Ptr<const WifiPpdu> ppdu,
-                        dBm_u txPower,
+                        units::power::dBm_t txPower,
                         Ptr<SpectrumValue> txPowerSpectrum,
                         Time hePortionDuration)
 {

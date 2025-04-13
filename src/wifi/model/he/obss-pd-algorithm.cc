@@ -8,12 +8,14 @@
 
 #include "obss-pd-algorithm.h"
 
+#include "ns3/decibel-mw.h"
 #include "ns3/double.h"
 #include "ns3/eht-phy.h"
 #include "ns3/log.h"
 #include "ns3/wifi-net-device.h"
 #include "ns3/wifi-phy.h"
 #include "ns3/wifi-utils.h"
+#include "ns3/units.h"
 
 namespace ns3
 {
@@ -30,30 +32,30 @@ ObssPdAlgorithm::GetTypeId()
             .SetGroupName("Wifi")
             .AddAttribute("ObssPdLevel",
                           "The current OBSS PD level (dBm).",
-                          DoubleValue(-82.0),
-                          MakeDoubleAccessor(&ObssPdAlgorithm::SetObssPdLevel,
+                          DecibelMwValue(units::power::dBm_t(-82.0)),
+                          MakeDecibelMwAccessor(&ObssPdAlgorithm::SetObssPdLevel,
                                              &ObssPdAlgorithm::GetObssPdLevel),
-                          MakeDoubleChecker<dBm_u>(-101, -62))
+                          MakeDecibelMwChecker(units::power::dBm_t(-101), units::power::dBm_t(-62)))
             .AddAttribute("ObssPdLevelMin",
                           "Minimum value (dBm) of OBSS PD level.",
-                          DoubleValue(-82.0),
-                          MakeDoubleAccessor(&ObssPdAlgorithm::m_obssPdLevelMin),
-                          MakeDoubleChecker<dBm_u>(-101, -62))
+                          DecibelMwValue(units::power::dBm_t(-82.0)),
+                          MakeDecibelMwAccessor(&ObssPdAlgorithm::m_obssPdLevelMin),
+                          MakeDecibelMwChecker(units::power::dBm_t(-101), units::power::dBm_t(-62)))
             .AddAttribute("ObssPdLevelMax",
                           "Maximum value (dBm) of OBSS PD level.",
-                          DoubleValue(-62.0),
-                          MakeDoubleAccessor(&ObssPdAlgorithm::m_obssPdLevelMax),
-                          MakeDoubleChecker<dBm_u>(-101, -62))
+                          DecibelMwValue(units::power::dBm_t(-62.0)),
+                          MakeDecibelMwAccessor(&ObssPdAlgorithm::m_obssPdLevelMax),
+                          MakeDecibelMwChecker(units::power::dBm_t(-101), units::power::dBm_t( -62)))
             .AddAttribute("TxPowerRefSiso",
                           "The SISO reference TX power level (dBm).",
-                          DoubleValue(21),
-                          MakeDoubleAccessor(&ObssPdAlgorithm::m_txPowerRefSiso),
-                          MakeDoubleChecker<dBm_u>())
+                          DecibelMwValue(units::power::dBm_t(21)),
+                          MakeDecibelMwAccessor(&ObssPdAlgorithm::m_txPowerRefSiso),
+                          MakeDecibelMwChecker())
             .AddAttribute("TxPowerRefMimo",
                           "The MIMO reference TX power level (dBm).",
-                          DoubleValue(25),
-                          MakeDoubleAccessor(&ObssPdAlgorithm::m_txPowerRefMimo),
-                          MakeDoubleChecker<dBm_u>())
+                          DecibelMwValue(units::power::dBm_t(25)),
+                          MakeDecibelMwAccessor(&ObssPdAlgorithm::m_txPowerRefMimo),
+                          MakeDecibelMwChecker())
             .AddTraceSource("Reset",
                             "Trace CCA Reset event",
                             MakeTraceSourceAccessor(&ObssPdAlgorithm::m_resetEvent),
@@ -88,8 +90,8 @@ ObssPdAlgorithm::ConnectWifiNetDevice(const Ptr<WifiNetDevice> device)
 void
 ObssPdAlgorithm::ResetPhy(HeSigAParameters params)
 {
-    dBm_u txPowerMaxSiso{0};
-    dBm_u txPowerMaxMimo{0};
+    units::power::dBm_t txPowerMaxSiso{0};
+    units::power::dBm_t txPowerMaxMimo{0};
     bool powerRestricted = false;
     // Fetch my BSS color
     Ptr<HeConfiguration> heConfiguration = m_device->GetHeConfiguration();
@@ -110,13 +112,13 @@ ObssPdAlgorithm::ResetPhy(HeSigAParameters params)
 }
 
 void
-ObssPdAlgorithm::SetObssPdLevel(dBm_u level)
+ObssPdAlgorithm::SetObssPdLevel(units::power::dBm_t level)
 {
     NS_LOG_FUNCTION(this << level);
     m_obssPdLevel = level;
 }
 
-dBm_u
+units::power::dBm_t
 ObssPdAlgorithm::GetObssPdLevel() const
 {
     return m_obssPdLevel;

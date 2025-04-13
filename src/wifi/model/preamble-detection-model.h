@@ -12,6 +12,7 @@
 #include "wifi-units.h"
 
 #include "ns3/object.h"
+#include "ns3/units.h"
 
 namespace ns3
 {
@@ -41,7 +42,7 @@ class PreambleDetectionModel : public Object
      * @return true if the preamble has been detected,
      *         false otherwise
      */
-    virtual bool IsPreambleDetected(dBm_u rssi, double snr, MHz_u channelWidth) const = 0;
+    virtual bool IsPreambleDetected(units::power::dBm_t rssi, double snr, MHz_u channelWidth) const = 0;
 };
 
 } // namespace ns3
