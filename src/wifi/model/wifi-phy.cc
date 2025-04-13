@@ -204,9 +204,9 @@ WifiPhy::GetTypeId()
                 " the noise output of the actual receiver to the noise output of an "
                 " ideal receiver with the same overall gain and bandwidth when the receivers "
                 " are connected to sources at the standard noise temperature T0 (usually 290 K)\".",
-                DoubleValue(7),
-                MakeDoubleAccessor(&WifiPhy::SetRxNoiseFigure),
-                MakeDoubleChecker<dB_u>())
+                DecibelValue(7),
+                MakeDecibelAccessor(&WifiPhy::SetRxNoiseFigure),
+                MakeDecibelChecker())
             .AddAttribute("State",
                           "The state of the PHY layer.",
                           PointerValue(),
@@ -554,7 +554,7 @@ WifiPhy::GetCcaSensitivityThreshold() const
 }
 
 void
-WifiPhy::SetRxNoiseFigure(dB_u noiseFigure)
+WifiPhy::SetRxNoiseFigure(units::power::dB_t noiseFigure)
 {
     NS_LOG_FUNCTION(this << noiseFigure);
     if (m_interference)

@@ -14,6 +14,7 @@
 #ifndef ERROR_RATE_TABLES_H
 #define ERROR_RATE_TABLES_H
 
+#include "ns3/units.h"
 #include "ns3/wifi-units.h"
 
 #include <utility>
@@ -31,7 +32,7 @@ const uint8_t ERROR_TABLE_BCC_MAX_NUM_MCS = 10;    //!< maximum number of MCSs f
 const uint8_t ERROR_TABLE_LDPC_MAX_NUM_MCS = 12;   //!< maximum number of MCSs for LDPC
 
 /// Table of SNR and PER pairs
-typedef std::vector<std::pair<dB_u /* SNR */, double /* PER */>> SnrPerTable;
+typedef std::vector<std::pair<units::power::dB_t /* SNR */, double /* PER */>> SnrPerTable;
 
 /// AWGN error table for BCC with reference size of 32 bytes
 extern const SnrPerTable AwgnErrorTableBcc32[ERROR_TABLE_BCC_MAX_NUM_MCS];

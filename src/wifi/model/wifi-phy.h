@@ -832,7 +832,7 @@ class WifiPhy : public Object
      *
      * @param noiseFigure noise figure
      */
-    void SetRxNoiseFigure(dB_u noiseFigure);
+    void SetRxNoiseFigure(units::power::dB_t noiseFigure);
     /**
      * Sets the minimum available transmission power level.
      *
@@ -1642,7 +1642,7 @@ class WifiPhy : public Object
     uint8_t m_txSpatialStreams; //!< Number of supported TX spatial streams
     uint8_t m_rxSpatialStreams; //!< Number of supported RX spatial streams
 
-    dB_u m_noiseFigure; //!< The noise figure
+    units::power::dB_t m_noiseFigure; //!< The noise figure
 
     Time m_channelSwitchDelay; //!< Time required to switch between channel
 

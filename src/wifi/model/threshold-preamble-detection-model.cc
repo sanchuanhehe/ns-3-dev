@@ -32,14 +32,14 @@ ThresholdPreambleDetectionModel::GetTypeId()
             .AddAttribute("Threshold",
                           "Preamble is successfully detected if the SNR is at or above this value "
                           "(expressed in dB).",
-                          DoubleValue(4),
-                          MakeDoubleAccessor(&ThresholdPreambleDetectionModel::m_threshold),
-                          MakeDoubleChecker<dB_u>())
+                          DecibelValue(4),
+                          MakeDecibelAccessor(&ThresholdPreambleDetectionModel::m_threshold),
+                          MakeDecibelChecker())
             .AddAttribute("MinimumRssi",
                           "Preamble is dropped if the RSSI is below this value (expressed in dBm).",
-                          DoubleValue(-82),
-                          MakeDoubleAccessor(&ThresholdPreambleDetectionModel::m_rssiMin),
-                          MakeDoubleChecker<units::power::dBm_t>());
+                          DecibelMwValue(-82),
+                          MakeDecibelMwAccessor(&ThresholdPreambleDetectionModel::m_rssiMin),
+                          MakeDecibelMwChecker());
     return tid;
 }
 

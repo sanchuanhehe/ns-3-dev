@@ -31,6 +31,7 @@
 #include "ns3/spectrum-wifi-phy.h"
 #include "ns3/test.h"
 #include "ns3/threshold-preamble-detection-model.h"
+#include "ns3/units.h"
 #include "ns3/wifi-bandwidth-filter.h"
 #include "ns3/wifi-mac-header.h"
 #include "ns3/wifi-mpdu.h"
@@ -40,7 +41,6 @@
 #include "ns3/wifi-spectrum-signal-parameters.h"
 #include "ns3/wifi-spectrum-value-helper.h"
 #include "ns3/wifi-utils.h"
-#include "ns3/units.h"
 
 #include <optional>
 
@@ -410,7 +410,7 @@ TestThresholdPreambleDetectionWithoutFrameCapture::DoRun()
     Simulator::Schedule(Seconds(3) + MicroSeconds(2),
                         &TestThresholdPreambleDetectionWithoutFrameCapture::SendPacket,
                         this,
-                        rxPower - dB_u{3},
+                        rxPower - units::power::dB_t{3},
                         1000,
                         7);
     // At 4us, no preamble is successfully detected, hence STA PHY STATE should move from IDLE to
@@ -455,7 +455,7 @@ TestThresholdPreambleDetectionWithoutFrameCapture::DoRun()
     Simulator::Schedule(Seconds(4) + MicroSeconds(2),
                         &TestThresholdPreambleDetectionWithoutFrameCapture::SendPacket,
                         this,
-                        rxPower - dB_u{6},
+                        rxPower - units::power::dB_t{6},
                         1000,
                         7);
     // At 4us, preamble should be successfully detected and STA PHY STATE should move from IDLE to
@@ -519,7 +519,7 @@ TestThresholdPreambleDetectionWithoutFrameCapture::DoRun()
     Simulator::Schedule(Seconds(5) + MicroSeconds(2),
                         &TestThresholdPreambleDetectionWithoutFrameCapture::SendPacket,
                         this,
-                        rxPower + dB_u{3.0},
+                        rxPower + units::power::dB_t{3.0},
                         1000,
                         7);
     // At 6us (hence 4us after the last signal is received), no preamble is successfully detected,
@@ -646,7 +646,7 @@ TestThresholdPreambleDetectionWithoutFrameCapture::DoRun()
     Simulator::Schedule(Seconds(8) + MicroSeconds(2),
                         &TestThresholdPreambleDetectionWithoutFrameCapture::SendPacket,
                         this,
-                        rxPower - dB_u{3},
+                        rxPower - units::power::dB_t{3},
                         1000,
                         7);
     // At 4us, STA PHY STATE should stay IDLE
@@ -676,7 +676,7 @@ TestThresholdPreambleDetectionWithoutFrameCapture::DoRun()
     Simulator::Schedule(Seconds(9) + MicroSeconds(2),
                         &TestThresholdPreambleDetectionWithoutFrameCapture::SendPacket,
                         this,
-                        rxPower - dB_u{6},
+                        rxPower - units::power::dB_t{6},
                         1000,
                         7);
     // At 4us, preamble should be successfully detected and STA PHY STATE should move from IDLE to
@@ -730,7 +730,7 @@ TestThresholdPreambleDetectionWithoutFrameCapture::DoRun()
     Simulator::Schedule(Seconds(10) + MicroSeconds(2),
                         &TestThresholdPreambleDetectionWithoutFrameCapture::SendPacket,
                         this,
-                        rxPower + dB_u{3.0},
+                        rxPower + units::power::dB_t{3.0},
                         1000,
                         7);
     // At 4us, STA PHY STATE should stay IDLE
@@ -1030,7 +1030,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     Simulator::Schedule(Seconds(3) + MicroSeconds(2),
                         &TestThresholdPreambleDetectionWithFrameCapture::SendPacket,
                         this,
-                        rxPower - dB_u{3},
+                        rxPower - units::power::dB_t{3},
                         1000,
                         7);
     // At 4us, no preamble is successfully detected, hence STA PHY STATE should move from IDLE to
@@ -1075,7 +1075,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     Simulator::Schedule(Seconds(4) + MicroSeconds(2),
                         &TestThresholdPreambleDetectionWithFrameCapture::SendPacket,
                         this,
-                        rxPower - dB_u{6},
+                        rxPower - units::power::dB_t{6},
                         1000,
                         7);
     // At 4us, preamble should be successfully detected and STA PHY STATE should move from IDLE to
@@ -1139,7 +1139,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     Simulator::Schedule(Seconds(5) + MicroSeconds(2),
                         &TestThresholdPreambleDetectionWithFrameCapture::SendPacket,
                         this,
-                        rxPower + dB_u{3.0},
+                        rxPower + units::power::dB_t{3.0},
                         1000,
                         7);
     // At 4us, STA PHY STATE should stay IDLE
@@ -1189,7 +1189,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     Simulator::Schedule(Seconds(6) + MicroSeconds(2),
                         &TestThresholdPreambleDetectionWithFrameCapture::SendPacket,
                         this,
-                        rxPower + dB_u{6.0},
+                        rxPower + units::power::dB_t{6.0},
                         1000,
                         7);
     // At 4us, STA PHY STATE should stay IDLE
@@ -1295,7 +1295,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     Simulator::Schedule(Seconds(8),
                         &TestThresholdPreambleDetectionWithFrameCapture::SendPacket,
                         this,
-                        rxPower - dB_u{3},
+                        rxPower - units::power::dB_t{3},
                         1000,
                         7);
     // At 4us, no preamble is successfully detected, hence STA PHY STATE should move from IDLE to
@@ -1339,7 +1339,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     Simulator::Schedule(Seconds(9),
                         &TestThresholdPreambleDetectionWithFrameCapture::SendPacket,
                         this,
-                        rxPower - dB_u{6},
+                        rxPower - units::power::dB_t{6},
                         1000,
                         7);
     // At 4us, preamble should be successfully detected and STA PHY STATE should move from IDLE to
@@ -1393,7 +1393,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     Simulator::Schedule(Seconds(10),
                         &TestThresholdPreambleDetectionWithFrameCapture::SendPacket,
                         this,
-                        rxPower + dB_u{3.0},
+                        rxPower + units::power::dB_t{3.0},
                         1000,
                         7);
     // At 4us, no preamble is successfully detected, hence STA PHY STATE should move from IDLE to
@@ -1438,7 +1438,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     Simulator::Schedule(Seconds(11),
                         &TestThresholdPreambleDetectionWithFrameCapture::SendPacket,
                         this,
-                        rxPower + dB_u{6.0},
+                        rxPower + units::power::dB_t{6.0},
                         1000,
                         7);
     // At 4us, preamble should be successfully detected and STA PHY STATE should move from IDLE to
@@ -1573,7 +1573,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     Simulator::Schedule(Seconds(14) + MicroSeconds(2),
                         &TestThresholdPreambleDetectionWithFrameCapture::SendPacket,
                         this,
-                        rxPower - dB_u{3},
+                        rxPower - units::power::dB_t{3},
                         1000,
                         7);
     // At 4us, STA PHY STATE should stay IDLE
@@ -1603,7 +1603,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     Simulator::Schedule(Seconds(15) + MicroSeconds(2),
                         &TestThresholdPreambleDetectionWithFrameCapture::SendPacket,
                         this,
-                        rxPower - dB_u{6},
+                        rxPower - units::power::dB_t{6},
                         1000,
                         7);
     // At 4us, preamble should be successfully detected and STA PHY STATE should move from IDLE to
@@ -1659,7 +1659,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     Simulator::Schedule(Seconds(16) + MicroSeconds(2),
                         &TestThresholdPreambleDetectionWithFrameCapture::SendPacket,
                         this,
-                        rxPower + dB_u{3.0},
+                        rxPower + units::power::dB_t{3.0},
                         1000,
                         7);
     // At 4us, STA PHY STATE should stay IDLE
@@ -1695,7 +1695,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     Simulator::Schedule(Seconds(17) + MicroSeconds(2),
                         &TestThresholdPreambleDetectionWithFrameCapture::SendPacket,
                         this,
-                        rxPower + dB_u{6.0},
+                        rxPower + units::power::dB_t{6.0},
                         1000,
                         7);
     // At 4us, STA PHY STATE should stay IDLE
@@ -1752,7 +1752,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     Simulator::Schedule(Seconds(18) + MicroSeconds(2),
                         &TestThresholdPreambleDetectionWithFrameCapture::SendPacket,
                         this,
-                        rxPower + dB_u{50.0},
+                        rxPower + units::power::dB_t{50.0},
                         1000,
                         7);
     // The second packet should be received successfully
@@ -1773,7 +1773,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     Simulator::Schedule(Seconds(19) + MicroSeconds(2),
                         &TestThresholdPreambleDetectionWithFrameCapture::SendPacket,
                         this,
-                        rxPower + dB_u{10.0},
+                        rxPower + units::power::dB_t{10.0},
                         1000,
                         7);
     // The second packet should be captured, but not decoded since SNR to low for used MCS
@@ -1794,7 +1794,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     Simulator::Schedule(Seconds(20),
                         &TestThresholdPreambleDetectionWithFrameCapture::SendPacket,
                         this,
-                        rxPower + dB_u{50.0},
+                        rxPower + units::power::dB_t{50.0},
                         1000,
                         7);
     // The second packet should be received successfully, same as in CASE 13
@@ -1815,7 +1815,7 @@ TestThresholdPreambleDetectionWithFrameCapture::DoRun()
     Simulator::Schedule(Seconds(21),
                         &TestThresholdPreambleDetectionWithFrameCapture::SendPacket,
                         this,
-                        rxPower + dB_u{10.0},
+                        rxPower + units::power::dB_t{10.0},
                         1000,
                         7);
     // The second packet should be captured, but not decoded since SNR to low for used MCS, same as
@@ -2019,7 +2019,7 @@ TestSimpleFrameCaptureModel::DoRun()
     Simulator::Schedule(Seconds(2) + MicroSeconds(10),
                         &TestSimpleFrameCaptureModel::SendPacket,
                         this,
-                        rxPower - dB_u{6},
+                        rxPower - units::power::dB_t{6},
                         1500,
                         0);
     Simulator::Schedule(Seconds(2.1),
@@ -2040,7 +2040,7 @@ TestSimpleFrameCaptureModel::DoRun()
     Simulator::Schedule(Seconds(3) + MicroSeconds(10),
                         &TestSimpleFrameCaptureModel::SendPacket,
                         this,
-                        rxPower + dB_u{6.0},
+                        rxPower + units::power::dB_t{6.0},
                         1500,
                         0);
     Simulator::Schedule(Seconds(3.1), &TestSimpleFrameCaptureModel::Expect1000BPacketDropped, this);
@@ -2062,7 +2062,7 @@ TestSimpleFrameCaptureModel::DoRun()
     Simulator::Schedule(Seconds(4) + MicroSeconds(25),
                         &TestSimpleFrameCaptureModel::SendPacket,
                         this,
-                        rxPower + dB_u{6.0},
+                        rxPower + units::power::dB_t{6.0},
                         1500,
                         0);
     Simulator::Schedule(Seconds(4.1), &TestSimpleFrameCaptureModel::Expect1500BPacketDropped, this);
@@ -2144,7 +2144,7 @@ TestPhyHeadersReception::DoRun()
     Simulator::Schedule(Seconds(2) + MicroSeconds(10),
                         &TestPhyHeadersReception::SendPacket,
                         this,
-                        rxPower - dB_u{3},
+                        rxPower - units::power::dB_t{3},
                         1000,
                         7);
     // At 10 us, STA PHY STATE should be CCA_BUSY.
@@ -2226,7 +2226,7 @@ TestPhyHeadersReception::DoRun()
     Simulator::Schedule(Seconds(4) + MicroSeconds(25),
                         &TestPhyHeadersReception::SendPacket,
                         this,
-                        rxPower - dB_u{3},
+                        rxPower - units::power::dB_t{3},
                         1000,
                         7);
     // At 10 us, STA PHY STATE should be CCA_BUSY.
@@ -2298,7 +2298,7 @@ TestPhyHeadersReception::DoRun()
     Simulator::Schedule(Seconds(6) + MicroSeconds(10),
                         &TestPhyHeadersReception::SendPacket,
                         this,
-                        rxPower - dB_u{3},
+                        rxPower - units::power::dB_t{3},
                         1000,
                         7);
     // At 10 us, STA PHY STATE should be CCA_BUSY.
@@ -2375,7 +2375,7 @@ TestPhyHeadersReception::DoRun()
     Simulator::Schedule(Seconds(8) + MicroSeconds(25),
                         &TestPhyHeadersReception::SendPacket,
                         this,
-                        rxPower - dB_u{3},
+                        rxPower - units::power::dB_t{3},
                         1000,
                         7);
     // At 10 us, STA PHY STATE should be CCA_BUSY.
@@ -2813,7 +2813,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(1),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower - dB_u{100},
+                        rxPower - units::power::dB_t{100},
                         1000);
 
     // A-MPDU 2
@@ -2870,7 +2870,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(2) + MicroSeconds(2),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower - dB_u{100},
+                        rxPower - units::power::dB_t{100},
                         1300);
 
     // All MPDUs of A-MPDU 1 should have been received.
@@ -2913,7 +2913,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(3),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower - dB_u{100},
+                        rxPower - units::power::dB_t{100},
                         1000);
 
     // A-MPDU 2
@@ -2970,7 +2970,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(4) + MicroSeconds(10),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower - dB_u{100},
+                        rxPower - units::power::dB_t{100},
                         1300);
 
     // All MPDUs of A-MPDU 1 should have been received.
@@ -3013,7 +3013,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(5),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower - dB_u{100},
+                        rxPower - units::power::dB_t{100},
                         1000);
 
     // A-MPDU 2
@@ -3070,7 +3070,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(6) + MicroSeconds(100),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower - dB_u{100},
+                        rxPower - units::power::dB_t{100},
                         1300);
 
     // All MPDUs of A-MPDU 1 should have been received.
@@ -3112,7 +3112,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(7),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower - dB_u{100},
+                        rxPower - units::power::dB_t{100},
                         1000);
 
     // A-MPDU 2
@@ -3168,7 +3168,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(8) + NanoSeconds(1100000),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower - dB_u{100},
+                        rxPower - units::power::dB_t{100},
                         1300);
 
     // All MPDUs of A-MPDU 1 should have been received.
@@ -3218,7 +3218,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(9) + MicroSeconds(2),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower + dB_u{3.0},
+                        rxPower + units::power::dB_t{3.0},
                         1300);
 
     // All MPDUs of A-MPDU 1 should have been dropped.
@@ -3311,7 +3311,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(11),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower + dB_u{3.0},
+                        rxPower + units::power::dB_t{3.0},
                         1000);
 
     // A-MPDU 2
@@ -3368,7 +3368,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(12) + MicroSeconds(10),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower + dB_u{3.0},
+                        rxPower + units::power::dB_t{3.0},
                         1300);
 
     // All MPDUs of A-MPDU 1 should have been received with errors (PHY header reception failed and
@@ -3464,7 +3464,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(14),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower + dB_u{3.0},
+                        rxPower + units::power::dB_t{3.0},
                         1000);
 
     // A-MPDU 2
@@ -3521,7 +3521,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(15) + MicroSeconds(10),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower + dB_u{6.0},
+                        rxPower + units::power::dB_t{6.0},
                         1300);
 
     // All MPDUs of A-MPDU 1 should have been dropped because PHY reception switched to A-MPDU 2.
@@ -3564,7 +3564,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(16),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower + dB_u{6.0},
+                        rxPower + units::power::dB_t{6.0},
                         1000);
 
     // A-MPDU 2
@@ -3621,7 +3621,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(17) + MicroSeconds(25),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower + dB_u{6.0},
+                        rxPower + units::power::dB_t{6.0},
                         1300);
 
     // All MPDUs of A-MPDU 1 should have been received with errors.
@@ -3665,7 +3665,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(18),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower + dB_u{6.0},
+                        rxPower + units::power::dB_t{6.0},
                         1000);
 
     // A-MPDU 2
@@ -3772,7 +3772,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(20) + MicroSeconds(100),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower + dB_u{6.0},
+                        rxPower + units::power::dB_t{6.0},
                         1300);
 
     // All MPDUs of A-MPDU 1 should have been received with errors.
@@ -3816,7 +3816,7 @@ TestAmpduReception::DoRun()
     Simulator::Schedule(Seconds(21),
                         &TestAmpduReception::SendAmpduWithThreeMpdus,
                         this,
-                        rxPower + dB_u{6.0},
+                        rxPower + units::power::dB_t{6.0},
                         1000);
 
     // A-MPDU 2

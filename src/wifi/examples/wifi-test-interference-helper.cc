@@ -90,7 +90,7 @@ class InterferenceExperiment
         WifiPhyBand band;      ///< band
         WifiPreamble preamble; ///< preamble
         bool captureEnabled;   ///< whether physical layer capture is enabled
-        dB_u captureMargin;    ///< margin used for physical layer capture
+        units::power::dB_t captureMargin;    ///< margin used for physical layer capture
     };
 
     InterferenceExperiment();
@@ -198,7 +198,7 @@ InterferenceExperiment::Input::Input()
       band(WIFI_PHY_BAND_5GHZ),
       preamble(WIFI_PREAMBLE_LONG),
       captureEnabled(false),
-      captureMargin(dB_u{0})
+      captureMargin(units::power::dB_t{0})
 {
 }
 

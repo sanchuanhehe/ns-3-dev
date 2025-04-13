@@ -12,6 +12,8 @@
 #include "frame-capture-model.h"
 #include "wifi-units.h"
 
+#include "ns3/units.h"
+
 namespace ns3
 {
 /**
@@ -41,13 +43,13 @@ class SimpleFrameCaptureModel : public FrameCaptureModel
      *
      * @param margin the frame capture margin
      */
-    void SetMargin(dB_u margin);
+    void SetMargin(units::power::dB_t margin);
     /**
      * Return the frame capture margin.
      *
      * @return the frame capture margin
      */
-    dB_u GetMargin() const;
+    units::power::dB_t GetMargin() const;
 
     /**
      * This method returns whether the reception should be switched to a
@@ -62,7 +64,7 @@ class SimpleFrameCaptureModel : public FrameCaptureModel
     bool CaptureNewFrame(Ptr<Event> currentEvent, Ptr<Event> newEvent) const override;
 
   private:
-    dB_u m_margin; ///< margin for determining if a new frame
+    units::power::dB_t m_margin; ///< margin for determining if a new frame
 };
 
 } // namespace ns3

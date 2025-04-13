@@ -25,7 +25,7 @@ namespace ns3
 const Time WIFI_TU = MicroSeconds(WIFI_TU_US);
 
 double
-DbToRatio(dB_u val)
+DbToRatio(units::power::dB_t val)
 {
     return std::pow(10.0, 0.1 * val);
 }
@@ -43,7 +43,7 @@ WToDbm(Watt_u val)
     return 10.0 * std::log10(val) + 30.0;
 }
 
-dB_u
+units::power::dB_t
 RatioToDb(double ratio)
 {
     return 10.0 * std::log10(ratio);

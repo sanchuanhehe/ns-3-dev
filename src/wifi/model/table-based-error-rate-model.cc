@@ -18,6 +18,7 @@
 #include "ns3/pointer.h"
 #include "ns3/string.h"
 #include "ns3/uinteger.h"
+#include "ns3/units.h"
 
 #include <algorithm>
 #include <cmath>
@@ -65,12 +66,12 @@ TableBasedErrorRateModel::~TableBasedErrorRateModel()
     m_fallbackErrorModel = nullptr;
 }
 
-dB_u
-TableBasedErrorRateModel::RoundSnr(dB_u snr, double precision) const
+units::power::dB_t
+TableBasedErrorRateModel::RoundSnr(units::power::dB_t snr, double precision) const
 {
     NS_LOG_FUNCTION(this << snr);
     const auto multiplier = std::round(std::pow(10.0, precision));
-    return dB_u{std::floor(snr * multiplier + 0.5) / multiplier};
+    return units::power::dB_t{std::floor(snr * multiplier + 0.5) / multiplier};
 }
 
 std::optional<uint8_t>
@@ -199,8 +200,8 @@ TableBasedErrorRateModel::DoGetChunkSuccessRate(WifiMode mode,
         {
             double a = 0.0;
             double b = 0.0;
-            dB_u previousSnr{0.0};
-            dB_u nextSnr{0.0};
+            units::power::dB_t previousSnr{0.0};
+            units::power::dB_t nextSnr{0.0};
             for (auto i = itVector.cbegin(); i != itVector.cend(); ++i)
             {
                 if (i->first < roundedSnr)

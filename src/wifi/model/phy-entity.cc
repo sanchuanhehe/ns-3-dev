@@ -694,7 +694,7 @@ PhyEntity::EndOfMpdu(Ptr<Event> event,
     signalNoiseIt->second = rxInfo.second;
 
     RxSignalInfo rxSignalInfo;
-    rxSignalInfo.snr = DbToRatio(dB_u{rxInfo.second.signal - rxInfo.second.noise});
+    rxSignalInfo.snr = DbToRatio(units::power::dB_t{rxInfo.second.signal - rxInfo.second.noise});
     rxSignalInfo.rssi = rxInfo.second.signal;
 
     auto statusPerMpduIt = m_statusPerMpduMap.find({ppdu->GetUid(), staId});

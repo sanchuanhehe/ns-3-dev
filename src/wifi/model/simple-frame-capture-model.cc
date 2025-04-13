@@ -14,6 +14,7 @@
 #include "ns3/double.h"
 #include "ns3/log.h"
 #include "ns3/simulator.h"
+#include "ns3/units.h"
 
 namespace ns3
 {
@@ -37,7 +38,7 @@ SimpleFrameCaptureModel::GetTypeId()
                 DoubleValue(5),
                 MakeDoubleAccessor(&SimpleFrameCaptureModel::GetMargin,
                                    &SimpleFrameCaptureModel::SetMargin),
-                MakeDoubleChecker<dB_u>());
+                MakeDoubleChecker<units::power::dB_t>());
     return tid;
 }
 
@@ -52,13 +53,13 @@ SimpleFrameCaptureModel::~SimpleFrameCaptureModel()
 }
 
 void
-SimpleFrameCaptureModel::SetMargin(dB_u margin)
+SimpleFrameCaptureModel::SetMargin(units::power::dB_t margin)
 {
     NS_LOG_FUNCTION(this << margin);
     m_margin = margin;
 }
 
-dB_u
+units::power::dB_t
 SimpleFrameCaptureModel::GetMargin() const
 {
     return m_margin;

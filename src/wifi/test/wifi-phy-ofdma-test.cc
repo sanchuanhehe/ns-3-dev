@@ -32,6 +32,7 @@
 #include "ns3/test.h"
 #include "ns3/threshold-preamble-detection-model.h"
 #include "ns3/txop.h"
+#include "ns3/units.h"
 #include "ns3/waveform-generator.h"
 #include "ns3/wifi-mac-header.h"
 #include "ns3/wifi-net-device.h"
@@ -41,7 +42,6 @@
 #include "ns3/wifi-spectrum-signal-parameters.h"
 #include "ns3/wifi-spectrum-value-helper.h"
 #include "ns3/wifi-utils.h"
-#include "ns3/units.h"
 
 #include <algorithm>
 #include <iterator>
@@ -5483,7 +5483,7 @@ class TestUlOfdmaPowerControl : public TestCase
     units::power::dBm_t m_rssiSta1; ///< expected RSSI from STA 1 at AP for HE TB PPDUs
     units::power::dBm_t m_rssiSta2; ///< expected RSSI from STA 2 at AP for HE TB PPDUs
 
-    dB_u m_tol; ///< tolerance between received and expected RSSIs
+    units::power::dB_t m_tol; ///< tolerance between received and expected RSSIs
 };
 
 TestUlOfdmaPowerControl::TestUlOfdmaPowerControl()
@@ -5497,7 +5497,7 @@ TestUlOfdmaPowerControl::TestUlOfdmaPowerControl()
       m_requestedRssiSta2(units::power::dBm_t{0}),
       m_rssiSta1(units::power::dBm_t{0}),
       m_rssiSta2(units::power::dBm_t{0}),
-      m_tol(dB_u{0.1})
+      m_tol(units::power::dB_t{0.1})
 {
 }
 

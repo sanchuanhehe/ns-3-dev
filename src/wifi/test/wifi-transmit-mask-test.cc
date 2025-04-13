@@ -9,6 +9,7 @@
 #include "ns3/fatal-error.h"
 #include "ns3/log.h"
 #include "ns3/test.h"
+#include "ns3/units.h"
 #include "ns3/wifi-phy-band.h"
 #include "ns3/wifi-phy-common.h"
 #include "ns3/wifi-spectrum-value-helper.h"
@@ -62,7 +63,7 @@ class WifiOfdmMaskSlopesTestCase : public TestCase
                                MHz_u channelWidth,
                                const std::vector<MHz_u>& centerFrequencies,
                                const IndexPowerVect& maskRefs,
-                               dB_u tolerance,
+                               units::power::dB_t tolerance,
                                std::size_t precision,
                                const std::vector<bool>& puncturedSubchannels = std::vector<bool>{});
     ~WifiOfdmMaskSlopesTestCase() override = default;
@@ -93,7 +94,7 @@ class WifiOfdmMaskSlopesTestCase : public TestCase
                                 ///< not (only used for 802.11ax and later)
     Ptr<SpectrumValue> m_actualSpectrum; ///< actual spectrum value
     IndexPowerVect m_expectedPsd;        ///< expected power values
-    dB_u m_tolerance;                    ///< tolerance
+    units::power::dB_t m_tolerance;                    ///< tolerance
     std::size_t m_precision;             ///< precision for double calculations (in decimals)
 };
 
@@ -104,7 +105,7 @@ WifiOfdmMaskSlopesTestCase::WifiOfdmMaskSlopesTestCase(
     MHz_u channelWidth,
     const std::vector<MHz_u>& centerFrequencies,
     const IndexPowerVect& maskRefs,
-    dB_u tolerance,
+    units::power::dB_t tolerance,
     std::size_t precision,
     const std::vector<bool>& puncturedSubchannels)
     : TestCase(std::string("SpectrumValue ") + name),
@@ -262,9 +263,9 @@ WifiOfdmMaskSlopesTestCase::InterpolateAndAppendValues(IndexPowerVect& vect,
     for (uint32_t i = start.first; i <= stop.first; i++)
     {
         const auto delta{i - start.first};
-        dB_u val{start.second + slope * delta};
+        units::power::dB_t val{start.second + slope * delta};
         const auto multiplier = std::round(std::pow(10.0, static_cast<double>(m_precision)));
-        val = dB_u{std::floor(val * multiplier + 0.5) / multiplier};
+        val = units::power::dB_t{std::floor(val * multiplier + 0.5) / multiplier};
         vect.emplace_back(i, val);
         NS_LOG_LOGIC("Append (" << i << ", " << val << ")");
     }
@@ -323,7 +324,7 @@ WifiTransmitMaskTestSuite::WifiTransmitMaskTestSuite()
     NS_LOG_INFO("Creating WifiTransmitMaskTestSuite");
 
     WifiOfdmMaskSlopesTestCase::IndexPowerVect maskSlopes;
-    dB_u tol{10e-2};
+    units::power::dB_t tol{10e-2};
     double prec = 10; // in decimals
 
     // ============================================================================================
