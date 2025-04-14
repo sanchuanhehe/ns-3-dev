@@ -1525,28 +1525,27 @@ HeFrameExchangeManager::GetHeTbTxVector(CtrlTriggerHeader trigger, Mac48Address 
     uint8_t numPowerLevels = m_phy->GetNTxPower();
     if (numPowerLevels > 1)
     {
-        dBm_u step = (m_phy->GetTxPowerEnd() - m_phy->GetTxPowerStart()) / (numPowerLevels - 1);
+        dBm_u step =
+            (m_phy->GetTxPowerEnd() - m_phy->GetTxPowerStart()).to<double>() / (numPowerLevels - 1);
         powerLevel = static_cast<uint8_t>(
-            ceil((reqTxPower - m_phy->GetTxPowerStart()) /
+            ceil((reqTxPower - m_phy->GetTxPowerStart().to<double>()) /
                  step)); // better be slightly above so as to satisfy target UL RSSI
         if (powerLevel > numPowerLevels)
         {
             powerLevel = numPowerLevels; // capping will trigger warning below
         }
     }
-    if (reqTxPower > m_phy->GetPower(powerLevel))
+    if (reqTxPower > m_phy->GetPower(powerLevel).to<double>())
     {
         NS_LOG_WARN("The requested power level (" << reqTxPower << "dBm) cannot be satisfied (max: "
                                                   << m_phy->GetTxPowerEnd() << "dBm)");
     }
     v.SetTxPowerLevel(powerLevel);
-    NS_LOG_LOGIC("UL power control: input "
-                 << "{pathLoss=" << pathLossDb << "dB, reqTxPower=" << reqTxPower << "dBm}"
-                 << " output "
-                 << "{powerLevel=" << +powerLevel << " -> " << m_phy->GetPower(powerLevel) << "dBm}"
-                 << " PHY power capa "
-                 << "{min=" << m_phy->GetTxPowerStart() << "dBm, max=" << m_phy->GetTxPowerEnd()
-                 << "dBm, levels:" << +numPowerLevels << "}");
+    NS_LOG_LOGIC("UL power control: "
+                 << "input {pathLoss=" << pathLossDb << "dB, reqTxPower=" << reqTxPower << "dBm}"
+                 << " output {powerLevel=" << +powerLevel << " -> " << m_phy->GetPower(powerLevel)
+                 << " PHY power capa {min=" << m_phy->GetTxPowerStart()
+                 << " max=" << m_phy->GetTxPowerEnd() << " levels:" << +numPowerLevels << "}");
 
     return v;
 }
@@ -1564,7 +1563,7 @@ HeFrameExchangeManager::SetTargetRssi(CtrlTriggerHeader& trigger) const
     NS_ASSERT(m_apMac);
 
     trigger.SetApTxPower(static_cast<int8_t>(
-        m_phy->GetPower(GetWifiRemoteStationManager()->GetDefaultTxPowerLevel())));
+        m_phy->GetPower(GetWifiRemoteStationManager()->GetDefaultTxPowerLevel()).to<double>()));
     for (auto& userInfo : trigger)
     {
         const auto staList = m_apMac->GetStaList(m_linkId);

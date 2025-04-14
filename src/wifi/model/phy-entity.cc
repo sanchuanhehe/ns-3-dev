@@ -1375,7 +1375,7 @@ void
 PhyEntity::StartTx(Ptr<const WifiPpdu> ppdu)
 {
     NS_LOG_FUNCTION(this << ppdu);
-    auto txPower = m_wifiPhy->GetTxPowerForTransmission(ppdu) + m_wifiPhy->GetTxGain();
+    auto txPower = m_wifiPhy->GetTxPowerForTransmission(ppdu) + m_wifiPhy->GetTxGain().to<double>();
     auto txVector = ppdu->GetTxVector();
     auto txPowerSpectrum = GetTxPowerSpectralDensity(DbmToW(txPower), ppdu);
     Transmit(ppdu->GetTxDuration(), ppdu, txPower, txPowerSpectrum, "transmission");

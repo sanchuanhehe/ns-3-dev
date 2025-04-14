@@ -226,7 +226,7 @@ NodeStatistics::NodeStatistics(NetDeviceContainer aps, NetDeviceContainer stas)
     Ptr<WifiPhy> phy = wifiDevice->GetPhy();
     SetupPhy(phy);
     DataRate dataRate = DataRate(phy->GetDefaultMode().GetDataRate(phy->GetChannelWidth()));
-    const auto power = phy->GetTxPowerEnd();
+    const auto power = phy->GetTxPowerEnd().to<double>();
     for (uint32_t j = 0; j < stas.GetN(); j++)
     {
         Ptr<NetDevice> staDevice = stas.Get(j);

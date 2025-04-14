@@ -4787,8 +4787,8 @@ TestSpectrumChannelWithBandwidthFilter::DoSetup()
     Ptr<WifiNetDevice> dev = CreateObject<WifiNetDevice>();
     m_tx = CreateObject<SpectrumWifiPhy>();
     m_tx->SetDevice(dev);
-    m_tx->SetTxPowerStart(dBm_u{20});
-    m_tx->SetTxPowerEnd(dBm_u{20});
+    m_tx->SetTxPowerStart(units::power::dBm_t(20));
+    m_tx->SetTxPowerEnd(units::power::dBm_t(20));
 
     Ptr<Node> nodeRx = CreateObject<Node>();
     Ptr<WifiNetDevice> devRx = CreateObject<WifiNetDevice>();
@@ -4958,15 +4958,15 @@ TestPhyDropDueToTx::DoSetup()
     auto devA = CreateObject<WifiNetDevice>();
     m_phyA = CreateObject<SpectrumWifiPhy>();
     m_phyA->SetDevice(devA);
-    m_phyA->SetTxPowerStart(dBm_u{20});
-    m_phyA->SetTxPowerEnd(dBm_u{20});
+    m_phyA->SetTxPowerStart(DBm(20));
+    m_phyA->SetTxPowerEnd(DBm(20));
 
     auto nodeRx = CreateObject<Node>();
     auto devB = CreateObject<WifiNetDevice>();
     m_phyB = CreateObject<SpectrumWifiPhy>();
     m_phyB->SetDevice(devB);
-    m_phyB->SetTxPowerStart(dBm_u{20});
-    m_phyB->SetTxPowerEnd(dBm_u{20});
+    m_phyB->SetTxPowerStart(DBm(20));
+    m_phyB->SetTxPowerEnd(DBm(20));
 
     auto interferenceTx = CreateObject<InterferenceHelper>();
     m_phyA->SetInterferenceHelper(interferenceTx);

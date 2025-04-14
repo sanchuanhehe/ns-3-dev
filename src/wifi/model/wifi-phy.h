@@ -15,7 +15,9 @@
 #include "wifi-phy-state-helper.h"
 #include "wifi-standards.h"
 
+#include "ns3/decibel.h"
 #include "ns3/error-model.h"
+#include "ns3/units.h"
 
 #include <limits>
 
@@ -836,25 +838,25 @@ class WifiPhy : public Object
      *
      * @param start the minimum transmission power level
      */
-    void SetTxPowerStart(dBm_u start);
+    void SetTxPowerStart(units::power::dBm_t start);
     /**
      * Return the minimum available transmission power level.
      *
      * @return the minimum available transmission power level
      */
-    dBm_u GetTxPowerStart() const;
+    units::power::dBm_t GetTxPowerStart() const;
     /**
      * Sets the maximum available transmission power level.
      *
      * @param end the maximum transmission power level
      */
-    void SetTxPowerEnd(dBm_u end);
+    void SetTxPowerEnd(units::power::dBm_t end);
     /**
      * Return the maximum available transmission power level.
      *
      * @return the maximum available transmission power level
      */
-    dBm_u GetTxPowerEnd() const;
+    units::power::dBm_t GetTxPowerEnd() const;
     /**
      * Sets the number of transmission power levels available between the
      * minimum level and the maximum level. Transmission power levels are
@@ -874,25 +876,25 @@ class WifiPhy : public Object
      *
      * @param gain the transmission gain
      */
-    void SetTxGain(dB_u gain);
+    void SetTxGain(units::dimensionless::dB_t gain);
     /**
      * Return the transmission gain.
      *
      * @return the transmission gain
      */
-    dB_u GetTxGain() const;
+    units::dimensionless::dB_t GetTxGain() const;
     /**
      * Sets the reception gain.
      *
      * @param gain the reception gain
      */
-    void SetRxGain(dB_u gain);
+    void SetRxGain(units::dimensionless::dB_t gain);
     /**
      * Return the reception gain.
      *
      * @return the reception gain
      */
-    dB_u GetRxGain() const;
+    units::dimensionless::dB_t GetRxGain() const;
 
     /**
      * Get the remaining time to the end of the MAC header reception of the next MPDU being
@@ -1116,7 +1118,7 @@ class WifiPhy : public Object
      *
      * @return the transmission power at the given power level
      */
-    dBm_u GetPower(uint8_t powerLevel) const;
+    units::power::dBm_t GetPower(uint8_t powerLevel) const;
 
     /**
      * Reset PHY to IDLE, with some potential TX power restrictions for the next transmission.
@@ -1622,12 +1624,12 @@ class WifiPhy : public Object
     dBm_u m_ccaSensitivityThreshold; //!< Clear channel assessment (CCA) modulation and coding rate
                                      //!< sensitivity threshold
 
-    dB_u m_txGain;                     //!< Transmission gain
-    dB_u m_rxGain;                     //!< Reception gain
-    dBm_u m_txPowerBase;               //!< Minimum transmission power
-    dBm_u m_txPowerEnd;                //!< Maximum transmission power
-    uint8_t m_nTxPower;                //!< Number of available transmission power levels
-    dBm_per_MHz_u m_powerDensityLimit; //!< the power density limit
+    units::dimensionless::dB_t m_txGain; //!< Transmission gain
+    units::dimensionless::dB_t m_rxGain; //!< Reception gain
+    units::power::dBm_t m_txPowerBase;   //!< Minimum transmission power (dBm)
+    units::power::dBm_t m_txPowerEnd;    //!< Maximum transmission power (dBm)
+    uint8_t m_nTxPower;                  //!< Number of available transmission power levels
+    dBm_per_MHz_u m_powerDensityLimit;   //!< the power density limit
 
     bool m_powerRestricted; //!< Flag whether transmit power is restricted by OBSS PD SR
     dBm_u m_txPowerMaxSiso; //!< SISO maximum transmit power due to OBSS PD SR power restriction

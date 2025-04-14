@@ -195,6 +195,8 @@ set(source_files
     model/wall-clock-synchronizer.cc
     model/matrix-array.cc
     model/demangle.cc
+    model/decibel.cc
+    model/decibel-mw.cc
 )
 
 # Define core lib headers
@@ -295,6 +297,10 @@ set(header_files
     model/type-traits.h
     model/uinteger.h
     model/uniform-random-bit-generator.h
+    model/units-nholthaus.h
+    model/units.h
+    model/decibel.h
+    model/decibel-mw.h
     model/valgrind.h
     model/vector.h
     model/warnings.h
@@ -337,6 +343,7 @@ set(test_sources
     test/tuple-value-test-suite.cc
     test/type-id-test-suite.cc
     test/type-traits-test-suite.cc
+    test/units-test-suite.cc
     test/watchdog-test-suite.cc
     test/val-array-test-suite.cc
     test/matrix-array-test-suite.cc

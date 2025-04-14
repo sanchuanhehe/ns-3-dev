@@ -267,6 +267,40 @@ MakeSimpleAttributeChecker(std::string name, std::string underlying)
 /**
  * @ingroup attributehelper
  *
+ * This is an alternative to ATTRIBUTE_CHECKER_DEFINE(type)
+ * Declare the AttributeChecker class \pname{typeChecker}
+ * and the \c MaketypeChecker function for class \pname{type},
+ * with the addition of a Value class converter.
+ *
+ * @param [in] baseType The underlying type that is being wrapped
+ * @param [in] type The name of the class
+ * @param [in] converterType The name of the converter (value) class
+ *
+ * This macro declares the \pname{typeChecker} class and the associated
+ * \c MaketypeChecker function.
+ *
+ * Typically invoked in the class header file.
+ */
+#define ATTRIBUTE_CHECKER_DEFINE_WITH_CONVERTER(baseType, type, converterType)                     \
+    class type##Checker : public AttributeChecker                                                  \
+    {                                                                                              \
+        Ptr<AttributeValue> CreateValidValue(const AttributeValue& value) const override           \
+        {                                                                                          \
+            const auto ptr = dynamic_cast<const converterType##Value*>(&value);                    \
+            if (ptr)                                                                               \
+            {                                                                                      \
+                return AttributeChecker::CreateValidValue(type##Value(baseType{ptr->Get()}));      \
+            }                                                                                      \
+            return AttributeChecker::CreateValidValue(value);                                      \
+        }                                                                                          \
+    };                                                                                             \
+    Ptr<const AttributeChecker> Make##type##Checker();                                             \
+                                                                                                   \
+    Ptr<const AttributeChecker> Make##type##Checker(baseType min, baseType max)
+
+/**
+ * @ingroup attributehelper
+ *
  * Define the class methods belonging to
  * the attribute value class \pname{nameValue}
  * of the underlying class \pname{type}.
@@ -369,6 +403,87 @@ MakeSimpleAttributeChecker(std::string name, std::string underlying)
     Ptr<const AttributeChecker> Make##type##Checker()                                              \
     {                                                                                              \
         return MakeSimpleAttributeChecker<type##Value, type##Checker>(#type "Value", name);        \
+    }
+
+/**
+ * @ingroup attributehelper
+ *
+ * Define the \c MaketypeChecker function for class \pname{type}.
+ *
+ * @param [in] baseType The underlying type.
+ * @param [in] type The name of the class.
+ *
+ * This macro implements the \c MaketypeChecker function
+ * for class \pname{type}.
+ *
+ * Typically invoked in the source file and intended to be used
+ * with the ATTRIBUTE_CHECKER_DEFINE_WITH_CONVERTER() macro.
+ */
+#define ATTRIBUTE_CHECKER_IMPLEMENT_WITH_CONVERTER(baseType, type)                                 \
+    Ptr<const AttributeChecker> Make##type##Checker()                                              \
+    {                                                                                              \
+        return MakeSimpleAttributeChecker<type##Value, type##Checker>(#type "Value", #baseType);   \
+    }                                                                                              \
+    Ptr<const AttributeChecker> Make##type##Checker(baseType min, baseType max)                    \
+    {                                                                                              \
+        struct Checker : public type##Checker                                                      \
+        {                                                                                          \
+            Checker(const baseType minValue, const baseType maxValue)                              \
+                : m_minValue(minValue),                                                            \
+                  m_maxValue(maxValue)                                                             \
+            {                                                                                      \
+            }                                                                                      \
+                                                                                                   \
+            bool Check(const AttributeValue& value) const override                                 \
+            {                                                                                      \
+                const auto v = dynamic_cast<const type##Value*>(&value);                           \
+                if (!v)                                                                            \
+                {                                                                                  \
+                    return false;                                                                  \
+                }                                                                                  \
+                return v->Get() >= m_minValue && v->Get() <= m_maxValue;                           \
+            }                                                                                      \
+                                                                                                   \
+            std::string GetValueTypeName() const override                                          \
+            {                                                                                      \
+                return "ns3::" + std::string(#type) + "Value";                                     \
+            }                                                                                      \
+                                                                                                   \
+            bool HasUnderlyingTypeInformation() const override                                     \
+            {                                                                                      \
+                return true;                                                                       \
+            }                                                                                      \
+                                                                                                   \
+            std::string GetUnderlyingTypeInformation() const override                              \
+            {                                                                                      \
+                std::ostringstream oss;                                                            \
+                oss << "type"                                                                      \
+                    << " " << m_minValue << ":" << m_maxValue;                                     \
+                return oss.str();                                                                  \
+            }                                                                                      \
+                                                                                                   \
+            Ptr<AttributeValue> Create() const override                                            \
+            {                                                                                      \
+                return ns3::Create<type##Value>();                                                 \
+            }                                                                                      \
+                                                                                                   \
+            bool Copy(const AttributeValue& source, AttributeValue& destination) const override    \
+            {                                                                                      \
+                const auto src = dynamic_cast<const type##Value*>(&source);                        \
+                auto dst = dynamic_cast<type##Value*>(&destination);                               \
+                if (src == nullptr || dst == nullptr)                                              \
+                {                                                                                  \
+                    return false;                                                                  \
+                }                                                                                  \
+                *dst = *src;                                                                       \
+                return true;                                                                       \
+            }                                                                                      \
+                                                                                                   \
+            baseType m_minValue;                                                                   \
+            baseType m_maxValue;                                                                   \
+        }* checker = new Checker(min, max);                                                        \
+                                                                                                   \
+        return Ptr<const AttributeChecker>(checker, false);                                        \
     }
 
 /**

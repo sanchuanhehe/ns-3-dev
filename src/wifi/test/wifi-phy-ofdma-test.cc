@@ -10,6 +10,7 @@
 #include "ns3/boolean.h"
 #include "ns3/constant-position-mobility-model.h"
 #include "ns3/ctrl-headers.h"
+#include "ns3/decibel.h"
 #include "ns3/double.h"
 #include "ns3/he-configuration.h"
 #include "ns3/he-phy.h"
@@ -3884,11 +3885,12 @@ TestUlOfdmaPhyTransmission::DoSetup()
     std::list<Ptr<WifiPhy>> phys{m_phyAp, m_phySta1, m_phySta2, m_phySta3};
     for (auto& phy : phys)
     {
-        phy->SetAttribute("TxGain", DoubleValue(1.0));
+        // Leaving the below unchanged as a DoubleValue to show that it still works
+        phy->SetAttribute("TxGain", DoubleValue(1));
         phy->SetAttribute("TxPowerStart", DoubleValue(16.0));
         phy->SetAttribute("TxPowerEnd", DoubleValue(16.0));
         phy->SetAttribute("PowerDensityLimit", DoubleValue(100.0)); // no impact by default
-        phy->SetAttribute("RxGain", DoubleValue(2.0));
+        phy->SetAttribute("RxGain", DecibelValue(units::dimensionless::dB_t(2)));
         // test assumes no rejection power for simplicity
         phy->SetAttribute("TxMaskInnerBandMinimumRejection", DoubleValue(-100.0));
         phy->SetAttribute("TxMaskOuterBandMinimumRejection", DoubleValue(-100.0));

@@ -8,6 +8,7 @@
 
 #include "ns3/ap-wifi-mac.h"
 #include "ns3/boolean.h"
+#include "ns3/decibel.h"
 #include "ns3/double.h"
 #include "ns3/he-configuration.h"
 #include "ns3/he-phy.h"
@@ -1589,11 +1590,11 @@ TestUlMuMimoPhyTransmission::DoSetup()
         phy->SetDevice(staDev);
         phy->AddChannel(spectrumChannel);
         phy->ConfigureStandard(WIFI_STANDARD_80211ax);
-        phy->SetAttribute("TxGain", DoubleValue(1.0));
+        phy->SetAttribute("TxGain", DecibelValue(units::dimensionless::dB_t(1)));
         phy->SetAttribute("TxPowerStart", DoubleValue(16.0));
         phy->SetAttribute("TxPowerEnd", DoubleValue(16.0));
         phy->SetAttribute("PowerDensityLimit", DoubleValue(100.0)); // no impact by default
-        phy->SetAttribute("RxGain", DoubleValue(2.0));
+        phy->SetAttribute("RxGain", DecibelValue(units::dimensionless::dB_t(2)));
         staDev->SetPhy(phy);
         staNode->AddDevice(staDev);
         m_phyStas.push_back(phy);
