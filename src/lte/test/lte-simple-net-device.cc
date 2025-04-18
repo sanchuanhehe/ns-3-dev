@@ -53,12 +53,6 @@ LteSimpleNetDevice::DoDispose()
     SimpleNetDevice::DoDispose();
 }
 
-void
-LteSimpleNetDevice::DoInitialize()
-{
-    NS_LOG_FUNCTION(this);
-}
-
 bool
 LteSimpleNetDevice::Send(Ptr<Packet> packet, const Address& dest, uint16_t protocolNumber)
 {

@@ -85,6 +85,13 @@ class LteNetDevice : public NetDevice
      */
     void Receive(Ptr<Packet> p);
 
+    /**
+     * Complete the device setup and configuration.
+     *
+     * This function is called automatically by the helper.
+     */
+    virtual void FinishSetup();
+
   protected:
     NetDevice::ReceiveCallback m_rxCallback; ///< receive callback
 

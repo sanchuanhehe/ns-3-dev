@@ -102,7 +102,7 @@ LteUeNetDevice::GetTypeId()
 }
 
 LteUeNetDevice::LteUeNetDevice()
-    : m_isConstructed(false)
+    : m_isSetupComplete(false)
 {
     NS_LOG_FUNCTION(this);
 }
@@ -136,7 +136,7 @@ LteUeNetDevice::UpdateConfig()
 {
     NS_LOG_FUNCTION(this);
 
-    if (m_isConstructed)
+    if (m_isSetupComplete)
     {
         NS_LOG_LOGIC(this << " Updating configuration: IMSI " << m_imsi << " CSG ID " << m_csgId);
         m_nas->SetImsi(m_imsi);
@@ -147,7 +147,7 @@ LteUeNetDevice::UpdateConfig()
     {
         /*
          * NAS and RRC instances are not be ready yet, so do nothing now and
-         * expect ``DoInitialize`` to re-invoke this function.
+         * expect ``DoSetup`` to re-invoke this function.
          */
     }
 }
@@ -250,10 +250,16 @@ LteUeNetDevice::SetCcMap(std::map<uint8_t, Ptr<ComponentCarrierUe>> ccm)
 }
 
 void
-LteUeNetDevice::DoInitialize()
+LteUeNetDevice::FinishSetup()
 {
     NS_LOG_FUNCTION(this);
-    m_isConstructed = true;
+
+    if (m_isSetupComplete)
+    {
+        return;
+    }
+
+    m_isSetupComplete = true;
     UpdateConfig();
 
     for (auto it = m_ccMap.begin(); it != m_ccMap.end(); ++it)

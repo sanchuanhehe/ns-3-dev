@@ -134,7 +134,7 @@ LteEnbNetDevice::GetTypeId()
 }
 
 LteEnbNetDevice::LteEnbNetDevice()
-    : m_isConstructed(false),
+    : m_isSetupComplete(false),
       m_isConfigured(false),
       m_anr(nullptr),
       m_componentCarrierManager(nullptr)
@@ -359,10 +359,16 @@ LteEnbNetDevice::SetCcMap(std::map<uint8_t, Ptr<ComponentCarrierBaseStation>> cc
 }
 
 void
-LteEnbNetDevice::DoInitialize()
+LteEnbNetDevice::FinishSetup()
 {
     NS_LOG_FUNCTION(this);
-    m_isConstructed = true;
+
+    if (m_isSetupComplete)
+    {
+        return;
+    }
+
+    m_isSetupComplete = true;
     UpdateConfig();
     for (auto it = m_ccMap.begin(); it != m_ccMap.end(); ++it)
     {
@@ -396,7 +402,7 @@ LteEnbNetDevice::UpdateConfig()
 {
     NS_LOG_FUNCTION(this);
 
-    if (m_isConstructed)
+    if (m_isSetupComplete)
     {
         if (!m_isConfigured)
         {

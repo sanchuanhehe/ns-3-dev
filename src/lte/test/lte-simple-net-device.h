@@ -47,10 +47,6 @@ class LteSimpleNetDevice : public SimpleNetDevice
 
     // inherited from NetDevice
     bool Send(Ptr<Packet> packet, const Address& dest, uint16_t protocolNumber) override;
-
-  protected:
-    // inherited from Object
-    void DoInitialize() override;
 };
 
 } // namespace ns3
