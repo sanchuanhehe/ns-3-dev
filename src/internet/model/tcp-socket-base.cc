@@ -194,6 +194,11 @@ TcpSocketBase::GetTypeId()
                                           "On",
                                           TcpSocketState::AcceptOnly,
                                           "AcceptOnly"))
+            .AddAttribute("UseAbe",
+                          "Parameter to set ABE functionality",
+                          BooleanValue(false),
+                          MakeBooleanAccessor(&TcpSocketBase::SetUseAbe),
+                          MakeBooleanChecker())
             .AddTraceSource("RTO",
                             "Retransmission timeout",
                             MakeTraceSourceAccessor(&TcpSocketBase::m_rto),
@@ -4804,6 +4809,18 @@ TcpSocketBase::SetUseEcn(TcpSocketState::UseEcn_t useEcn)
 {
     NS_LOG_FUNCTION(this << useEcn);
     m_tcb->m_useEcn = useEcn;
+}
+
+void
+TcpSocketBase::SetUseAbe(bool useAbe)
+{
+    NS_LOG_FUNCTION(this << useAbe);
+    if (m_tcb->m_useEcn == TcpSocketState::Off && useAbe)
+    {
+        NS_LOG_WARN("Enabling ECN along with ABE");
+        m_tcb->m_useEcn = TcpSocketState::On;
+    }
+    m_tcb->m_useAbe = useAbe;
 }
 
 uint32_t

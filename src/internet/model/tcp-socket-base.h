@@ -579,7 +579,12 @@ class TcpSocketBase : public TcpSocket
      * @param useEcn Mode of ECN to use.
      */
     void SetUseEcn(TcpSocketState::UseEcn_t useEcn);
-
+    /**
+     * @brief Get ABE mode of use on the socket
+     *
+     * @param useAbe Mode of ABE to use.
+     */
+    void SetUseAbe(bool useAbe);
     /**
      * @brief Enable or disable pacing
      * @param pacing Boolean to enable or disable pacing

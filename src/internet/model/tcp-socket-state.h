@@ -205,7 +205,7 @@ class TcpSocketState : public Object
 
     EcnMode_t m_ecnMode{ClassicEcn}; //!< ECN mode
     UseEcn_t m_useEcn{Off};          //!< Socket ECN capability
-
+    bool m_useAbe{false};         //!< ABE mode
     EcnCodePoint_t m_ectCodePoint{Ect0}; //!< ECT code point to use
 
     uint32_t m_lastAckedSackedBytes{
