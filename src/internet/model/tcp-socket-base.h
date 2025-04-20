@@ -661,6 +661,11 @@ class TcpSocketBase : public TcpSocket
                                            const Address& peerAddr,
                                            const Ptr<const TcpSocketBase> socket);
 
+    // D-SACK related variables
+    bool m_isDsack{false}; //!< Boolean variable to check if a duplicate packet has arrived
+    SequenceNumber32 m_dsackFirst{0};  //!< First Sequence number of D-SACK block
+    SequenceNumber32 m_dsackSecond{0}; //!< Second Sequence number of D-SACK block
+
   protected:
     // Implementing ns3::TcpSocket -- Attribute get/set
     // inherited, no need to doc
@@ -1267,6 +1272,13 @@ class TcpSocketBase : public TcpSocket
     void AddOptionSack(TcpHeader& header);
 
     /**
+     * @brief Add the D-SACK block to the header
+     *
+     * @param header TcpHeader where the method should add the option
+     */
+    void AddDsack(TcpHeader& header);
+
+    /**
      * @brief Process the timestamp option from other side
      *
      * Get the timestamp and the echo, then save timestamp (which will
@@ -1412,6 +1424,7 @@ class TcpSocketBase : public TcpSocket
     uint8_t m_sndWindShift{0};      //!< Window shift to apply to incoming segments
     bool m_timestampEnabled{true};  //!< Timestamp option enabled
     uint32_t m_timestampToEcho{0};  //!< Timestamp to echo
+    bool m_dsackEnabled{false};     //!< D-SACK option disabled
 
     EventId m_sendPendingDataEvent{}; //!< micro-delay event to send pending data
 
