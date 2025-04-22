@@ -122,6 +122,7 @@ SOURCEFIGS = \
 	$(SRC)/network/doc/node.dia \
 	$(SRC)/network/doc/buffer.dia \
 	$(SRC)/network/doc/sockets-overview.dia \
+	$(SRC)/network/doc/admin-state-diagram.dia \
 	$(SRC)/internet/doc/internet-node-send.dia \
 	$(SRC)/internet/doc/internet-node-recv.dia \
 	$(SRC)/internet/doc/routing.dia \
@@ -390,6 +391,7 @@ IMAGES_EPS = \
 	$(FIGURES)/node.eps \
 	$(FIGURES)/buffer.eps \
 	$(FIGURES)/sockets-overview.eps \
+	$(FIGURES)/admin-state-diagram.eps \
 	$(FIGURES)/internet-node-send.eps \
 	$(FIGURES)/internet-node-recv.eps \
 	$(FIGURES)/routing.eps \
@@ -517,6 +519,7 @@ $(FIGURES)/node.pdf_width = 5in
 $(FIGURES)/packet.pdf_width = 4in
 $(FIGURES)/buffer.pdf_width = 15cm
 $(FIGURES)/sockets-overview.pdf_width = 10cm
+$(FIGURES)/admin-state-diagram.pdf_width = 10cm
 $(FIGURES)/internet-node-send.pdf_width = 5in
 $(FIGURES)/internet-node-recv.pdf_width = 5in
 $(FIGURES)/routing.pdf_width = 6in

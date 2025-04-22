@@ -16,6 +16,7 @@ set(source_files
     model/chunk.cc
     model/header.cc
     model/net-device.cc
+    model/net-device-state.cc
     model/nix-vector.cc
     model/node-list.cc
     model/node.cc
@@ -90,6 +91,7 @@ set(header_files
     model/chunk.h
     model/header.h
     model/net-device.h
+    model/net-device-state.h
     model/nix-vector.h
     model/node-list.h
     model/node.h
@@ -171,4 +173,5 @@ build_lib(
     test/pcap-file-test-suite.cc
     test/sequence-number-test-suite.cc
     test/test-data-rate.cc
+    test/net-device-state-test-suite.cc
 )
