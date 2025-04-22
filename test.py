@@ -1451,7 +1451,7 @@ def run_tests():
     # of the trace files, so we also just stash them off in the temporary dir.
     # The retain option also causes these unchecked trace files to be kept.
     #
-    date_and_time = time.strftime("%Y-%m-%d-%H-%M-%S-CUT", time.gmtime())
+    date_and_time = time.strftime("%Y-%m-%d-%H-%M-%S-CUT", time.localtime())
 
     if not os.path.exists(TMP_OUTPUT_DIR):
         os.makedirs(TMP_OUTPUT_DIR)
