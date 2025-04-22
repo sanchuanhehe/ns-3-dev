@@ -1093,7 +1093,8 @@ main(int argc, char* argv[])
 
     if (g_validationFailed)
     {
-        NS_FATAL_ERROR("Validation failed");
+        std::cerr << "Validation failed" << std::endl;
+        exit(1);
     }
 
     return 0;

@@ -350,7 +350,9 @@ main(int argc, char* argv[])
                 {
                     if (throughput < minExpectedThroughput)
                     {
-                        NS_FATAL_ERROR("Obtained throughput " << throughput << " is not expected!");
+                        std::cerr << "Obtained throughput " << throughput << " is not expected!"
+                                  << std::endl;
+                        exit(1);
                     }
                 }
                 // test last element
@@ -358,7 +360,9 @@ main(int argc, char* argv[])
                 {
                     if (maxExpectedThroughput > 0 && throughput > maxExpectedThroughput)
                     {
-                        NS_FATAL_ERROR("Obtained throughput " << throughput << " is not expected!");
+                        std::cerr << "Obtained throughput " << throughput << " is not expected!"
+                                  << std::endl;
+                        exit(1);
                     }
                 }
                 // test previous throughput is smaller (for the same mcs)
@@ -368,7 +372,9 @@ main(int argc, char* argv[])
                 }
                 else
                 {
-                    NS_FATAL_ERROR("Obtained throughput " << throughput << " is not expected!");
+                    std::cerr << "Obtained throughput " << throughput << " is not expected!"
+                              << std::endl;
+                    exit(1);
                 }
                 // test previous throughput is smaller (for the same channel width and GI)
                 if (throughput > prevThroughput[index])
@@ -377,7 +383,9 @@ main(int argc, char* argv[])
                 }
                 else
                 {
-                    NS_FATAL_ERROR("Obtained throughput " << throughput << " is not expected!");
+                    std::cerr << "Obtained throughput " << throughput << " is not expected!"
+                              << std::endl;
+                    exit(1);
                 }
                 index++;
             }
