@@ -99,6 +99,10 @@ class OnOffApplication : public SourceApplication
      * Once these bytes are sent, no packet is sent again, even in on state.
      * The value zero means that there is no limit.
      *
+     * If the modulo result of (maxBytes % PacketSize) is non-zero, an extra
+     * full-sized packet will be sent (i.e., maxBytes is rounded up to the
+     * next full-sized packet).
+     *
      * @param maxBytes the total number of bytes to send
      */
     void SetMaxBytes(uint64_t maxBytes);

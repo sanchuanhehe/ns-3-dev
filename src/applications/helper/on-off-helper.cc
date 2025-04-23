@@ -31,4 +31,15 @@ OnOffHelper::SetConstantRate(DataRate dataRate, uint32_t packetSize)
     m_factory.Set("PacketSize", UintegerValue(packetSize));
 }
 
+void
+OnOffHelper::SetConstantInterval(Time interval, uint32_t packetSize)
+{
+    NS_ABORT_MSG_UNLESS(interval > Time(), "Error, a zero interval is not supported");
+    m_factory.Set("OnTime", StringValue("ns3::ConstantRandomVariable[Constant=1000]"));
+    m_factory.Set("OffTime", StringValue("ns3::ConstantRandomVariable[Constant=0]"));
+    m_factory.Set("DataRate",
+                  DataRateValue(static_cast<uint64_t>((packetSize * 8) / interval.GetSeconds())));
+    m_factory.Set("PacketSize", UintegerValue(packetSize));
+}
+
 } // namespace ns3

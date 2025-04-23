@@ -46,6 +46,21 @@ class OnOffHelper : public ApplicationHelper
      * @param packetSize size in bytes of the packet payloads generated
      */
     void SetConstantRate(DataRate dataRate, uint32_t packetSize = 512);
+
+    /**
+     * Helper function to set a constant rate source.  Equivalent to
+     * setting the attributes OnTime to constant 1000 seconds, OffTime to
+     * constant 0 seconds, and the interval and PacketSize set accordingly
+     *
+     * The underlying DataRate object used in the OnOffApplication is
+     * configured by this helper as ((packetSize * 8)/interval).  This
+     * method is provided, in addition to the method setting the DataRate
+     * explicitly, for syntactic convenience.
+     *
+     * @param interval Time interval between packet generation
+     * @param packetSize size in bytes of the packet payloads generated
+     */
+    void SetConstantInterval(Time interval, uint32_t packetSize = 512);
 };
 
 } // namespace ns3

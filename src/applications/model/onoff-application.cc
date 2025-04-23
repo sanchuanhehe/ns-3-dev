@@ -348,7 +348,9 @@ OnOffApplication::SendPacket()
         SeqTsSizeHeader header;
         header.SetSeq(m_seq++);
         header.SetSize(m_pktSize);
-        NS_ABORT_IF(m_pktSize < header.GetSerializedSize());
+        NS_ABORT_MSG_IF(m_pktSize < header.GetSerializedSize(),
+                        "Packet size " << m_pktSize << " less than SeqTsSize "
+                                       << header.GetSerializedSize());
         packet = Create<Packet>(m_pktSize - header.GetSerializedSize());
         // Trace before adding header, for consistency with PacketSink
         m_txTraceWithSeqTsSize(packet, from, to, header);
@@ -359,6 +361,23 @@ OnOffApplication::SendPacket()
         packet = Create<Packet>(m_pktSize);
     }
 
+    if (g_log.IsEnabled(ns3::LOG_INFO))
+    {
+        if (InetSocketAddress::IsMatchingType(m_peer))
+        {
+            auto inetSockAddr = InetSocketAddress::ConvertFrom(m_peer);
+            NS_LOG_INFO("Sending " << packet->GetSize() << " bytes to " << inetSockAddr.GetIpv4()
+                                   << " port " << inetSockAddr.GetPort() << " new total Tx "
+                                   << m_totBytes + packet->GetSize() << " bytes");
+        }
+        else if (Inet6SocketAddress::IsMatchingType(m_peer))
+        {
+            auto inet6SockAddr = Inet6SocketAddress::ConvertFrom(m_peer);
+            NS_LOG_INFO("Sending " << packet->GetSize() << " bytes to " << inet6SockAddr.GetIpv6()
+                                   << " port " << inet6SockAddr.GetPort() << " new total Tx "
+                                   << m_totBytes + packet->GetSize() << " bytes");
+        }
+    }
     int actual = m_socket->Send(packet);
     if ((unsigned)actual == m_pktSize)
     {
@@ -369,27 +388,18 @@ OnOffApplication::SendPacket()
         m_socket->GetSockName(localAddress);
         if (InetSocketAddress::IsMatchingType(m_peer))
         {
-            NS_LOG_INFO("At time " << Simulator::Now().As(Time::S) << " on-off application sent "
-                                   << packet->GetSize() << " bytes to "
-                                   << InetSocketAddress::ConvertFrom(m_peer).GetIpv4() << " port "
-                                   << InetSocketAddress::ConvertFrom(m_peer).GetPort()
-                                   << " total Tx " << m_totBytes << " bytes");
             m_txTraceWithAddresses(packet, localAddress, InetSocketAddress::ConvertFrom(m_peer));
         }
         else if (Inet6SocketAddress::IsMatchingType(m_peer))
         {
-            NS_LOG_INFO("At time " << Simulator::Now().As(Time::S) << " on-off application sent "
-                                   << packet->GetSize() << " bytes to "
-                                   << Inet6SocketAddress::ConvertFrom(m_peer).GetIpv6() << " port "
-                                   << Inet6SocketAddress::ConvertFrom(m_peer).GetPort()
-                                   << " total Tx " << m_totBytes << " bytes");
             m_txTraceWithAddresses(packet, localAddress, Inet6SocketAddress::ConvertFrom(m_peer));
         }
     }
     else
     {
-        NS_LOG_DEBUG("Unable to send packet; actual " << actual << " size " << m_pktSize
-                                                      << "; caching for later attempt");
+        NS_LOG_INFO("Unable to send packet; actual "
+                    << actual << " size " << m_pktSize
+                    << "; caching for later attempt; total Tx remains at " << m_totBytes);
         m_unsentPacket = packet;
     }
     m_residualBits = 0;
