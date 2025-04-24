@@ -19,30 +19,17 @@ if(NOT
 endif()
 
 add_definitions(
-  -DTAP_CREATOR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/src/tap-bridge/ns${NS3_VER}-tap-creator${build_profile_suffix}"
+  -DTAP_CREATOR="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/src/tun-tap/ns${NS3_VER}-tap-creator${build_profile_suffix}"
 )
 
 build_lib(
   LIBNAME tap-bridge
-  SOURCE_FILES
-    helper/tap-bridge-helper.cc
-    model/tap-bridge.cc
-    model/tap-encode-decode.cc
-  HEADER_FILES
-    helper/tap-bridge-helper.h
-    model/tap-bridge.h
-    model/tap-encode-decode.h
+  SOURCE_FILES helper/tap-bridge-helper.cc
+               model/tap-bridge.cc
+  HEADER_FILES helper/tap-bridge-helper.h
+               model/tap-bridge.h
   LIBRARIES_TO_LINK ${libinternet}
-)
-
-build_exec(
-  EXECNAME tap-creator
-  SOURCE_FILES model/tap-creator.cc
-               model/tap-encode-decode.cc
-  LIBRARIES_TO_LINK ${libnetwork}
-  EXECUTABLE_DIRECTORY_PATH ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/src/tap-bridge/
-  INSTALL_DIRECTORY_PATH ${CMAKE_INSTALL_LIBEXECDIR}/ns3
-  STANDALONE
+                    ${libtun-tap}
 )
 
 add_dependencies(

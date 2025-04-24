@@ -6,11 +6,10 @@
 
 #include "tap-bridge.h"
 
-#include "tap-encode-decode.h"
-
 #include "ns3/abort.h"
 #include "ns3/boolean.h"
 #include "ns3/channel.h"
+#include "ns3/encode-decode.h"
 #include "ns3/enum.h"
 #include "ns3/ethernet-header.h"
 #include "ns3/fd-reader.h"
@@ -344,7 +343,7 @@ TapBridge::CreateTap()
     //
     // Now encode that socket name (family and path) as a string of hex digits
     //
-    std::string path = TapBufferToString((uint8_t*)&un, len);
+    std::string path = BufferToString((uint8_t*)&un, len);
     NS_LOG_INFO("Encoded Unix socket as \"" << path << "\"");
 
     //
@@ -501,7 +500,7 @@ TapBridge::CreateTap()
         NS_LOG_DEBUG("Executing: " << TAP_CREATOR << " " << ossDeviceName.str() << " "
                                    << ossIp.str() << " " << ossMac.str() << " " << ossNetmask.str()
                                    << " " << ossMode.str() << " " << ossPath.str() << " "
-                                   << ossVerbose.str());
+                                   << ossVerbose.str() << " -t");
 
         //
         // Execute the socket creation process image.
@@ -515,6 +514,7 @@ TapBridge::CreateTap()
                           ossMode.str().c_str(),       // argv[5] (-o<operating mode>)
                           ossPath.str().c_str(),       // argv[6] (-p<path>)
                           ossVerbose.str().c_str(),    // argv[7] (-v)
+                          "-t",                        // argv[8] (-t <tap>)
                           (char*)nullptr);
 
         //

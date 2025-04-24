@@ -33,7 +33,7 @@ extern bool gVerbose;
               << "(): " << msg << std::endl;                                                       \
     if (printErrno)                                                                                \
     {                                                                                              \
-        std::cout << "    errno = " << errno << " (" << strerror(errno) << ")" << std::endl;       \
+        std::cout << "    errno = " << errno << " (" << std::strerror(errno) << ")" << std::endl;  \
     }                                                                                              \
     exit(-1);
 
