@@ -1,0 +1,33 @@
+# -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+# def options(opt):
+#     pass
+
+# def configure(conf):
+#     conf.check_nonfatal(header_name='stdint.h', define_name='HAVE_STDINT_H')
+
+def build(bld):
+    module = bld.create_ns3_module('data-center', ['internet', 'point-to-point', 'mobility', 'csma', 'netanim'])
+    module.source = [
+        'model/leaf-spine.cc',
+        'model/fat-tree.cc',
+        'model/bcube.cc',
+        'model/dcell.cc',
+        'model/dcn-topology.cc'
+        ]
+
+    headers = bld(features='ns3header')
+    headers.module = 'data-center'
+    headers.source = [
+        'model/leaf-spine.h',
+        'model/fat-tree.h',
+        'model/bcube.h',
+        'model/dcell.h',
+        'model/dcn-topology.h'
+        ]
+
+    if bld.env.ENABLE_EXAMPLES:
+        bld.recurse('examples')
+
+    # bld.ns3_python_bindings()
+
