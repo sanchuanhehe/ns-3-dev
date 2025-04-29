@@ -108,28 +108,38 @@ extern "C"
 
         /* handle the last 11 bytes */
         c += length;
-        switch (len) /* all the case statements fall through */
+        switch (len) 
         {
         case 11:
             c += ((ub4)k[10] << 24);
+            [[fallthrough]];
         case 10:
             c += ((ub4)k[9] << 16);
+            [[fallthrough]];
         case 9:
             c += ((ub4)k[8] << 8); /* the first byte of c is reserved for the length */
+            [[fallthrough]];
         case 8:
             b += ((ub4)k[7] << 24);
+            [[fallthrough]];
         case 7:
             b += ((ub4)k[6] << 16);
+            [[fallthrough]];
         case 6:
             b += ((ub4)k[5] << 8);
+            [[fallthrough]];
         case 5:
             b += k[4];
+            [[fallthrough]];
         case 4:
             a += ((ub4)k[3] << 24);
+            [[fallthrough]];
         case 3:
             a += ((ub4)k[2] << 16);
+            [[fallthrough]];
         case 2:
             a += ((ub4)k[1] << 8);
+            [[fallthrough]];
         case 1:
             a += k[0];
             /* case 0: nothing left to add */
