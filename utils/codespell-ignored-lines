@@ -49,6 +49,14 @@ Network Animator nam.  It is not possible to run a simulation
                 arp_h->ar_tha);                                       // Target hardware address.
             arp_h->ar_hln = sizeof arp_h->ar_tha;                     // Hardware address length.
 
+#./src/si-units/test/si-units-test-suite.cc
+                              MakedBAccessor(&AttributeMock::m_dB),
+                              MakedBChecker())
+                              MakedBmAccessor(&AttributeMock::m_dBm),
+                              MakedBmChecker())
+                              MakedBm_per_HzAccessor(&AttributeMock::m_dBm_per_Hz),
+                              MakedBm_per_HzChecker())
+
 # Names and emails
  * Author: Manuel Requena <manuel.requena@cttc.es>
  *   Manuel Requena <manuel.requena@cttc.es>
