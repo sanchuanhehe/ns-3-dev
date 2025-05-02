@@ -127,13 +127,13 @@ PhyEntity::HandlesMcsModes() const
     return false;
 }
 
-std::list<WifiMode>::const_iterator
+std::vector<WifiMode>::const_iterator
 PhyEntity::begin() const
 {
     return m_modeList.begin();
 }
 
-std::list<WifiMode>::const_iterator
+std::vector<WifiMode>::const_iterator
 PhyEntity::end() const
 {
     return m_modeList.end();
