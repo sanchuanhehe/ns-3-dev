@@ -51,6 +51,8 @@ This file is a best-effort approach to solving this issue; we will do our best b
 * (applications) Deprecated attributes `ThreeGppHttpClient::RemoteServerAddress` and `ThreeGppHttpClient::RemoteServerPort`. They have been combined into a single `ThreeGppHttpClient::Remote` attribute.
 * (core) Deprecated `SUPPORTED`, `DEPRECATED` and `OBSOLETE` in `TypeId` class. They have been replaced by `SupportLevel::{SUPPORTED,DEPRECATED,OBSOLETE}`, respectively.
 * (lr-wpan) ``LrWpanMac`` is now also aggregated to ``LrWpanNetDevice``.
+* (network) `Buffer::Serialize`, `ByteTagList::Serialize`, `NixVector::Serialize`, `PacketMetadata::Serialize`, `PacketTagList::Serialize` and `Packet::Serialize` functions return now the number of serialized bytes instead of just `1` for a successful serialization.
+* (network) `Buffer::Deserialize`, `ByteTagList::Deserialize`, `PacketMetadata::Deserialize`, `PacketTagList::Deserialize` and `Packet::Deserialize` functions return now the number of deserialized bytes instead of just `1` for a successful deserialization.
 * (stats) Deprecated ns3::NaN and ns3::isNaN to use std::nan and std::isnan in their place
 * (tap-bridge) Deprecated "Gateway" attribute.
 * (tap-bridge) Removed unused gateway option from tap-creator.

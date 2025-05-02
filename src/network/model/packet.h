@@ -544,8 +544,7 @@ class Packet : public SimpleRefCount<Packet>
      *
      * @param buffer a raw byte buffer to which the packet will be serialized
      * @param maxSize the max size of the buffer for bounds checking
-     *
-     * @returns one if all data were serialized, zero if buffer size was too small.
+     * @return number of serialized bytes on success, 0 on failure
      */
     uint32_t Serialize(uint8_t* buffer, uint32_t maxSize) const;
 
@@ -772,7 +771,7 @@ class Packet : public SimpleRefCount<Packet>
      * @brief Deserializes a packet.
      * @param [in] buffer the input buffer.
      * @param [in] size the buffer size.
-     * @returns the number of deserialized bytes.
+     * @return number of deserialized bytes on success, 0 on failure
      */
     uint32_t Deserialize(const uint8_t* buffer, uint32_t size);
 
