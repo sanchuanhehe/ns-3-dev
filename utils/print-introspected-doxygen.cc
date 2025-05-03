@@ -124,7 +124,7 @@ SortedTraceSourceInfo(const TypeId tid)
     return index;
 }
 
-} // unnamed namespace
+} // namespace
 
 /**
  * Initialize the markup strings, for either doxygen or text.

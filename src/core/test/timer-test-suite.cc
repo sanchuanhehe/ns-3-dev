@@ -43,7 +43,7 @@ void barir(int&) {}
 
 // clang-format on
 
-} // anonymous namespace
+} // namespace
 
 using namespace ns3;
 

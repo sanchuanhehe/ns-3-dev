@@ -95,7 +95,7 @@ class Hold : public SimpleRefCount<Hold>
     // end of class HOLD
 };
 
-} // unnamed namespace
+} // namespace
 
 int
 main(int argc, char** argv)

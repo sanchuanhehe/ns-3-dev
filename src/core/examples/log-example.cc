@@ -91,7 +91,7 @@ class MyEventObject : public Object
 
 NS_OBJECT_ENSURE_REGISTERED(MyEventObject);
 
-} // Unnamed namespace
+} // namespace
 
 int
 main(int argc, char** argv)

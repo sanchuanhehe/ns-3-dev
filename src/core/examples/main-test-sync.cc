@@ -135,7 +135,7 @@ test()
     Simulator::Destroy();
 }
 
-} // unnamed namespace
+} // namespace
 
 int
 main(int argc, char* argv[])
