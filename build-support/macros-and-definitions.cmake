@@ -875,6 +875,10 @@ macro(process_options)
     endif()
   endif()
 
+  if(netanim IN_LIST ns3-all-enabled-modules)
+    add_definitions(-DNS3_NETANIM)
+  endif()
+
   # checking for documentation dependencies and creating targets
 
   # First we check for doxygen dependencies
