@@ -42,6 +42,7 @@
     FULLNESS: ""
     # workaround for Valgrind on Archlinux https://bbs.archlinux.org/viewtopic.php?pid=2036171#p2036171
     DEBUGINFOD_URLS: "https://debuginfod.archlinux.org"
+  timeout: 12h
   interruptible: true
 
 daily-jobs:
