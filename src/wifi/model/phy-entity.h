@@ -548,6 +548,16 @@ class PhyEntity : public SimpleRefCount<PhyEntity>
     typedef std::map<std::string, CodeRateConstellationSizePair> ModulationLookupTable;
 
     /**
+     * Return a reference to the global counter of the PPDU UID maintained statically in memory
+     * by the wifi module library. This method provides access to an instance of a static variable
+     * held in phy-entity.cc such that only one instance exists and is accessible independent of
+     * compiler and operating system idiosyncrasies.
+     *
+     * @return a reference to the PPDU UID global counter
+     */
+    static uint64_t& GetGlobalPpduUid();
+
+    /**
      * Return the PPDU formats of the PHY.
      *
      * @return the PPDU formats of the PHY
@@ -970,8 +980,6 @@ class PhyEntity : public SimpleRefCount<PhyEntity>
     std::map<UidStaIdPair, SignalNoiseDbm>
         m_signalNoiseMap; //!< Map of the latest signal power and noise power in dBm (noise power
                           //!< includes the noise figure)
-
-    static uint64_t m_globalPpduUid; //!< Global counter of the PPDU UID
 };
 
 /**

@@ -22,7 +22,11 @@
 namespace ns3
 {
 
-const Time WIFI_TU = MicroSeconds(WIFI_TU_US);
+const Time
+WifiTu()
+{
+    return MicroSeconds(WIFI_TU_US);
+}
 
 double
 DbToRatio(dB_u val)
@@ -252,5 +256,4 @@ GetIndividuallyAddressedRecipient(Ptr<WifiMac> mac, const WifiMacHeader& hdr)
     auto apMac = DynamicCast<ApWifiMac>(mac);
     return apMac->GetGcrManager()->GetIndividuallyAddressedRecipient(addr1);
 }
-
 } // namespace ns3

@@ -249,6 +249,13 @@ bool TidToLinkMappingValidForNegType1(const WifiTidLinkMapping& dlLinkMapping,
 bool IsGroupcast(const Mac48Address& adr);
 
 /**
+ * Wi-Fi Time Unit (see IEEE 802.11 - 2020 sec.3.1)
+ *
+ * @return the Wi-Fi Time Unit
+ */
+const Time WifiTu();
+
+/**
  * Return whether a given packet is transmitted using the GCR service.
  *
  * @param mac a pointer to the wifi MAC
@@ -286,11 +293,8 @@ static constexpr uint8_t WIFI_LINKID_UNDEFINED = 0xff;
 static constexpr uint8_t WIFI_TID_UNDEFINED = 0xff;
 
 /// Wi-Fi Time Unit value in microseconds (see IEEE 802.11-2020 sec. 3.1)
-/// Used to initialize WIFI_TU
-constexpr int WIFI_TU_US = 1024;
-
-/// Wi-Fi Time Unit (see IEEE 802.11-2020 sec. 3.1)
-extern const Time WIFI_TU;
+/// Value returned as Time object by WifiTu()
+static constexpr int WIFI_TU_US = 1024;
 
 } // namespace ns3
 

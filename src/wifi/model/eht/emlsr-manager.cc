@@ -1324,7 +1324,7 @@ EmlsrManager::ComputeOperatingChannels()
                                                        auxPhyMaxWidth,
                                                        WIFI_STANDARD_UNSPECIFIED,
                                                        channel.GetPhyBand());
-        NS_ASSERT_MSG(chIt != WifiPhyOperatingChannel::m_frequencyChannels.end(),
+        NS_ASSERT_MSG(chIt != WifiPhyOperatingChannel::GetFrequencyChannels().cend(),
                       "Primary" << auxPhyMaxWidth << " channel not found");
         m_auxPhyChannels.emplace(linkId, chIt);
         // find the P20 index for the channel used by the aux PHYs

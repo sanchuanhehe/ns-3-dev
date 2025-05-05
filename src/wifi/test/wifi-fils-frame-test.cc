@@ -61,8 +61,8 @@ static const auto DUMMY_AP_ADDR = Mac48Address("00:00:00:00:00:10");
 static const auto DEFAULT_STANDARD = WifiStandard::WIFI_STANDARD_80211ax;
 static const auto DEFAULT_BAND = WifiPhyBand::WIFI_PHY_BAND_6GHZ;
 static const auto DEFAULT_SSID = "01234567890123456789012345678901"; // max length (32 bytes)
-static const auto DEFAULT_BCN_INTRVL = 100 * WIFI_TU;
-static const auto DEFAULT_FILS_INTRVL = 20 * WIFI_TU;
+static const auto DEFAULT_BCN_INTRVL = 100 * WifiTu();
+static const auto DEFAULT_FILS_INTRVL = 20 * WifiTu();
 static const auto DEFAULT_TIMING_TOLERANCE = MicroSeconds(100);
 static const auto DEFAULT_UNSOL_PROBE_RESP_EN = false;
 static const auto DEFAULT_PCAP_PREFIX = "ap-fils";
@@ -393,7 +393,7 @@ WifiFilsFrameTestBuildCase(const WifiFilsFrameTestCase& tc)
         params.bw = MHz_u{20};
         params.ssid = "BW20MHZ_NSS3";
         params.nss = 3;
-        params.filsIntrvl = 15 * WIFI_TU;
+        params.filsIntrvl = 15 * WifiTu();
         params.expChWidFld = 0;
         params.expNssFld = 2;
         break;
@@ -401,7 +401,7 @@ WifiFilsFrameTestBuildCase(const WifiFilsFrameTestCase& tc)
         params.bw = MHz_u{40};
         params.ssid = "BW40MHZ_NSS2";
         params.nss = 2;
-        params.filsIntrvl = 10 * WIFI_TU;
+        params.filsIntrvl = 10 * WifiTu();
         params.expChWidFld = 1;
         params.expNssFld = 1;
         break;
@@ -409,7 +409,7 @@ WifiFilsFrameTestBuildCase(const WifiFilsFrameTestCase& tc)
         params.bw = MHz_u{80};
         params.ssid = "BW80MHZ_NSS2";
         params.nss = 2;
-        params.filsIntrvl = 7 * WIFI_TU;
+        params.filsIntrvl = 7 * WifiTu();
         params.expChWidFld = 2;
         params.expNssFld = 1;
         break;
@@ -417,7 +417,7 @@ WifiFilsFrameTestBuildCase(const WifiFilsFrameTestCase& tc)
         params.bw = MHz_u{160};
         params.ssid = "BW160MHZ_NSS2";
         params.nss = 2;
-        params.filsIntrvl = 5 * WIFI_TU;
+        params.filsIntrvl = 5 * WifiTu();
         params.expChWidFld = 3;
         params.expNssFld = 1;
         break;

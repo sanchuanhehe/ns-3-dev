@@ -1662,7 +1662,7 @@ ApWifiMac::GetFilsDiscovery(uint8_t linkId) const
 
     FilsDiscHeader fils;
     fils.SetSsid(GetSsid().PeekString());
-    fils.m_beaconInt = (m_beaconInterval / WIFI_TU).GetHigh();
+    fils.m_beaconInt = (m_beaconInterval / WifiTu()).GetHigh();
 
     fils.m_fdCap = FilsDiscHeader::FdCapability{};
     fils.m_fdCap->SetOpChannelWidth(link.phy->GetChannelWidth());
