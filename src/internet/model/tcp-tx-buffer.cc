@@ -775,6 +775,11 @@ TcpTxBuffer::Update(const TcpOptionSack::SackList& list, const Callback<void, Tc
 
     uint32_t bytesSacked = 0;
 
+    if (m_sentList.empty())
+    {
+        return false;
+    }
+
     for (auto option_it = list.begin(); option_it != list.end(); ++option_it)
     {
         auto item_it = m_sentList.begin();
