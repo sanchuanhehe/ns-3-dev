@@ -241,14 +241,16 @@ inline uint32_t
 Hasher::GetHash32(const std::string s)
 {
     NS_ASSERT(m_impl);
-    return m_impl->GetHash32(s.c_str(), s.size());
+    std::vector<char> buf(s.begin(), s.end()); // Force alignment (see issue #1124)
+    return m_impl->GetHash32(buf.data(), s.size());
 }
 
 inline uint64_t
 Hasher::GetHash64(const std::string s)
 {
     NS_ASSERT(m_impl);
-    return m_impl->GetHash64(s.c_str(), s.size());
+    std::vector<char> buf(s.begin(), s.end()); // Force alignment (see issue #1124)
+    return m_impl->GetHash64(buf.data(), s.size());
 }
 
 /*************************************************
