@@ -621,7 +621,7 @@ TcpTxBuffer::RemoveFromCounts(TcpTxItem* item, uint32_t size)
         NS_ASSERT(m_sackedOut >= size);
         m_sackedOut -= size;
     }
-    if (item->m_retrans)
+    else if (item->m_retrans)
     {
         NS_ASSERT(m_retrans >= size);
         m_retrans -= size;
@@ -822,6 +822,11 @@ TcpTxBuffer::Update(const TcpOptionSack::SackList& list, const Callback<void, Tc
                     {
                         m_sackSeen = true;
                         m_highestSack = std::make_pair(item_it, beginOfCurrentPacket);
+                    }
+
+                    if ((*item_it)->m_retrans)
+                    {
+                        m_retrans -= (*item_it)->m_packet->GetSize();
                     }
 
                     NS_LOG_INFO("Received block "
