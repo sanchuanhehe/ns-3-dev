@@ -131,6 +131,9 @@ class TrafficControlHelper
      * Helper function used to set a root queue disc of the given type and with the
      * given attributes. To set the InternalQueueList, PacketFilterList and ChildQueueDiscList
      * attributes, use the AddInternalQueue, AddPacketFilter and AddChildQueueDisc methods.
+     * Note that this will clear existing root queue disc and all its dependent configurations
+     * including internal queues, packet filters and child queue discs and sets new root queue disc
+     * with the given type and attributes.
      *
      * @tparam Args \deduced Template type parameter pack for the sequence of name-value pairs.
      * @param type the type of queue disc
@@ -298,6 +301,8 @@ class TrafficControlHelper
   private:
     /**
      * Actual implementation of the SetRootQueueDisc method.
+     * Note that this will clear existing root queue disc and all its dependent configurations and
+     * sets new root queue disc given by the factory.
      *
      * @param factory the factory used to create the root queue disc
      * @returns zero on success

@@ -116,9 +116,7 @@ TrafficControlHelper::Default(std::size_t nTxQueues)
 uint16_t
 TrafficControlHelper::DoSetRootQueueDisc(ObjectFactory factory)
 {
-    NS_ABORT_MSG_UNLESS(m_queueDiscFactory.empty(),
-                        "A root queue disc has been already added to this factory");
-
+    m_queueDiscFactory.clear();
     m_queueDiscFactory.emplace_back(factory);
     return 0;
 }
