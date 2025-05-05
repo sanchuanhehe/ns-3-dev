@@ -1504,9 +1504,9 @@ def run_step(args, target_to_run, target_args):
 
             # running mpi on the CI?
             if target_to_run in ["mpiexec", "mpirun"] and os.getenv("MPI_CI"):
-                if shutil.which("ompi_info"):
-                    target_args = ["--oversubscribe"] + target_args
-                target_args = ["--allow-run-as-root"] + target_args
+                proc_env["OMPI_ALLOW_RUN_AS_ROOT"] = 1
+                proc_env["OMPI_ALLOW_RUN_AS_ROOT_CONFIRM"] = 1
+                proc_env["OMPI_MCA_rmaps_base_oversubscribe "] = 1
 
     program_arguments = [*debugging_software, target_to_run, *target_args]
 
