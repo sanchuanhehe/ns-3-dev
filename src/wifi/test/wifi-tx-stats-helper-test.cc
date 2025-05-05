@@ -233,7 +233,8 @@ WifiTxStatsHelperTest::DoRun()
             if (freq == 6)
             {
                 mldChannelStr[1] = "{0, 20, BAND_6GHZ, 0}";
-                wifi.SetRemoteStationManager(static_cast<uint8_t>(1),
+                uint8_t link = 1;
+                wifi.SetRemoteStationManager(link,
                                              "ns3::ConstantRateWifiManager",
                                              "DataMode",
                                              StringValue(dataMode),
@@ -243,7 +244,8 @@ WifiTxStatsHelperTest::DoRun()
             else
             {
                 mldChannelStr[0] = "{0, 20, BAND_5GHZ, 0}";
-                wifi.SetRemoteStationManager(static_cast<uint8_t>(0),
+                uint8_t link = 0;
+                wifi.SetRemoteStationManager(link,
                                              "ns3::ConstantRateWifiManager",
                                              "DataMode",
                                              StringValue(dataMode),

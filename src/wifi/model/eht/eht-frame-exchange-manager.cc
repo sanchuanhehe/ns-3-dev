@@ -474,7 +474,8 @@ EhtFrameExchangeManager::ForwardPsduMapDown(WifiConstPsduMap psduMap, WifiTxVect
         for (auto clientIt = m_protectedStas.begin(); clientIt != m_protectedStas.end();)
         {
             auto aid = GetWifiRemoteStationManager()->GetAssociationId(*clientIt);
-            const auto psduMapIt = psduMap.find(aid);
+            // NOLINTNEXTLINE(modernize-use-auto)
+            WifiConstPsduMap::const_iterator psduMapIt = psduMap.find(aid);
             const auto aidNotFoundAndNotTf = (psduMapIt == psduMap.cend()) && !IsTrigger(psduMap);
             // the PSDU to process: the one addressed to the given AID (if any) or the unique one
             const auto psdu = (psduMapIt != psduMap.cend() ? psduMapIt : psduMap.cbegin())->second;

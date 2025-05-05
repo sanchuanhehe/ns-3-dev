@@ -24,7 +24,7 @@ namespace ns3
 
 NS_LOG_COMPONENT_DEFINE("WifiPhyOperatingChannel");
 
-const std::set<FrequencyChannelInfo> WifiPhyOperatingChannel::m_frequencyChannels = {{
+static const std::set<FrequencyChannelInfo> frequencyChannels = std::set<FrequencyChannelInfo>({{
     // 2.4 GHz channels
     //  802.11b uses width of 22, while OFDM modes use width of 20
     {1, MHz_u{2412}, MHz_u{22}, WIFI_PHY_BAND_2_4GHZ, FrequencyChannelType::DSSS},
@@ -258,7 +258,13 @@ const std::set<FrequencyChannelInfo> WifiPhyOperatingChannel::m_frequencyChannel
     {143, MHz_u{6665}, MHz_u{160}, WIFI_PHY_BAND_6GHZ, FrequencyChannelType::OFDM},
     {175, MHz_u{6825}, MHz_u{160}, WIFI_PHY_BAND_6GHZ, FrequencyChannelType::OFDM},
     {207, MHz_u{6985}, MHz_u{160}, WIFI_PHY_BAND_6GHZ, FrequencyChannelType::OFDM},
-}};
+}}); //!< Available frequency channels
+
+const std::set<FrequencyChannelInfo>&
+WifiPhyOperatingChannel::GetFrequencyChannels()
+{
+    return frequencyChannels;
+}
 
 std::ostream&
 operator<<(std::ostream& os, const FrequencyChannelInfo& info)
@@ -323,13 +329,13 @@ WifiPhyOperatingChannel::Set(const std::vector<FrequencyChannelInfo>& segments,
     {
         if (const auto channelIt =
                 FindFirst(segment.number, segment.frequency, segment.width, standard, segment.band);
-            channelIt != m_frequencyChannels.cend() &&
+            channelIt != GetFrequencyChannels().cend() &&
             FindFirst(segment.number,
                       segment.frequency,
                       segment.width,
                       standard,
                       segment.band,
-                      std::next(channelIt)) == m_frequencyChannels.cend())
+                      std::next(channelIt)) == GetFrequencyChannels().cend())
         {
             // a unique channel matches the specified criteria
             channelIts.insert(channelIt);
@@ -395,19 +401,20 @@ WifiPhyOperatingChannel::GetDefaultChannelNumber(
     WifiPhyBand band,
     std::optional<uint8_t> previousChannelNumber /* = std::nullopt */)
 {
-    auto start = m_frequencyChannels.begin();
-    auto prevSegmentChannelIt = m_frequencyChannels.end();
+    auto start = GetFrequencyChannels().cbegin();
+    auto prevSegmentChannelIt = GetFrequencyChannels().cend();
     if (previousChannelNumber)
     {
         prevSegmentChannelIt =
             FindFirst(*previousChannelNumber, MHz_u{0}, width, standard, band, start);
-        if (prevSegmentChannelIt != m_frequencyChannels.end())
+        if (prevSegmentChannelIt != GetFrequencyChannels().cend())
         {
             start = std::next(prevSegmentChannelIt);
         }
     }
     auto channelIt = FindFirst(0, MHz_u{0}, width, standard, band, start);
-    if (prevSegmentChannelIt != m_frequencyChannels.end() && channelIt != m_frequencyChannels.end())
+    if (prevSegmentChannelIt != GetFrequencyChannels().cend() &&
+        channelIt != GetFrequencyChannels().cend())
     {
         const auto prevFreq = prevSegmentChannelIt->frequency;
         const auto prevWidth = prevSegmentChannelIt->width;
@@ -422,7 +429,7 @@ WifiPhyOperatingChannel::GetDefaultChannelNumber(
             channelIt = FindFirst(0, MHz_u{0}, width, standard, band, std::next(channelIt));
         }
     }
-    if (channelIt != m_frequencyChannels.end())
+    if (channelIt != GetFrequencyChannels().cend())
     {
         // a channel matches the specified criteria
         return channelIt->number;
@@ -476,10 +483,9 @@ WifiPhyOperatingChannel::FindFirst(uint8_t number,
              standardIt->second.cend() ||
          width > GetMaximumChannelWidth(GetModulationClassForStandard(standard))))
     {
-        return m_frequencyChannels.cend();
+        return GetFrequencyChannels().cend();
     }
-
-    return std::find_if(start, m_frequencyChannels.cend(), predicate);
+    return std::find_if(start, GetFrequencyChannels().cend(), predicate);
 }
 
 uint8_t
@@ -714,7 +720,8 @@ WifiPhyOperatingChannel::GetPrimaryChannelNumber(MHz_u primaryChannelWidth,
     auto frequency = GetPrimaryChannelCenterFrequency(primaryChannelWidth);
     NS_ASSERT_MSG(IsSet(), "No channel set");
     auto primaryChanIt = FindFirst(0, frequency, primaryChannelWidth, standard, GetPhyBand());
-    NS_ASSERT_MSG(primaryChanIt != m_frequencyChannels.end(), "Primary channel number not found");
+    NS_ASSERT_MSG(primaryChanIt != GetFrequencyChannels().cend(),
+                  "Primary channel number not found");
     return primaryChanIt->number;
 }
 
@@ -735,7 +742,8 @@ WifiPhyOperatingChannel::GetPrimaryChannel(MHz_u primaryChannelWidth) const
     const auto frequency = GetPrimaryChannelCenterFrequency(primaryChannelWidth);
     auto primaryChanIt =
         FindFirst(0, frequency, primaryChannelWidth, WIFI_STANDARD_UNSPECIFIED, GetPhyBand());
-    NS_ABORT_MSG_IF(primaryChanIt == m_frequencyChannels.end(), "Primary channel number not found");
+    NS_ABORT_MSG_IF(primaryChanIt == GetFrequencyChannels().cend(),
+                    "Primary channel number not found");
 
     WifiPhyOperatingChannel primaryChannel(primaryChanIt);
 
