@@ -25,10 +25,32 @@
 #include <rte_mbuf.h>
 #include <rte_mempool.h>
 #include <rte_port.h>
+#include <rte_version.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
 #include <sys/signal.h>
 #include <unistd.h>
+
+// for backward compatibility, define macros not available in older versions of DPDK
+#if RTE_VERSION < RTE_VERSION_NUM(20, 11, 0, 0)
+#ifndef CALL_MAIN
+#define CALL_MAIN CALL_MASTER
+#endif
+#endif
+
+#if RTE_VERSION < RTE_VERSION_NUM(21, 11, 0, 0)
+#ifndef RTE_ETH_LINK_DOWN
+#define RTE_ETH_LINK_DOWN ETH_LINK_DOWN
+#endif
+
+#ifndef RTE_ETH_MQ_TX_NONE
+#define RTE_ETH_MQ_TX_NONE ETH_MQ_TX_NONE
+#endif
+
+#ifndef RTE_ETH_TX_OFFLOAD_MBUF_FAST_FREE
+#define RTE_ETH_TX_OFFLOAD_MBUF_FAST_FREE DEV_TX_OFFLOAD_MBUF_FAST_FREE
+#endif
+#endif
 
 namespace ns3
 {
@@ -141,7 +163,7 @@ DpdkNetDevice::CheckAllPortsLinkStatus()
             continue;
         }
         /* clear allPortsUp flag if any link down */
-        if (link.link_status == ETH_LINK_DOWN)
+        if (link.link_status == RTE_ETH_LINK_DOWN)
         {
             allPortsUp = 0;
             break;
@@ -301,9 +323,11 @@ DpdkNetDevice::InitDpdk(int argc, char** argv, std::string dpdkDriver)
     NS_LOG_INFO("Initialize port");
     static struct rte_eth_conf portConf = {};
     portConf.rxmode = {};
+#if RTE_VERSION < RTE_VERSION_NUM(22, 11, 0, 0)
     portConf.rxmode.split_hdr_size = 0;
+#endif
     portConf.txmode = {};
-    portConf.txmode.mq_mode = ETH_MQ_TX_NONE;
+    portConf.txmode.mq_mode = RTE_ETH_MQ_TX_NONE;
 
     struct rte_eth_rxconf reqConf;
     struct rte_eth_txconf txqConf;
@@ -312,9 +336,9 @@ DpdkNetDevice::InitDpdk(int argc, char** argv, std::string dpdkDriver)
 
     fflush(stdout);
     rte_eth_dev_info_get(m_portId, &devInfo);
-    if (devInfo.tx_offload_capa & DEV_TX_OFFLOAD_MBUF_FAST_FREE)
+    if (devInfo.tx_offload_capa & RTE_ETH_TX_OFFLOAD_MBUF_FAST_FREE)
     {
-        localPortConf.txmode.offloads |= DEV_TX_OFFLOAD_MBUF_FAST_FREE;
+        localPortConf.txmode.offloads |= RTE_ETH_TX_OFFLOAD_MBUF_FAST_FREE;
     }
     ret = rte_eth_dev_configure(m_portId, 1, 1, &localPortConf);
     if (ret < 0)
@@ -387,7 +411,7 @@ DpdkNetDevice::InitDpdk(int argc, char** argv, std::string dpdkDriver)
     CheckAllPortsLinkStatus();
 
     NS_LOG_INFO("Launching core threads");
-    rte_eal_mp_remote_launch(LaunchCore, this, CALL_MASTER);
+    rte_eal_mp_remote_launch(LaunchCore, this, CALL_MAIN);
 }
 
 uint8_t*
