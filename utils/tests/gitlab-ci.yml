@@ -44,9 +44,6 @@ workflow:
 # the following variables: COMPILER (g++, clang++, ...) and
 # MODE (debug, default, optimized)
 .base-build:
-  image:
-    docker:
-      user: nobody
   script:
     - if (git remote | grep -qw upstream) ; then
       git remote remove upstream ;
