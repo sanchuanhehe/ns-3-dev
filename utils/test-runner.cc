@@ -9,5 +9,6 @@
 int
 main(int argc, char* argv[])
 {
-    return ns3::TestRunner::Run(argc, argv);
+    int b = argc;
+    return ns3::TestRunner::Run(b, argv);
 }
