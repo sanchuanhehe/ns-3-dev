@@ -152,33 +152,8 @@ References
 Many aspects of the traffic are randomly determined by ``ThreeGppHttpVariables``.
 A separate instance of this object is used by the HTTP server and client applications.
 These characteristics are based on a legacy 3GPP specification. The description
-can be found in the following references:
+can be found in the following references: `[1]`_, `[2]`_, `[3]`_, and `[4]`_.
 
-\
-
-.. _`[1]`:
-
-[1] 3GPP TR 25.892, "Feasibility Study for Orthogonal Frequency Division Multiplexing (OFDM) for UTRAN enhancement"
-
-\
-
-.. _`[2]`:
-
-[2] IEEE 802.16m, "Evaluation Methodology Document (EMD)", IEEE 802.16m-08/004r5, July 2008.
-
-\
-
-.. _`[3]`:
-
-[3] NGMN Alliance, "NGMN Radio Access Performance Evaluation Methodology", v1.0, January 2008.
-
-\
-
-.. _`[4]`:
-
-[4] 3GPP2-TSGC5, "HTTP, FTP and TCP models for 1xEV-DV simulations", 2001.
-
-\
 
 Usage
 *****
@@ -232,4 +207,154 @@ Test cases themselves are rather simple: test verifies that HTTP object packet b
 total bytes received by the client, and that ``ThreeGppHttpHeader`` matches the expected packet.
 
 
+NGMN traffic generators
+-----------------------
 
+Model Description
+*****************
+
+The NGMN traffic generators are a part of the applications library. In the following subsections are described the design,
+different NGMN traffic generators being implemented, and the example and the test. More details and validation figures
+can be found in `[5]`_.
+
+Design
+======
+``TrafficGenerator`` class is created with an idea to serve as a base class for different traffic generators by allowing
+a high-level of granularity of the possible configurations. It supports:
+
+- A variable packet burst size to support a wide range of different use cases, from just several packets to whatever size
+of the packet burst expressed in bytes. To support this it was necessary to allow specifying the packet burst size in
+either the number of bytes or a number of packets. For this we have created the function ``GenerateNextPacketBurstSize``
+which should be overridden by the child traffic generator class to generate the next packet burst size in bytes or in
+packets and set the corresponding value by calling either ``SetPacketBurstSizeInBytes`` or ``SetPacketBurstSizeInPackets``.
+
+- A variable packet arrival time to support different use cases needed by different traffic models. ``TrafficGenerator``
+supports both, a deterministic and a variable packet arrival time. The function that should be implemented
+by the child classes is called ``GetNextPacketTime``.
+
+- A variable packet size to support different traffic models. ``TrafficGenerator`` supports both, a deterministic
+and a variable packet arrival time. The function that should be implemented by the child classes is called ``GetNextPacketSize``.
+
+Different traffic generators have been implemented by inheriting ``TrafficGenerator`` class and according to NGMN
+Alliance `[3]`_, such as FTP, video streaming, gaming and VoIP. In the following subsection we describe
+these models. ``TrafficGeneratorHelper`` helper class is created to to help with the installation of the
+desired ``TrafficGenerator``` on the node container. It allows to configure the transport protocol (TCP/UDP),
+and the remote address.
+
+NGMN FTP traffic generator
+##########################
+
+``TrafficGeneratorNgmnFtpMulti`` class implements the NGMN FTP traffic model defined in the Annex A of the White Paper
+by the NGMN Alliance `[3]`_. This file transfer application allows sending multiple files in a row where each file is of
+a variable file size with a variable reading time. An FTP session is a sequence of file transfers separated by reading times.
+The two main FTP session parameters are: 1) The size S of a file to be transferred. 2) The reading time D, i.e. the time
+interval between the end of the download of the previous file and the user request for the next file. The file size follows
+Truncated Lognormal Distribution, while the reading time follows Exponential Distribution.
+
+``TrafficGeneratorNgmnFtpMulti`` class overrides ``GenerateNextPacketBurstSize`` to generate a packet burst size value
+according to a truncated log-normal distribution. The reading time generation is implemented in ``GetNextReadingTime``
+which is called each time that the file transfer is finished, i.e., the ``PacketBurstSent``` function is called, and then
+the next file transfer is scheduled to start once the reading time finishes.
+
+NGMN Video traffic generator
+############################
+
+``TrafficGeneratorNgmnVideo`` class implements the NGMN video application traffic model explained in Annex A of the White Paper by
+the NGMN Alliance `[3]`_. As per this model, the video traffic is composed of frames. Each frame of video data arrives at
+a regular interval T determined by the number of frames per second. Each frame is decomposed into a fixed number of slices,
+each transmitted as a single packet. The size of these packets/slices is modeled to have a truncated Pareto distribution.
+The video encoder introduces encoding delay intervals between the packets of a frame. These intervals are modeled by a
+truncated Pareto distribution. The default configurations of distributions of packet size and packet time assume a source
+video rate of 64 kbps.
+
+``TrafficGeneratorNgmnVideo`` class implements functions ``GetNextPacketSize`` and ``GetNextPacketTime`` to allow a generation
+of the packet size and the packet arrival time according to Pareto distribution, as defined in `[3]`_.
+Once that the video frame is being generated and sent, the function ``PacketBurstSent`` is called,
+which will schedule the next frame after a deterministic inter-frame interval time as specified by the NGMN document.
+Notice that one could generate another kind of video traffic in which the inter-frame interval time would be variable and
+follow a specific probability distribution.
+
+NGMN gaming traffic generator
+#############################
+
+``TrafficGeneratorNgmnGaming`` class implements the NGMN gaming traffic models for both downlink and uplink explained
+in Annex A of the White Paper by the NGMN Alliance `[3]`_. Gaming application in NGMN is defined for interactive
+real-time services, in both downlink and uplink directions with a different parametrization and characterization for
+each direction. To simulate the random timing relationship between client traffic packet arrival and uplink frame boundary,
+the starting time of a network gaming mobile is uniformly distributed within [0, 40 ms], both for downlink and uplink gaming.
+The gaming session is a sequence of packets with a certain inter-packet arrival time. A gaming session is characterized
+by two parameters: the packet size (S) and the inter-packet arrival time (D). Additionally, a UDP header is added to
+the packet size to account for the UDP header after header compression. The UDP header size is 2 Bytes both for downlink
+and uplink gaming.
+
+``TrafficGeneratorNgmnGaming`` class has a function ``GetInitialPacketArrivalTime`` to support an initial packet arrival
+time generation according to the NGMN gaming model `[3]`_. Additionally, ``GetNextPacketSize`` and ``GetNextPacketTime``
+are implemented to generate the packet size and the packet arrival time according to Fisher-Tippett distribution
+(except for the packet arrival for the uplink which is defined to be deterministic).
+
+NGMN VoIP traffic generator
+###########################
+
+``TrafficGeneratorNgmnVoip`` class implements the NGMN VoIP traffic model as defined in Annex B of the White Paper by
+NGMN Alliance `[3]`_.  According to this document, the VOIP traffic can be modeled as a simple 2-state voice activity model.
+The states are: 1) Inactive State, and 2) Active State. In the VoIP model, the probability of transitioning from state 1 (the active
+speech state) to state 0 (the inactive or silent state) is equal to "a", while the probability of transitioning from state 0 to
+state 1 is "c". The model is updated at the speech encoder frame rate R=1/T, where T is the encoder frame duration (typically, 20ms).
+A 2-state model is extremely simplistic, and many more complex models are available. However, it is amenable to rapid analysis and
+initial estimation of talk spurt arrival statistics and hence reservation activity. The main purpose of this traffic model
+is not to favor any codec but to specify a model to obtain results that are comparable.
+
+To support the transitions from the active to inactive state, and vice versa, the ``TrafficGeneratorNgmnVoip`` class
+implements a simple state machine that is being updated after each encoder frame duration, i.e., a function called
+``UpdateState`` generates a random value (between 0 and 1) based on the uniform random variable and compares the generated
+value with the probabilities (``a`` or ``c``) in order to determine whether to stay in the same state or to transit to
+another state. While being in the active state, the voice payload is being used as the packet size, while meanwhile in
+the inactive state the SID payload is being used. While in active state the source rate is 12.2 kbps and based on this is
+calculated the packet arrival time, while when in the inactive state the periodicity of the SID payload is 160 ms.
+
+Example
+=======
+Example ``three-gpp-http-example.cc`` is created to show how to configure and use different types of traffic generators.
+The example allows to configure the type of NGMN traffic and the protocol to be used, UDP or TCP. The statistics are
+obtain periodically and written into the file.
+
+Test
+====
+Test implemented in ``traffic-generator-test.cc`` tests that all the packets generated by the client application
+(e.g., NGMN VoIP, NGMN VIDEO, NGMN GAMING, NGMN FTP, etc.) are correctly received by the server application and
+tests whether the traffic generator works correctly with the different protocols (TCP/UCP).
+
+
+References
+----------
+
+\
+
+.. _`[1]`:
+
+[1] 3GPP TR 25.892, "Feasibility Study for Orthogonal Frequency Division Multiplexing (OFDM) for UTRAN enhancement"
+
+\
+
+.. _`[2]`:
+
+[2] IEEE 802.16m, "Evaluation Methodology Document (EMD)", IEEE 802.16m-08/004r5, July 2008.
+
+\
+
+.. _`[3]`:
+
+[3] NGMN Alliance, "NGMN Radio Access Performance Evaluation Methodology", v1.0, January 2008.
+
+\
+
+.. _`[4]`:
+
+[4] 3GPP2-TSGC5, "HTTP, FTP and TCP models for 1xEV-DV simulations", 2001.
+
+\
+
+.. _`5`:
+
+[5] Biljana Bojovic and Sandra Lagen. "Enabling NGMN Mixed Traffic Models for ns-3", In Proceedings of the 2022 Workshop
+on ns-3 (WNS3 '22). ACM, New York, NY, USA, 127–134. https://doi.org/10.1145/3532577.3532602
