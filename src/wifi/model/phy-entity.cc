@@ -69,8 +69,6 @@ operator<<(std::ostream& os, const PhyEntity::PhyFieldRxStatus& status)
  *       Abstract base class for PHY entities
  *******************************************************/
 
-uint64_t PhyEntity::m_globalPpduUid = 0;
-
 PhyEntity::~PhyEntity()
 {
     NS_LOG_FUNCTION(this);
@@ -353,6 +351,13 @@ PhyEntity::GetRemainingDurationAfterField(Ptr<const WifiPpdu> ppdu, WifiPpduFiel
     const auto& txVector = ppdu->GetTxVector();
     return ppdu->GetTxDuration() -
            (GetDurationUpToField(field, txVector) + GetDuration(field, txVector));
+}
+
+uint64_t&
+PhyEntity::GetGlobalPpduUid()
+{
+    static uint64_t _globalPpduUid = 0;
+    return _globalPpduUid;
 }
 
 bool
@@ -1356,7 +1361,7 @@ uint64_t
 PhyEntity::ObtainNextUid(const WifiTxVector& /* txVector */)
 {
     NS_LOG_FUNCTION(this);
-    return m_globalPpduUid++;
+    return GetGlobalPpduUid()++;
 }
 
 Time

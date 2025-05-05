@@ -127,7 +127,7 @@ class Time
     inline Time()
         : m_data()
     {
-        if (g_markingTimes)
+        if (MarkingTimes())
         {
             Mark(this);
         }
@@ -141,7 +141,7 @@ class Time
     inline Time(const Time& o)
         : m_data(o.m_data)
     {
-        if (g_markingTimes)
+        if (MarkingTimes())
         {
             Mark(this);
         }
@@ -155,7 +155,7 @@ class Time
     Time(Time&& o)
         : m_data(o.m_data)
     {
-        if (g_markingTimes)
+        if (MarkingTimes())
         {
             Mark(this);
         }
@@ -174,7 +174,7 @@ class Time
     explicit inline Time(double v)
         : m_data(llround(v))
     {
-        if (g_markingTimes)
+        if (MarkingTimes())
         {
             Mark(this);
         }
@@ -183,7 +183,7 @@ class Time
     explicit inline Time(int v)
         : m_data(v)
     {
-        if (g_markingTimes)
+        if (MarkingTimes())
         {
             Mark(this);
         }
@@ -192,7 +192,7 @@ class Time
     explicit inline Time(long int v)
         : m_data(v)
     {
-        if (g_markingTimes)
+        if (MarkingTimes())
         {
             Mark(this);
         }
@@ -201,7 +201,7 @@ class Time
     explicit inline Time(long long int v)
         : m_data(v)
     {
-        if (g_markingTimes)
+        if (MarkingTimes())
         {
             Mark(this);
         }
@@ -210,7 +210,7 @@ class Time
     explicit inline Time(unsigned int v)
         : m_data(v)
     {
-        if (g_markingTimes)
+        if (MarkingTimes())
         {
             Mark(this);
         }
@@ -219,7 +219,7 @@ class Time
     explicit inline Time(unsigned long int v)
         : m_data(v)
     {
-        if (g_markingTimes)
+        if (MarkingTimes())
         {
             Mark(this);
         }
@@ -228,7 +228,7 @@ class Time
     explicit inline Time(unsigned long long int v)
         : m_data(v)
     {
-        if (g_markingTimes)
+        if (MarkingTimes())
         {
             Mark(this);
         }
@@ -237,7 +237,7 @@ class Time
     explicit inline Time(const int64x64_t& v)
         : m_data(v.Round())
     {
-        if (g_markingTimes)
+        if (MarkingTimes())
         {
             Mark(this);
         }
@@ -291,7 +291,7 @@ class Time
     /** Destructor */
     ~Time()
     {
-        if (g_markingTimes)
+        if (MarkingTimes())
         {
             Clear(this);
         }
@@ -745,6 +745,21 @@ class Time
      *  includes nstime.h.
      */
     static MarkedTimes* g_markingTimes;
+
+    /**
+     *  Null check for g_markingTimes from outside time.cc
+     *
+     *  @return \c true if g_markingTimes is not null
+     *
+     *  @internal
+     *
+     *  The inline Time ctors need to check if g_markingTimes is allocated
+     *  before calling Mark(). Likewise, the dtor also needs to check before
+     *  calling Clear(). On Windows, attempting to access g_markingTimes
+     *  directly from outside the compilation unit is an access violation so
+     *  this method is provided to work around that limitation.
+     */
+    bool MarkingTimes() const;
 
   public:
     /**
