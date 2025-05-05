@@ -408,18 +408,7 @@ EhtFrameExchangeManager::ForwardPsduDown(Ptr<const WifiPsdu> psdu, WifiTxVector&
     {
         NS_ASSERT(m_staMac->GetEmlsrManager());
         m_staMac->GetEmlsrManager()->NotifyInDeviceInterferenceStart(m_linkId, txDuration);
-
-        for (const auto linkId : m_staMac->GetLinkIds())
-        {
-            if (auto phy = m_mac->GetWifiPhy(linkId);
-                phy && linkId != m_linkId && m_staMac->IsEmlsrLink(linkId))
-            {
-                const auto txPower = phy->GetPower(txVector.GetTxPowerLevel()) + phy->GetTxGain();
-                // generate in-device interference on the other EMLSR link for the duration of this
-                // transmission
-                GenerateInDeviceInterference(linkId, txDuration, DbmToW(txPower));
-            }
-        }
+        GenerateInDeviceInterferenceForAll(txDuration, txVector);
     }
 }
 
@@ -497,47 +486,73 @@ EhtFrameExchangeManager::ForwardPsduMapDown(WifiConstPsduMap psduMap, WifiTxVect
     {
         NS_ASSERT(m_staMac->GetEmlsrManager());
         m_staMac->GetEmlsrManager()->NotifyInDeviceInterferenceStart(m_linkId, txDuration);
+        GenerateInDeviceInterferenceForAll(txDuration, txVector);
+    }
+}
 
-        for (const auto linkId : m_staMac->GetLinkIds())
+void
+EhtFrameExchangeManager::GenerateInDeviceInterferenceForAll(const Time& txDuration,
+                                                            const WifiTxVector& txVector)
+{
+    NS_LOG_FUNCTION(this << txDuration.As(Time::MS) << txVector);
+
+    NS_ASSERT(m_staMac);
+    NS_ASSERT(m_staMac->GetEmlsrManager());
+
+    for (const auto& phy : m_staMac->GetDevice()->GetPhys())
+    {
+        // generate in-device interference for a PHY provided that:
+        // - the PHY is not the one the client is using to transmit
+        // - either the PHY is not operating on any link or it is operating on an EMLSR link
+        // Interference is generated for the duration of this transmission
+        if (auto id = m_staMac->GetLinkForPhy(phy);
+            phy != m_phy && (!id || m_staMac->IsEmlsrLink(*id)))
         {
-            if (auto phy = m_mac->GetWifiPhy(linkId);
-                phy && linkId != m_linkId && m_staMac->IsEmlsrLink(linkId))
-            {
-                const auto txPower = phy->GetPower(txVector.GetTxPowerLevel()) + phy->GetTxGain();
-                // generate in-device interference on the other EMLSR link for the duration of this
-                // transmission
-                GenerateInDeviceInterference(linkId, txDuration, DbmToW(txPower));
-            }
+            const auto txPower = phy->GetPower(txVector.GetTxPowerLevel()) + phy->GetTxGain();
+            GenerateInDeviceInterference(phy, txDuration, DbmToW(txPower));
         }
     }
 }
 
 void
-EhtFrameExchangeManager::GenerateInDeviceInterference(uint8_t linkId, Time duration, Watt_u txPower)
+EhtFrameExchangeManager::GenerateInDeviceInterference(Ptr<WifiPhy> phy,
+                                                      Time duration,
+                                                      Watt_u txPower)
 {
-    NS_LOG_FUNCTION(this << linkId << duration.As(Time::US) << txPower);
+    NS_LOG_FUNCTION(this << phy << duration.As(Time::US) << txPower);
 
-    auto rxPhy = DynamicCast<SpectrumWifiPhy>(m_mac->GetWifiPhy(linkId));
+    auto rxPhy = DynamicCast<SpectrumWifiPhy>(phy);
 
     if (!rxPhy)
     {
-        NS_LOG_DEBUG("No spectrum PHY operating on link " << +linkId);
+        NS_LOG_DEBUG("No spectrum PHY");
         return;
     }
 
     auto txPhy = DynamicCast<SpectrumWifiPhy>(m_phy);
     NS_ASSERT(txPhy);
 
-    auto psd = Create<SpectrumValue>(rxPhy->GetCurrentInterface()->GetRxSpectrumModel());
-    *psd = txPower;
+    for (const auto& [range, interface] : rxPhy->GetSpectrumPhyInterfaces())
+    {
+        if (!interface->GetRxSpectrumModel())
+        {
+            // we may have created a PHY interface but never set a frequency channel comprised
+            // in the frequency range associated with that PHY interface, thus the RX spectrum
+            // model may have not been created
+            continue;
+        }
 
-    auto spectrumSignalParams = Create<SpectrumSignalParameters>();
-    spectrumSignalParams->duration = duration;
-    spectrumSignalParams->txPhy = txPhy->GetCurrentInterface();
-    spectrumSignalParams->txAntenna = txPhy->GetAntenna();
-    spectrumSignalParams->psd = psd;
+        auto psd = Create<SpectrumValue>(interface->GetRxSpectrumModel());
+        *psd = txPower;
 
-    rxPhy->StartRx(spectrumSignalParams, rxPhy->GetCurrentInterface());
+        auto spectrumSignalParams = Create<SpectrumSignalParameters>();
+        spectrumSignalParams->duration = duration;
+        spectrumSignalParams->txPhy = txPhy->GetCurrentInterface();
+        spectrumSignalParams->txAntenna = txPhy->GetAntenna();
+        spectrumSignalParams->psd = psd;
+
+        rxPhy->StartRx(spectrumSignalParams, interface);
+    }
 }
 
 void
@@ -565,9 +580,9 @@ EhtFrameExchangeManager::IntraBssNavResetTimeout()
 }
 
 bool
-EhtFrameExchangeManager::UnblockEmlsrLinksIfAllowed(Mac48Address address)
+EhtFrameExchangeManager::UnblockEmlsrLinksIfAllowed(Mac48Address address, bool checkThisLink)
 {
-    NS_LOG_FUNCTION(this << address);
+    NS_LOG_FUNCTION(this << address << checkThisLink);
 
     auto mldAddress = GetWifiRemoteStationManager()->GetMldAddress(address);
     NS_ASSERT_MSG(mldAddress, "MLD address not found for " << address);
@@ -619,9 +634,8 @@ EhtFrameExchangeManager::UnblockEmlsrLinksIfAllowed(Mac48Address address)
             return false;
         }
 
-        if (linkId == m_linkId)
+        if (linkId == m_linkId && !checkThisLink)
         {
-            // no need to check if the EMLSR client is involved in a DL TXOP on this link
             continue;
         }
 
@@ -655,8 +669,8 @@ EhtFrameExchangeManager::EmlsrSwitchToListening(Mac48Address address, const Time
     NS_ASSERT_MSG(mldAddress, "MLD address not found for " << address);
     NS_ASSERT_MSG(m_apMac, "This function shall only be called by AP MLDs");
 
-    auto blockLinks = [=, this]() {
-        if (!UnblockEmlsrLinksIfAllowed(address))
+    auto blockLinks = [=, this](bool checkThisLink) {
+        if (!UnblockEmlsrLinksIfAllowed(address, checkThisLink))
         {
             NS_LOG_DEBUG("Could not unblock transmissions to " << address);
             return;
@@ -694,7 +708,16 @@ EhtFrameExchangeManager::EmlsrSwitchToListening(Mac48Address address, const Time
                                                   Simulator::Schedule(endDelay, unblockLinks));
     };
 
-    delay.IsZero() ? blockLinks() : static_cast<void>(Simulator::Schedule(delay, blockLinks));
+    // it makes sense to check if the EMLSR client is involved in a DL TXOP on this link only if
+    // the transition delay start is scheduled to start after some delay, because the AP MLD may
+    // start another DL TXOP in the meantime. An example is when the AP MLD terminates a TXOP on
+    // this link due to the remaining TXOP time being not enough to send another frame (not even a
+    // CF-End), delays the start of the transition delay to align with the EMLSR client (which is
+    // waiting for a SIFS + slot + PHY RXSTART delay after the last frame to switch to listening
+    // operations), gains channel access on this link again before starting the transition delay
+    // timer and sends an ICF.
+    delay.IsZero() ? blockLinks(false)
+                   : static_cast<void>(Simulator::Schedule(delay, [=]() { blockLinks(true); }));
 }
 
 void
@@ -907,8 +930,8 @@ EhtFrameExchangeManager::SwitchToListeningOrUnblockLinks(const std::set<Mac48Add
         {
             // EMLSR client switched to listening operations if it was protected, otherwise
             // simply unblock transmissions
-            m_protectedStas.contains(address) ? EmlsrSwitchToListening(address, Seconds(0))
-                                              : (void)(UnblockEmlsrLinksIfAllowed(address));
+            m_protectedStas.contains(address) ? EmlsrSwitchToListening(address, Time{0})
+                                              : (void)(UnblockEmlsrLinksIfAllowed(address, false));
             m_protectedStas.erase(address);
         }
     }
@@ -1052,8 +1075,12 @@ EhtFrameExchangeManager::IsCrossLinkCollision(
                             on the given link ID */
                          [=, this](uint8_t id) {
                              auto macHdr = m_mac->GetFrameExchangeManager(id)->GetReceivedMacHdr();
-                             return macHdr.has_value() &&
-                                    m_mac->GetMldAddress(macHdr->get().GetAddr2()) == mldAddress;
+                             if (!macHdr.has_value())
+                             {
+                                 return false;
+                             }
+                             auto addr2 = macHdr->get().GetAddr2();
+                             return m_mac->GetMldAddress(addr2) == mldAddress;
                          }))
         {
             crossLinkCollision = false;
@@ -1214,13 +1241,21 @@ EhtFrameExchangeManager::NotifyChannelReleased(Ptr<Txop> txop)
 
     if (m_apMac)
     {
-        // the channel has been released; all EMLSR clients are switching back to
-        // listening operation
+        // the channel has been released; if the TXNAV is still set, it means that there is not
+        // enough time left to send a CF-End. In this case, EMLSR clients wait for a slot plus the
+        // PHY RX start delay before switching back to listening operation (in this case, this
+        // function is called a SIFS after the last frame in the TXOP)
+        Time delay{0};
+        if (const auto remTxNav = m_txNav - Simulator::Now(); remTxNav.IsStrictlyPositive())
+        {
+            delay = Min(m_phy->GetSlot() + EMLSR_RX_PHY_START_DELAY, remTxNav);
+        }
+
         for (const auto& address : m_protectedStas)
         {
             if (GetWifiRemoteStationManager()->GetEmlsrEnabled(address))
             {
-                EmlsrSwitchToListening(address, Seconds(0));
+                EmlsrSwitchToListening(address, delay);
             }
         }
     }
@@ -1304,7 +1339,9 @@ EhtFrameExchangeManager::PostProcessFrame(Ptr<const WifiPsdu> psdu, const WifiTx
     if (m_apMac && m_txopHolder == psdu->GetAddr2() &&
         GetWifiRemoteStationManager()->GetEmlsrEnabled(*m_txopHolder))
     {
-        if (!m_ongoingTxopEnd.IsPending())
+        const auto unrespondedRts = (psdu->GetHeader(0).IsRts() && !m_sendCtsEvent.IsPending());
+
+        if (!m_ongoingTxopEnd.IsPending() && !unrespondedRts)
         {
             // an EMLSR client has started an UL TXOP. Start the ongoingTxopEnd timer so that
             // the next call to UpdateTxopEndOnRxEnd does its job
@@ -1621,7 +1658,7 @@ EhtFrameExchangeManager::DropReceivedIcf()
             // started before the reception of the ICF ended. We drop this ICF and let the
             // UL TXOP continue.
             NS_LOG_DEBUG("Drop ICF because another EMLSR link is being used");
-            m_icfDropCallback(WifiIcfDrop::USING_OTHER_LINK, m_linkId);
+            m_icfDropCallback({WifiIcfDrop::USING_OTHER_LINK, m_linkId, m_bssid});
             return true;
         }
     }
@@ -1648,30 +1685,14 @@ EhtFrameExchangeManager::DropReceivedIcf()
     else if (auto mainPhy = m_staMac->GetDevice()->GetPhy(emlsrManager->GetMainPhyId());
              mainPhy != m_phy)
     {
-        const auto delay = mainPhy->GetChannelSwitchDelay();
-        auto lastTime = mainPhy->GetState()->GetLastTime({WifiPhyState::TX});
-        auto reason = WifiIcfDrop::NOT_ENOUGH_TIME_TX;
+        auto reason = emlsrManager->CheckMainPhyTakesOverDlTxop(m_linkId);
 
-        if (auto lastSwitch = mainPhy->GetState()->GetLastTime({WifiPhyState::SWITCHING});
-            lastSwitch > lastTime)
-        {
-            lastTime = lastSwitch;
-            reason = WifiIcfDrop::NOT_ENOUGH_TIME_SWITCH;
-        }
-        if (auto lastSleep = mainPhy->GetState()->GetLastTime({WifiPhyState::SLEEP});
-            lastSleep > lastTime)
-        {
-            lastTime = lastSleep;
-            reason = WifiIcfDrop::NOT_ENOUGH_TIME_SLEEP;
-        }
-        // ignore RX state for now
-
-        if (lastTime > Simulator::Now() - delay)
+        if (reason.has_value())
         {
             NS_LOG_DEBUG(
                 "Drop ICF due to not enough time for the main PHY to switch link; reason = "
-                << reason);
-            m_icfDropCallback(reason, m_linkId);
+                << *reason);
+            m_icfDropCallback({*reason, m_linkId, m_bssid});
             return true;
         }
     }
@@ -1743,6 +1764,8 @@ EhtFrameExchangeManager::UpdateTxopEndOnTxStart(Time txDuration, Time durationId
         // after the end of this PPDU, hence we need to postpone the TXOP end in order to
         // get the PHY-RXSTART.indication
         delay = txDuration + m_phy->GetSifs() + m_phy->GetSlot() + EMLSR_RX_PHY_START_DELAY;
+        // TXOP end cannot be beyond the period protected via Duration/ID
+        delay = Min(delay, txDuration + durationId);
     }
 
     NS_LOG_DEBUG("Expected TXOP end=" << (Simulator::Now() + delay).As(Time::S));
@@ -1796,6 +1819,8 @@ EhtFrameExchangeManager::UpdateTxopEndOnRxEnd(Time durationId)
     // we may send a response after a SIFS or we may receive another frame after a SIFS.
     // Postpone the TXOP end by considering the latter (which takes longer)
     auto delay = m_phy->GetSifs() + m_phy->GetSlot() + EMLSR_RX_PHY_START_DELAY;
+    // TXOP end cannot be beyond the period protected via Duration/ID
+    delay = Min(delay, durationId);
     NS_LOG_DEBUG("Expected TXOP end=" << (Simulator::Now() + delay).As(Time::S));
     m_ongoingTxopEnd =
         Simulator::Schedule(delay, &EhtFrameExchangeManager::TxopEnd, this, m_txopHolder);

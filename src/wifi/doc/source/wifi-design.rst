@@ -1458,7 +1458,7 @@ of the AC involved in the Channel Access Manager notification is expected to exp
 The Advanced EMLSR Manager has the ``InterruptSwitch`` attribute that can be set to true to
 interrupt a main PHY switch when it is determined that the main PHY shall switch to a different
 link while still completing the previous switch; in such cases, the previous switch is interrupted
-and the new channel switch starts. This opportunity is exploited in two situations:
+and the new channel switch starts. This opportunity is exploited in some situations:
 
 * If the main PHY is switching while a TX capable aux PHY transmits an RTS to start an UL TXOP,
   the main PHY switch can be interrupted and the main PHY can start switching to the link on
@@ -1468,6 +1468,9 @@ and the new channel switch starts. This opportunity is exploited in two situatio
   a CTS timeout occurs while the main PHY is switching. If the aux PHYs do not switch link, the
   main PHY switch is interrupted and the main PHY returns to the preferred link; if the aux PHYs
   switch link, the main PHY switch is interrupted and the main PHY returns to the link it just left.
+* If the main PHY is switching while an aux PHY is receiving an ICF, the switch can be interrupted
+  so that the main PHY can start switching to the aux PHY link and be ready to operate on that link
+  upon reception of the ICF.
 
 AP EMLSR Manager
 ----------------
@@ -1509,10 +1512,12 @@ EMLSR clients:
     switching and be operating on the link the ICF is received on at the end of the ICF reception
 
 * The ``StaWifiMac::EmlsrLinkSwitch`` trace provides information about start/end of EMLSR link
-  switch events: when a PHY operating on a link starts switching to another link, the trace provides
-  the ID of the link the PHY is leaving and a null pointer (indicating that no PHY is operating on
-  that link); when a PHY completes switching to a link, the trace provides the ID of the link and a
-  pointer to the PHY (which is now operating on that link)
+  switch events. This trace is fired: (i) when a PHY operating on a link starts switching to
+  another link, thus the PHY is disconnected from the previous link; (ii) when a PHY is connected
+  to a new link after performing a channel switch. This trace provides: the ID of the previous link,
+  in case the PHY is disconnected, or the ID of the new link, in case the PHY is connected; a
+  pointer to the PHY that switches link; a boolean value indicating if the PHY is connected to
+  (true) or disconnected from (false) the given link
 * The ``EmlsrManager::MainPhySwitch`` trace is fired when the main PHY switches channel to operate
   on another link. Information associated with the main PHY switch is provided through a struct
   that is inherited from ``struct EmlsrMainPhySwitchTrace``. Different inherited structs are defined
@@ -1525,20 +1530,22 @@ EMLSR clients:
   * ``EmlsrUlTxopRtsSentByAuxPhyTrace``: main PHY is starting switching to another link to take over
     an UL TXOP started by a TX capable aux PHY that transmitted an RTS frame on that link
   * ``EmlsrTxopEndedTrace``: main PHY is starting switching because a (DL or UL) TXOP ended. This
-    trace has a parameter, remTime, whose value is set as follows. When a TXOP ends after a
-    successful transmission and aux PHYs do not switch link, the main PHY switches back to the
-    preferred link; in such a case, the remTime parameter is set to zero. However, a TXOP may end
-    due to a CTS timeout after that a TX capable aux PHY had sent an RTS to start an UL TXOP and
-    the main PHY may be switching when the CTS timeout occurs. If the main PHY switch cannot be
-    interrupted (see case a) in Fig. :ref:`fig-emlsr-txop-ended-trace`), which is the case with the
-    Default EMLSR Manager or with the Advanced EMLSR Manager when the ``InterruptSwitch`` attribute
-    is false, the remTime parameter is set to the remaining channel switch delay at the time the
-    TXOP ends. If the main PHY switch can be interrupted (see case b) in Fig.
-    :ref:`fig-emlsr-txop-ended-trace`), which is the case with the Advanced EMLSR Manager when the
-    ``InterruptSwitch`` attribute is true, the remTime parameter indicates the time that was left
-    to complete the previous channel switch. Note that, in the latter case, this channel switch can
-    also occur when the aux PHYs switch link, as the main PHY returns to the link it was operating
-    on before starting the previous channel switch.
+    trace is called when aux PHYs do not switch link and the main PHY switches back to the preferred
+    link when a TXOP carried out on another link ends
+  * ``EmlsrRtsSentByAuxPhyCtsTimeoutTrace``: main PHY is starting switching after a CTS timeout
+    occurred on the link on which an RTS was transmitted to start an UL TXOP. This trace
+    has a parameter, sinceCtsTimeout, that provides the time elapsed since the CTS timeout occurred.
+    Normally, this trace is called when aux PHYs do not switch links, because the main PHY has to
+    return to the preferred link upon CTS timeout, because a TXOP did not start. In some cases, the
+    main PHY may be switching when CTS timeout occurs; this happens when an aux PHY that is TX
+    capable transmits an RTS and the main PHY starts switching to the aux PHY link. In such a case,
+    the main PHY completes the current link switch and then it starts switching to return back to
+    the preferred link (see case (a) in Fig. :ref:`fig-emlsr-txop-ended-trace`). If the
+    main PHY switch can be interrupted (see case (b) in Fig. :ref:`fig-emlsr-txop-ended-trace`),
+    which is the case with the Advanced EMLSR Manager when the ``InterruptSwitch`` attribute is
+    false, the previous switch is interrupted and the main PHY starts switching to the previous
+    link (in this case, the time elapsed since the CTS timeout occurred is zero). This holds true
+    for both the case aux PHYs do not switch link and the case aux PHYs switch link.
 
 Ack manager
 ###########
