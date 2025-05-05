@@ -112,3 +112,11 @@ build_example(
     ${libapplications}
     ${libtraffic-control}
 )
+build_example(
+  NAME fack_example
+  SOURCE_FILES fack_example.cc
+  LIBRARIES_TO_LINK
+    ${libinternet}
+    ${libpoint-to-point}
+    ${libapplications}
+)
