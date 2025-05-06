@@ -26,15 +26,21 @@ ThroughputMonitor(Ptr<PacketSink> sink, double startTime, double interval)
 }
 
 void
-SnrCallback(Ptr<const Packet> packet, double snr, WifiMode mode, WifiPreamble preamble)
+SnrCallback(Ptr<const Packet> packet, unsigned short channelFrequencyMhz, WifiTxVector txVector, MpduInfo mpduInfo, SignalNoiseDbm signalNoise, unsigned short channelWidth)
 {
-    NS_LOG_UNCOND(Simulator::Now().GetSeconds() << "s: SNR = " << 10 * std::log10(snr) << " dB");
+    double snr = signalNoise.signal - signalNoise.noise; // 计算 SNR
+    NS_LOG_UNCOND(Simulator::Now().GetSeconds() << "s: SNR = " << snr << " dB");
 }
 
 void
-SnrMonitor(Ptr<WifiPhyStateHelper> phyStateHelper)
+SnrMonitor(Ptr<NetDevice> device)
 {
-    phyStateHelper->TraceConnectWithoutContext("RxOk", MakeCallback(&SnrCallback));
+    Ptr<WifiNetDevice> wifiDevice = DynamicCast<WifiNetDevice>(device);
+    if (wifiDevice)
+    {
+        Ptr<WifiPhy> phy = wifiDevice->GetPhy();
+        phy->TraceConnectWithoutContext("MonitorSnifferRx", MakeCallback(&SnrCallback));
+    }
 }
 
 int
@@ -121,8 +127,8 @@ main(int argc, char* argv[])
     Simulator::Schedule(Seconds(interval), &ThroughputMonitor, sink, 0.5, interval);
 
     // 监控信噪比
-    Ptr<WifiPhyStateHelper> phyStateHelper = CreateObject<WifiPhyStateHelper>();
-    SnrMonitor(phyStateHelper);
+    // Ptr<WifiPhyStateHelper> phyStateHelper = CreateObject<WifiPhyStateHelper>();
+    SnrMonitor(apDevices.Get(0));
 
     // 运行仿真
     Simulator::Stop(Seconds(simuTime));
