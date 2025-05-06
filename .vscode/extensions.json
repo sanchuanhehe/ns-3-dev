@@ -1,0 +1,7 @@
+{
+    "recommendations": [
+        "editorconfig.editorconfig",
+        "ms-vscode.cpptools-extension-pack",
+        "ms-vscode.cmake-tools",
+    ]
+}

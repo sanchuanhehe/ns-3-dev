@@ -1,5 +1,6 @@
 *
 !.gitignore
 
+!extensions.json
 !launch.json
 !tasks.json
