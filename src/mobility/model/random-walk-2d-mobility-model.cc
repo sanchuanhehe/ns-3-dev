@@ -199,6 +199,34 @@ RandomWalk2dMobilityModel::Rebound(Time delayLeft)
     m_helper.UpdateWithBounds(m_bounds);
     Vector position = m_helper.GetCurrentPosition();
     Vector velocity = m_helper.GetVelocity();
+    // We want the smallest spatial step which can be made in one increment of time
+    // Since speed is implicitly in m/s, we need the smallest Time step, expressed in s:
+    const Vector2D speed{velocity.x, velocity.y};
+    const Vector2D epsilon = Time(1).GetSeconds() * speed;
+    const double dxMin = std::abs(position.x - m_bounds.xMin);
+    const double dxMax = std::abs(m_bounds.xMax - position.x);
+    const double dyMin = std::abs(position.y - m_bounds.yMin);
+    const double dyMax = std::abs(m_bounds.yMax - position.y);
+    if (dxMax <= epsilon.x && dyMin <= epsilon.y)
+    {
+        position.x = m_bounds.xMax;
+        position.y = m_bounds.yMin;
+    }
+    else if (dxMax <= epsilon.x && dyMax <= epsilon.y)
+    {
+        position.x = m_bounds.xMax;
+        position.y = m_bounds.yMax;
+    }
+    else if (dxMin <= epsilon.x && dyMax <= epsilon.y)
+    {
+        position.x = m_bounds.xMin;
+        position.y = m_bounds.yMax;
+    }
+    else if (dxMin <= epsilon.x && dyMin <= epsilon.y)
+    {
+        position.x = m_bounds.xMin;
+        position.y = m_bounds.yMin;
+    }
     switch (m_bounds.GetClosestSideOrCorner(position))
     {
     case Rectangle::RIGHTSIDE:
