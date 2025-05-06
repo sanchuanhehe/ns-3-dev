@@ -9,7 +9,6 @@
 #ifndef WIFI_PPDU_H
 #define WIFI_PPDU_H
 
-#include "wifi-psdu.h"
 #include "wifi-tx-vector.h"
 
 #include "ns3/nstime.h"
@@ -30,6 +29,7 @@ namespace ns3
 {
 
 class Packet;
+class WifiPsdu;
 class WifiPhyOperatingChannel;
 
 /**
@@ -73,7 +73,7 @@ class WifiPpdu : public SimpleRefCount<WifiPpdu>
     /**
      * Destructor for WifiPpdu.
      */
-    virtual ~WifiPpdu() = default;
+    virtual ~WifiPpdu();
 
     /**
      * Get the TXVECTOR used to send the PPDU.
