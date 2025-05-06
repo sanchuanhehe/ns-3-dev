@@ -1916,11 +1916,32 @@ MinstrelHtWifiManager::PrintTable(MinstrelHtWifiRemoteStation* station)
         station->m_statsFile.open(tmp.str(), std::ios::out);
     }
 
-    station->m_statsFile
-        << "               best   ____________rate__________    ________statistics________    "
-           "________last_______    ______sum-of________\n"
-        << " mode guard #  rate  [name   idx airtime  max_tp]  [avg(tp) avg(prob) sd(prob)]  "
-           "[prob.|retry|suc|att]  [#success | #attempts]\n";
+    station->m_statsFile << std::right << std::setw(8 + 7 + 4 + 4) << "best"
+                         << " " << std::left << std::setw(1 + 9 + 5 + 8 + 8 + 1)
+                         << "______________rate______________"
+                         << " " << std::setw(1 + 9 + 10 + 8 + 1) << "__________statistics_________"
+                         << " " << std::setw(1 + 5 + 6 + 4 + 3 + 1) << "________last________"
+                         << " "
+                         << "_______sum-of_______\n";
+
+    station->m_statsFile << std::left << std::setw(8) << "mode" << std::right << std::setw(6)
+                         << "guard"
+                         << " " << std::setw(3) << "Nss"
+                         << " " << std::left << std::setw(5) << "rate"
+                         << "[" << std::setw(9) << "name" << std::right << std::setw(4) << "idx"
+                         << " " << std::setw(7) << "airtime"
+                         << " " << std::setw(8) << "max_tp" << std::left << std::setw(2) << "]"
+                         << "[" << std::right << std::setw(8) << "avg(tp)"
+                         << " " << std::setw(9) << "avg(prob)"
+                         << " " << std::setw(8) << "sd(prob)" << std::left << std::setw(2) << "]"
+                         << "[" << std::setw(4) << "prob"
+                         << "|" << std::setw(5) << "retry"
+                         << "|" << std::setw(3) << "suc"
+                         << "|" << std::setw(3) << "att" << std::left << std::setw(2) << "]"
+                         << "[" << std::setw(8) << "#success"
+                         << "|" << std::setw(9) << "#attempts"
+                         << "]"
+                         << "\n";
     for (std::size_t i = 0; i < m_numGroups; i++)
     {
         StatsDump(station, i, station->m_statsFile);
@@ -1948,8 +1969,10 @@ MinstrelHtWifiManager::StatsDump(MinstrelHtWifiRemoteStation* station,
         if (station->m_groupsTable[groupId].m_supported &&
             station->m_groupsTable[groupId].m_ratesTable[i].supported)
         {
-            of << group.type << " " << group.chWidth << "   " << group.gi << "  " << +group.streams
-               << "   ";
+            of << std::left << std::setw(4) << group.type << std::right << std::setw(3)
+               << group.chWidth << " " << std::setw(6)
+               << std::to_string(group.gi.GetNanoSeconds()) + "ns"
+               << " " << std::setw(3) << +group.streams << " ";
 
             const auto maxTpRate = station->m_maxTpRate;
             const auto maxTpRate2 = station->m_maxTpRate2;
@@ -1981,37 +2004,74 @@ MinstrelHtWifiManager::StatsDump(MinstrelHtWifiRemoteStation* station,
                 of << ' ';
             }
 
+            of << "   " << std::left << std::setw(9);
             if (group.type == WIFI_MINSTREL_GROUP_HT)
             {
-                of << std::setw(4) << "   MCS"
-                   << (group.streams - 1) *
-                              (minstrelHtStandardInfos.at(WIFI_MOD_CLASS_HT).maxMcs + 1) +
-                          i;
+                of << "MCS" + std::to_string(
+                                  (group.streams - 1) *
+                                      (minstrelHtStandardInfos.at(WIFI_MOD_CLASS_HT).maxMcs + 1) +
+                                  i);
             }
             else
             {
-                of << std::setw(7) << "   MCS" << +i << "/" << static_cast<int>(group.streams);
+                of << "MCS " + std::to_string(+i) + "/" + std::to_string(+group.streams);
             }
 
-            of << "  " << std::setw(3) << idx << "  ";
+            of << std::right << std::setw(4) << idx << " ";
 
             /* tx_time[rate(i)] in usec */
             txTime = GetFirstMpduTxTime(
                 groupId,
                 GetMcsSupported(station, station->m_groupsTable[groupId].m_ratesTable[i].mcsIndex));
-            of << std::setw(6) << txTime.GetMicroSeconds() << "  ";
+            of << std::setw(7) << txTime.GetMicroSeconds() << " ";
 
-            of << std::setw(7) << CalculateThroughput(station, groupId, i, 100) / 100 << "   "
-               << std::setw(7) << station->m_groupsTable[groupId].m_ratesTable[i].throughput / 100
-               << "   " << std::setw(7) << station->m_groupsTable[groupId].m_ratesTable[i].ewmaProb
-               << "  " << std::setw(7) << station->m_groupsTable[groupId].m_ratesTable[i].ewmsdProb
-               << "  " << std::setw(7) << station->m_groupsTable[groupId].m_ratesTable[i].prob
-               << "  " << std::setw(2) << station->m_groupsTable[groupId].m_ratesTable[i].retryCount
-               << "   " << std::setw(3)
-               << station->m_groupsTable[groupId].m_ratesTable[i].prevNumRateSuccess << "  "
-               << std::setw(3) << station->m_groupsTable[groupId].m_ratesTable[i].prevNumRateAttempt
-               << "   " << std::setw(9)
-               << station->m_groupsTable[groupId].m_ratesTable[i].successHist << "   "
+            std::streamsize oldPrecision = of.precision();
+            of.precision(2);
+            of.setf(std::ios::fixed);
+
+            of << std::setw(8) << CalculateThroughput(station, groupId, i, 100) / 100 << "   "
+               << std::setw(8) << station->m_groupsTable[groupId].m_ratesTable[i].throughput / 100
+               << " ";
+
+            of.precision(5);
+            const auto ewmaProb = station->m_groupsTable[groupId].m_ratesTable[i].ewmaProb;
+            const auto ewmsdProb = station->m_groupsTable[groupId].m_ratesTable[i].ewmsdProb;
+
+            of << std::setw(9);
+            if (ewmaProb > 99.99999)
+            {
+                of << "100";
+            }
+            else if (ewmaProb < 0.00001)
+            {
+                of << "0";
+            }
+            else
+            {
+                of << ewmaProb;
+            }
+            of << " ";
+
+            of << std::setw(8);
+            if (ewmsdProb < 0.00001)
+            {
+                of << "0";
+            }
+            else
+            {
+                of << ewmsdProb;
+            }
+
+            of.precision(oldPrecision);
+            of.unsetf(std::ios::fixed);
+            of << "   ";
+
+            of << std::setw(4) << station->m_groupsTable[groupId].m_ratesTable[i].prob << " "
+               << std::setw(5) << station->m_groupsTable[groupId].m_ratesTable[i].retryCount << " "
+               << std::setw(3) << station->m_groupsTable[groupId].m_ratesTable[i].prevNumRateSuccess
+               << " " << std::setw(3)
+               << station->m_groupsTable[groupId].m_ratesTable[i].prevNumRateAttempt << "   "
+               << std::setw(8) << station->m_groupsTable[groupId].m_ratesTable[i].successHist << " "
                << std::setw(9) << station->m_groupsTable[groupId].m_ratesTable[i].attemptHist
                << "\n";
         }
