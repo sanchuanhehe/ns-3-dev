@@ -398,10 +398,28 @@ class TcpTxBuffer : public Object
      */
     void SetRWndCallback(Callback<uint32_t> rWndCallback);
 
+    /**
+     * @brief A custom comparator for TcpTxItem pointers in the PacketList
+     *
+     * This struct compares two TcpTxItem* and gives a custom ordering.
+     */
+    struct CustomComparator
+    {
+        /**
+         * @brief Compares two TcpTxItem pointers.
+         *
+         * @param i1 The first item pointer.
+         * @param i2 The second item pointer.
+         * @return true if the sequence number of i1 is less than sequence number of i2.
+         */
+        bool operator()(const TcpTxItem* i1, const TcpTxItem* i2) const;
+    };
+
   private:
     friend std::ostream& operator<<(std::ostream& os, const TcpTxBuffer& tcpTxBuf);
 
-    typedef std::list<TcpTxItem*> PacketList; //!< container for data stored in the buffer
+    /// Container for data stored in the buffer
+    using PacketList = std::multiset<TcpTxItem*, CustomComparator>;
 
     /**
      * @brief Update the lost count
@@ -606,6 +624,9 @@ class TcpTxBuffer : public Object
     uint32_t m_lostOut{0};   //!< Number of lost bytes
     uint32_t m_sackedOut{0}; //!< Number of sacked bytes
     uint32_t m_retrans{0};   //!< Number of retransmitted bytes
+
+    /// Highest Sequence number which has been retransmitted
+    SequenceNumber32 m_highRetransmitted{0};
 
     uint32_t m_dupAckThresh{0}; //!< Duplicate Ack threshold from TcpSocketBase
     uint32_t m_segmentSize{0};  //!< Segment size from TcpSocketBase

@@ -156,7 +156,7 @@ TcpTxBuffer::SetHeadSequence(const SequenceNumber32& seq)
 
     if (!m_sentList.empty())
     {
-        m_sentList.front()->m_startSeq = seq;
+        (*m_sentList.begin())->m_startSeq = seq;
     }
 
     // if you change the head with data already sent, something bad will happen
@@ -336,6 +336,7 @@ TcpTxBuffer::GetTransmittedSegment(uint32_t numBytes, const SequenceNumber32& se
     if (!item->m_retrans)
     {
         m_retrans += item->m_packet->GetSize();
+        m_highRetransmitted = item->m_startSeq;
         item->m_retrans = true;
     }
 
@@ -734,7 +735,7 @@ TcpTxBuffer::DiscardUpTo(const SequenceNumber32& seq, const Callback<void, TcpTx
 
     if (!m_sentList.empty())
     {
-        TcpTxItem* head = m_sentList.front();
+        TcpTxItem* head = (*m_sentList.begin());
         if (head->m_sacked)
         {
             NS_ASSERT(!head->m_lost);
@@ -777,8 +778,15 @@ TcpTxBuffer::Update(const TcpOptionSack::SackList& list, const Callback<void, Tc
 
     for (auto option_it = list.begin(); option_it != list.end(); ++option_it)
     {
-        auto item_it = m_sentList.begin();
+        auto searchKey = std::make_unique<TcpTxItem>(); // Create a Dummy item to search for
+        searchKey->m_startSeq = option_it->first;
+        auto item_it = m_sentList.lower_bound(searchKey.get());
         SequenceNumber32 beginOfCurrentPacket = m_firstByteSeq;
+
+        if (item_it != m_sentList.end())
+        {
+            beginOfCurrentPacket = (*item_it)->m_startSeq; // Start of current packet is assigned.
+        }
 
         if (m_firstByteSeq + m_sentSize < (*option_it).first)
         {
@@ -968,7 +976,16 @@ TcpTxBuffer::NextSeg(SequenceNumber32* seq, SequenceNumber32* seqHigh, bool isRe
     bool isSeqPerRule3Valid = false;
     SequenceNumber32 beginOfCurrentPkt = m_firstByteSeq;
 
-    for (auto it = m_sentList.begin(); it != m_sentList.end(); ++it)
+    auto searchKey = std::make_unique<TcpTxItem>();
+    searchKey->m_startSeq = m_highRetransmitted;
+    auto it = m_sentList.upper_bound(searchKey.get());
+
+    if (it != m_sentList.end())
+    {
+        beginOfCurrentPkt = (*it)->m_startSeq;
+    }
+
+    for (; it != m_sentList.end(); ++it)
     {
         item = *it;
 
@@ -1223,12 +1240,13 @@ TcpTxBuffer::ResetSentList()
     // Keep the head items; they will then marked as lost
     while (!m_sentList.empty())
     {
-        item = m_sentList.back();
+        item = *(--m_sentList.end());
         item->m_retrans = item->m_sacked = item->m_lost = false;
-        m_appList.push_front(item);
-        m_sentList.pop_back();
+        m_appList.insert(m_appList.begin(), item);
+        m_sentList.erase(--m_sentList.end());
     }
 
+    m_highRetransmitted = 0;
     m_sentSize = 0;
     m_lostOut = 0;
     m_retrans = 0;
@@ -1243,9 +1261,9 @@ TcpTxBuffer::ResetLastSegmentSent()
     NS_LOG_FUNCTION(this);
     if (!m_sentList.empty())
     {
-        TcpTxItem* item = m_sentList.back();
+        TcpTxItem* item = *(--m_sentList.end());
 
-        m_sentList.pop_back();
+        m_sentList.erase(--m_sentList.end());
         m_sentSize -= item->m_packet->GetSize();
         if (item->m_retrans)
         {
@@ -1261,6 +1279,7 @@ TcpTxBuffer::SetSentListLost(bool resetSack)
 {
     NS_LOG_FUNCTION(this);
     m_retrans = 0;
+    m_highRetransmitted = 0;
 
     if (resetSack)
     {
@@ -1314,7 +1333,7 @@ TcpTxBuffer::IsHeadRetransmitted() const
         return false;
     }
 
-    return m_sentList.front()->m_retrans;
+    return (*m_sentList.begin())->m_retrans;
 }
 
 void
@@ -1327,10 +1346,10 @@ TcpTxBuffer::DeleteRetransmittedFlagFromHead()
         return;
     }
 
-    if (m_sentList.front()->m_retrans)
+    if ((*m_sentList.begin())->m_retrans)
     {
-        m_sentList.front()->m_retrans = false;
-        m_retrans -= m_sentList.front()->m_packet->GetSize();
+        (*m_sentList.begin())->m_retrans = false;
+        m_retrans -= (*m_sentList.begin())->m_packet->GetSize();
     }
     ConsistencyCheck();
 }
@@ -1343,22 +1362,22 @@ TcpTxBuffer::MarkHeadAsLost()
         // If the head is sacked (reneging by the receiver the previously sent
         // information) we revert the sacked flag.
         // A sacked head means that we should advance SND.UNA.. so it's an error.
-        if (m_sentList.front()->m_sacked)
+        if ((*m_sentList.begin())->m_sacked)
         {
-            m_sentList.front()->m_sacked = false;
-            m_sackedOut -= m_sentList.front()->m_packet->GetSize();
+            (*m_sentList.begin())->m_sacked = false;
+            m_sackedOut -= (*m_sentList.begin())->m_packet->GetSize();
         }
 
-        if (m_sentList.front()->m_retrans)
+        if ((*m_sentList.begin())->m_retrans)
         {
-            m_sentList.front()->m_retrans = false;
-            m_retrans -= m_sentList.front()->m_packet->GetSize();
+            (*m_sentList.begin())->m_retrans = false;
+            m_retrans -= (*m_sentList.begin())->m_packet->GetSize();
         }
 
-        if (!m_sentList.front()->m_lost)
+        if (!(*m_sentList.begin())->m_lost)
         {
-            m_sentList.front()->m_lost = true;
-            m_lostOut += m_sentList.front()->m_packet->GetSize();
+            (*m_sentList.begin())->m_lost = true;
+            m_lostOut += (*m_sentList.begin())->m_packet->GetSize();
         }
     }
     ConsistencyCheck();
@@ -1442,6 +1461,12 @@ TcpTxBuffer::ConsistencyCheck() const
     NS_ASSERT_MSG(lost == m_lostOut, " Counted lost: " << lost << " stored lost: " << m_lostOut);
     NS_ASSERT_MSG(retrans == m_retrans,
                   " Counted retrans: " << retrans << " stored retrans: " << m_retrans);
+}
+
+bool
+TcpTxBuffer::CustomComparator::operator()(const TcpTxItem* item1, const TcpTxItem* item2) const
+{
+    return item1->m_startSeq < item2->m_startSeq;
 }
 
 std::ostream&
