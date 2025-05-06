@@ -100,6 +100,15 @@ WifiPpdu::WifiPpdu(const WifiConstPsduMap& psdus,
     m_psdus = psdus;
 }
 
+WifiPpdu::~WifiPpdu()
+{
+    for (auto& psdu : m_psdus)
+    {
+        psdu.second = nullptr;
+    }
+    m_psdus.clear();
+}
+
 const WifiTxVector&
 WifiPpdu::GetTxVector() const
 {
