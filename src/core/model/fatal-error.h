@@ -17,6 +17,14 @@
 #include <iostream>
 #include <string_view>
 
+// If stacktrace is available, print it on fatal errors
+#ifdef STACKTRACE_LIBRARY_IS_LINKED
+#include <stacktrace>
+#define PRINT_STACKTRACE std::cerr << std::stacktrace::current() << std::endl
+#else
+#define PRINT_STACKTRACE
+#endif
+
 /**
  * @file
  * @ingroup fatal
@@ -84,6 +92,7 @@ constexpr std::string_view NS_FATAL_MSG{"NS_FATAL, terminating"};
         if (fatal)                                                                                 \
         {                                                                                          \
             std::cerr << ns3::NS_FATAL_MSG << std::endl;                                           \
+            PRINT_STACKTRACE;                                                                      \
             std::terminate();                                                                      \
         }                                                                                          \
     } while (false)
