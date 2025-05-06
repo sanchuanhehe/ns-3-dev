@@ -41,16 +41,16 @@ int
 main(int argc, char* argv[])
 {
     double simuTime = 35.0;
-    double velocity = 2.0; // m/s
-    double interval = 1.0; // seconds for throughput monitoring
+    double velocity = 2.0; // 速度，单位：米/秒
+    double interval = 1.0; // 吞吐量监控的时间间隔（秒）
 
-    // Create nodes
+    // 创建节点
     NodeContainer wifiApNodes;
     wifiApNodes.Create(1);
     NodeContainer wifiStaNodes;
     wifiStaNodes.Create(1);
 
-    // Configure WiFi channel and physical layer
+    // 配置WiFi信道和物理层
     YansWifiPhyHelper phy;
     // 利用YansWifiChannelHelper进行物理层信道设置
     YansWifiChannelHelper channel;
@@ -65,7 +65,7 @@ main(int argc, char* argv[])
     // 设置物理层占用的{子信道，带宽，频段，主信道索引}
     phy.Set("ChannelSettings", StringValue("{0, 20, BAND_2_4GHZ, 0}"));
 
-    // Configure WiFi MAC and devices
+    // 配置WiFi MAC层和设备
     WifiHelper wifi;
     wifi.SetStandard(WIFI_STANDARD_80211ax);
     wifi.SetRemoteStationManager("ns3::IdealWifiManager");
@@ -79,11 +79,11 @@ main(int argc, char* argv[])
     wifiMac.SetType("ns3::ApWifiMac", "Ssid", SsidValue(ssid));
     NetDeviceContainer apDevices = wifi.Install(phy, wifiMac, wifiApNodes);
 
-    // Configure mobility
+    // 配置移动性
     MobilityHelper mobility;
     Ptr<ListPositionAllocator> positionAlloc = CreateObject<ListPositionAllocator>();
-    positionAlloc->Add(Vector(0.0, 0.0, 0.0)); // AP position
-    positionAlloc->Add(Vector(5.0, 0.0, 0.0)); // STA initial position
+    positionAlloc->Add(Vector(0.0, 0.0, 0.0)); // AP位置
+    positionAlloc->Add(Vector(5.0, 0.0, 0.0)); // STA初始位置
     mobility.SetPositionAllocator(positionAlloc);
     mobility.SetMobilityModel("ns3::ConstantVelocityMobilityModel");
     mobility.Install(wifiApNodes);
@@ -93,7 +93,7 @@ main(int argc, char* argv[])
         wifiStaNodes.Get(0)->GetObject<ConstantVelocityMobilityModel>();
     mob->SetVelocity(Vector(velocity, 0.0, 0.0));
 
-    // Configure IP stack
+    // 配置IP协议栈
     InternetStackHelper stack;
     stack.Install(wifiApNodes);
     stack.Install(wifiStaNodes);
@@ -102,7 +102,7 @@ main(int argc, char* argv[])
     address.SetBase("10.1.1.0", "255.255.255.0");
     Ipv4InterfaceContainer interfaces = address.Assign(NetDeviceContainer(apDevices, staDevices));
 
-    // Configure applications
+    // 配置应用程序
     uint16_t port = 9;
     Address sinkAddress(InetSocketAddress(interfaces.GetAddress(1), port));
     PacketSinkHelper sinkHelper("ns3::UdpSocketFactory", sinkAddress);
@@ -116,15 +116,15 @@ main(int argc, char* argv[])
     onOffHelper.SetAttribute("StopTime", TimeValue(Seconds(simuTime)));
     ApplicationContainer sourceApp = onOffHelper.Install(wifiApNodes.Get(0));
 
-    // Monitor throughput
+    // 监控吞吐量
     Ptr<PacketSink> sink = DynamicCast<PacketSink>(sinkApp.Get(0));
     Simulator::Schedule(Seconds(interval), &ThroughputMonitor, sink, 0.5, interval);
 
-    // Monitor SNR
+    // 监控信噪比
     Ptr<WifiPhyStateHelper> phyStateHelper = CreateObject<WifiPhyStateHelper>();
     SnrMonitor(phyStateHelper);
 
-    // Run simulation
+    // 运行仿真
     Simulator::Stop(Seconds(simuTime));
     Simulator::Run();
     Simulator::Destroy();
