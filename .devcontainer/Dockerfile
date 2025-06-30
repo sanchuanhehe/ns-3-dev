@@ -26,7 +26,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     ccache gdb valgrind clang-format clang-tidy \
     # Optional packages
     tcpdump wireshark \
-    sqlite sqlite3 libsqlite3-dev \
+    sqlite3 libsqlite3-dev \
     qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools \
     openmpi-bin openmpi-common openmpi-doc libopenmpi-dev \
     doxygen graphviz imagemagick \
@@ -38,7 +38,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     lxc-templates iproute2 iptables \
     libboost-all-dev \
     python3-pip \
-    gir1.2-goocanvas-2.0 python3-gi python3-gi-cairo python3-pygraphviz gir1.2-gtk-3.0 ipython3
+    gir1.2-goocanvas-2.0 python3-gi python3-gi-cairo python3-pygraphviz gir1.2-gtk-3.0 ipython3 \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip3 install --no-cache-dir \
